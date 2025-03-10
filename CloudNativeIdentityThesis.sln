@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		Commands.md = Commands.md
 		Directory.Build.props = Directory.Build.props
-		Directory.Package.props = Directory.Package.props
+		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
@@ -17,9 +17,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{516839E5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "e2e", "e2e", "{01CE41DA-2A4A-4F47-BDA8-39843CED7151}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "src\SharedKernel\SharedKernel.csproj", "{312FA558-635C-475A-885F-63B3E9E5EEAD}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{312FA558-635C-475A-885F-63B3E9E5EEAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{312FA558-635C-475A-885F-63B3E9E5EEAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{312FA558-635C-475A-885F-63B3E9E5EEAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{312FA558-635C-475A-885F-63B3E9E5EEAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{312FA558-635C-475A-885F-63B3E9E5EEAD} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBBAF4C0-A40F-4954-A1FE-27E274F76118}
