@@ -1,0 +1,42 @@
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+    - ".github/workflows/main-ci.yml"
+    - '**/*.md'
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+    - ".github/workflows/main-ci.yml"
+    - '**/*.md'
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+     matrix:
+      dotnet-version: [9.0.x]
+      os: [ubuntu-latest, windows-2022]
+        
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "15"
+    - name: Setup .NET ${{ matrix.dotnet-version }}
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+    - name: Display .NET version
+      run: dotnet --version
+    - name: Restore dependencies
+      run: dotnet restore ./CloudNativeIdentityThesis.sln
+    - name: Build
+      run: dotnet build ./CloudNativeIdentityThesis.sln --configuration Release /p:RunAnalyzers=true --no-restore
+    - name: Test
+      run: dotnet test ./CloudNativeIdentityThesis.sln --configuration Release --no-build --no-restore --verbosity normal
+    - uses: actions/upload-artifact@v4
