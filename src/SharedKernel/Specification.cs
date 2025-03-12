@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Query;
 //using Microsoft.EntityFrameworkCore.Query;
 
 namespace SharedKernel;
@@ -18,19 +19,19 @@ public abstract class Specification<TEntity>(
 
     public bool IsSplitQuery { get; protected set; }
 
-    //public Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? IncludeExpression { get; protected set; }
+    public Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? IncludeExpression { get; protected set; }
 
-    //public Specification<TEntity> AddInclude(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression)
-    //{
-    //    if (includeExpression is null)
-    //    {
-    //        throw new InvalidOperationException("IncludeExpression is null");
-    //    }
+    public Specification<TEntity> AddInclude(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression)
+    {
+        if (includeExpression is null)
+        {
+            throw new InvalidOperationException("IncludeExpression is null");
+        }
 
-    //    IncludeExpression = includeExpression;
+        IncludeExpression = includeExpression;
 
-    //    return this;
-    //}
+        return this;
+    }
 
     protected Specification<TEntity> AddCriteria(
         Expression<Func<TEntity, bool>> criteria,

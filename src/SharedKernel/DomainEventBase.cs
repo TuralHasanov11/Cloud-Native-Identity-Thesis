@@ -1,5 +1,5 @@
-﻿namespace SharedKernel;
+﻿using MediatR;
 
-public interface IDomainEvent { }
+namespace SharedKernel;
 
-public abstract record DomainEventBase(DateTime OccurredOnUtc) : IDomainEvent;
+public abstract record DomainEventBase(DateTime OccurredOnUtc) : INotification;
