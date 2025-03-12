@@ -2,7 +2,4 @@
 
 public interface IDomainEvent { }
 
-public abstract record DomainEventBase : IDomainEvent
-{
-    public DateTime OccurredOnUtc { get; }
-}
+public abstract record DomainEventBase(DateTime OccurredOnUtc) : IDomainEvent;
