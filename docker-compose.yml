@@ -1,0 +1,34 @@
+services:
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basketapi
+    build:
+      context: .
+      dockerfile: src/Basket.Api/Dockerfile
+
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}orderingapi
+    build:
+      context: .
+      dockerfile: src/Ordering.Api/Dockerfile
+
+
+  paymentprocessor:
+    image: ${DOCKER_REGISTRY-}paymentprocessor
+    build:
+      context: .
+      dockerfile: src/PaymentProcessor/Dockerfile
+
+
+  webapp:
+    image: ${DOCKER_REGISTRY-}webapp
+    build:
+      context: .
+      dockerfile: src/WebApp/Dockerfile
+
+
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: src/Catalog.Api/Dockerfile
+
