@@ -13,6 +13,7 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY ["src/OrderProcessor/OrderProcessor.csproj", "src/OrderProcessor/"]
+COPY ["src/SharedKernel/SharedKernel.csproj", "src/SharedKernel/"]
 RUN dotnet restore "./src/OrderProcessor/OrderProcessor.csproj"
 COPY . .
 WORKDIR "/src/src/OrderProcessor"

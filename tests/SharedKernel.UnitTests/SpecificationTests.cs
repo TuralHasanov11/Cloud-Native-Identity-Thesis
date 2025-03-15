@@ -9,7 +9,8 @@ public class SpecificationTests
     private class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+
+        public required string Name { get; set; }
     }
 
     private class TestSpecification : Specification<TestEntity>
@@ -51,7 +52,7 @@ public class SpecificationTests
         var data = new List<TestEntity>
         {
             new TestEntity { Id = 1, Name = "Test1" },
-            new TestEntity { Id = 2, Name = "Test2" }
+            new TestEntity { Id = 2, Name = "Test2" },
         }.AsQueryable();
 
         var spec = new TestSpecification(x => x.Id > 1);
@@ -71,7 +72,7 @@ public class SpecificationTests
         var data = new List<TestEntity>
         {
             new TestEntity { Id = 1, Name = "Test1" },
-            new TestEntity { Id = 2, Name = "Test2" }
+            new TestEntity { Id = 2, Name = "Test2" },
         }.AsQueryable();
 
         var spec = new TestSpecification(x => x.Id > 1, false);

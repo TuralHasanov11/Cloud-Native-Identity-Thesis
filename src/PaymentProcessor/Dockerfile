@@ -4,8 +4,8 @@
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 5006
-EXPOSE 5007
+EXPOSE 5106
+EXPOSE 5107
 
 
 # This stage is used to build the service project

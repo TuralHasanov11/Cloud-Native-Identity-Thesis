@@ -1,34 +1,162 @@
 services:
   basket.api:
-    image: ${DOCKER_REGISTRY-}basketapi
+    image: ${DOCKER_REGISTRY-}basket-api
+    container_name: basket.api
     build:
       context: .
       dockerfile: src/Basket.Api/Dockerfile
+    ports:
+    - "5100:5100"
+    - "5101:5101"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - rabbitmq
+
+  basket.postgres:
+    image: postgres:latest
+    container_name: "basket.postgres"
+    environment:
+      - POSTGRES_DB=basket
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalog-api
+    build:
+      context: .
+      dockerfile: src/Catalog.Api/Dockerfile
+    ports:
+    - "5102:5102"
+    - "5103:5103"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - rabbitmq
+
+  catalog.postgres:
+    image: postgres:latest
+    container_name: "catalog.postgres"
+    environment:
+      - POSTGRES_DB=catalog
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
   ordering.api:
-    image: ${DOCKER_REGISTRY-}orderingapi
+    image: ${DOCKER_REGISTRY-}ordering-api
     build:
       context: .
       dockerfile: src/Ordering.Api/Dockerfile
+    ports:
+    - "5104:5104"
+    - "5105:5105"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - rabbitmq
 
+  ordering.postgres:
+    image: postgres:latest
+    container_name: "ordering.postgres"
+    environment:
+      - POSTGRES_DB=ordering
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
   paymentprocessor:
     image: ${DOCKER_REGISTRY-}paymentprocessor
     build:
       context: .
       dockerfile: src/PaymentProcessor/Dockerfile
-
+    ports:
+    - "5106:5106"
+    - "5107:5107"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
 
   webapp:
     image: ${DOCKER_REGISTRY-}webapp
     build:
       context: .
       dockerfile: src/WebApp/Dockerfile
+    ports:
+    - "5108:5108"
+    - "5109:5109"
+    depends_on:
+    - basket.api
+    - catalog.api
+    - ordering.api
+    - paymentprocessor
 
+  papercut:
+    image: changemakerstudiosus/papercut-smtp:latest
+    container_name: "papercut"
+    ports:
+      - "8080:80"
+      - "25:25"
 
-  catalog.api:
-    image: ${DOCKER_REGISTRY-}catalogapi
+  seq:
+    image: datalust/seq:latest
+    container_name: "seq"
+    volumes:
+      - ./.containers/seq:/data
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:5341"
+      - "8081:80"
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: "pgadmin"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@postgres.com
+      - PGADMIN_DEFAULT_PASSWORD=postgres
+    ports:
+      - "5050:80"
+    volumes:
+      - ./.containers/pgadmin:/var/lib/pgadmin
+    # depends_on:
+    #   - modularmonolith.postgres
+
+  rabbitmq:
+    image: rabbitmq:4.0-management
+    container_name: "rabbitmq"
+    hostname: "rabbitmq"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - ./.containers/queue/data:/var/lib/rabbitmq
+      - ./.containers/queue/log:/var/log/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+
+  orderprocessor:
+    image: ${DOCKER_REGISTRY-}orderprocessor
+    container_name: orderprocessor
     build:
       context: .
-      dockerfile: src/Catalog.Api/Dockerfile
+      dockerfile: src/OrderProcessor/Dockerfile
 

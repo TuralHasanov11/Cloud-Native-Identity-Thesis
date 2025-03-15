@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
-//using Microsoft.EntityFrameworkCore.Query;
 
+// using Microsoft.EntityFrameworkCore.Query;
 namespace SharedKernel;
 
 public abstract class Specification<TEntity>(
@@ -9,9 +9,9 @@ public abstract class Specification<TEntity>(
     bool criteriaCondition = true)
     where TEntity : class
 {
-    private readonly List<Expression<Func<TEntity, bool>>> _criteria = criteria is null ? [] : [criteria];
+    private readonly List<Expression<Func<TEntity, bool>>> _criteria = criteria is null ?[] :[criteria];
 
-    private readonly List<bool> _criteriaCondition = [criteriaCondition];
+    private readonly List<bool> _criteriaCondition =[criteriaCondition];
 
     public IReadOnlyList<Expression<Func<TEntity, bool>>> Criteria => _criteria.AsReadOnly();
 
@@ -66,11 +66,10 @@ public static class SpecificationEvaluator
             }
         }
 
-        //if (specification.IncludeExpression is not null)
-        //{
+        // if (specification.IncludeExpression is not null)
+        // {
         //    queryable = specification.IncludeExpression(queryable);
-        //}
-
+        // }
         return queryable;
     }
 }

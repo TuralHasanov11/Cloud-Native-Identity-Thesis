@@ -31,7 +31,7 @@ public class QueryableExtensionsTests
         var result = data.WhereIf(condition, predicate);
 
         // Assert
-        Assert.Equal(data.ToList(), result.ToList());
+        Assert.Equal(data.ToList(),[.. result]);
     }
 
     [Fact]
