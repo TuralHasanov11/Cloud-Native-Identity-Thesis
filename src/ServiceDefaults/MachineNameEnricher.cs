@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Diagnostics.Enrichment;
 
-namespace SharedKernel;
+namespace ServiceDefaults;
 
 public class MachineNameEnricher : IStaticLogEnricher
 {

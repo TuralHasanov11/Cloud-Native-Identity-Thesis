@@ -15,18 +15,6 @@ services:
     depends_on:
     - rabbitmq
 
-  basket.postgres:
-    image: postgres:latest
-    container_name: "basket.postgres"
-    environment:
-      - POSTGRES_DB=basket
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    volumes:
-      - ./.containers/postgres:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalog-api
     build:
@@ -68,6 +56,13 @@ services:
     - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
     depends_on:
     - rabbitmq
+
+  orderprocessor:
+    image: ${DOCKER_REGISTRY-}orderprocessor
+    container_name: orderprocessor
+    build:
+      context: .
+      dockerfile: src/OrderProcessor/Dockerfile
 
   ordering.postgres:
     image: postgres:latest
@@ -136,8 +131,9 @@ services:
       - "5050:80"
     volumes:
       - ./.containers/pgadmin:/var/lib/pgadmin
-    # depends_on:
-    #   - modularmonolith.postgres
+    depends_on:
+      - ordering.postgres
+      - catalog.postgres
 
   rabbitmq:
     image: rabbitmq:4.0-management
@@ -153,10 +149,11 @@ services:
       RABBITMQ_DEFAULT_USER: "guest"
       RABBITMQ_DEFAULT_PASS: "guest"
 
-  orderprocessor:
-    image: ${DOCKER_REGISTRY-}orderprocessor
-    container_name: orderprocessor
-    build:
-      context: .
-      dockerfile: src/OrderProcessor/Dockerfile
+  redis:
+    image: redis:latest
+    container_name: "redis"
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./.containers/redis/data:/data
 

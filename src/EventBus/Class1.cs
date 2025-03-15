@@ -1,6 +1,7 @@
-﻿namespace Basket.Infrastructure
+﻿namespace EventBus
 {
     public class Class1
     {
+
     }
 }
