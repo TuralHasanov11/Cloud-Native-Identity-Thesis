@@ -56,6 +56,8 @@ try
 
     app.UseDefaultOpenApi();
 
+    app.UseBackgroundJobs();
+
     await app.RunAsync();
 }
 catch (Exception ex)

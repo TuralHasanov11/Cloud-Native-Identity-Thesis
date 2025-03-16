@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Audit\Audit.csproj" />
+    <ProjectReference Include="..\Catalog.Contracts\Catalog.Contracts.csproj" />
     <ProjectReference Include="..\Catalog.Core\Catalog.Core.csproj" />
     <ProjectReference Include="..\Outbox\Outbox.csproj" />
   </ItemGroup>

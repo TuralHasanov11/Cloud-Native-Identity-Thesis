@@ -1,6 +1,10 @@
 ﻿using Audit;
+using Catalog.Contracts.IntegrationEvents;
+using Catalog.Infrastructure.IntegrationEvents;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Outbox.Services;
 
 namespace Catalog.Api.Extensions;
 
@@ -23,6 +27,8 @@ public static class Extensions
                     HistoryRepository.DefaultTableName))
                 .AddInterceptors(builder.GetAuditInterceptor(sp));
 
+            //builder.UseVector();
+
             if (builder.Environment.IsDevelopment())
             {
                 options.EnableSensitiveDataLogging()
@@ -30,21 +36,9 @@ public static class Extensions
             }
         });
 
-        //builder.AddNpgsqlDbContext<CatalogContext>("catalogdb", configureDbContextOptions: dbContextOptionsBuilder =>
-        //{
-        //    dbContextOptionsBuilder.UseNpgsql(builder =>
-        //    {
-        //        builder.UseVector();
-        //    });
-        //});
+        builder.Services.AddTransient<IOutboxService, OutboxService<CatalogDbContext>>();
 
-        //// REVIEW: This is done for development ease but shouldn't be here in production
-        //builder.Services.AddMigration<CatalogContext, CatalogContextSeed>();
-
-        //// Add the integration services that consume the DbContext
-        //builder.Services.AddTransient<IIntegrationEventLogService, IntegrationEventLogService<CatalogContext>>();
-
-        //builder.Services.AddTransient<ICatalogIntegrationEventService, CatalogIntegrationEventService>();
+        builder.Services.AddTransient<ICatalogIntegrationEventService, CatalogIntegrationEventService>();
 
         //builder.AddRabbitMqEventBus("eventbus")
         //       .AddSubscription<OrderStatusChangedToAwaitingValidationIntegrationEvent, OrderStatusChangedToAwaitingValidationIntegrationEventHandler>()
@@ -69,5 +63,17 @@ public static class Extensions
         //}
 
         //builder.Services.AddScoped<ICatalogAI, CatalogAI>();
+
+    }
+
+    public static IApplicationBuilder UseBackgroundJobs(this WebApplication app)
+    {
+        app.Services.GetRequiredService<IRecurringJobManager>()
+           .AddOrUpdate<IOutboxProcessor>(
+                "outbox-processor",
+                job => job.ExecuteAsync(CancellationToken.None),
+                "0/15 * * * * *");
+
+        return app;
     }
 }

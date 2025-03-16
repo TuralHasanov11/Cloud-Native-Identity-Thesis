@@ -1,10 +1,8 @@
 ﻿using System.Reflection;
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
-using NetArchTest.Rules;
-using SharedKernel;
 
-namespace Catalog.ArchitectureTests;
+namespace ArchitectureTests;
 
 public class DomainTests
 {
