@@ -1,4 +1,4 @@
-﻿namespace SharedKernel;
+﻿namespace Audit;
 
 public class AuditEntry
 {

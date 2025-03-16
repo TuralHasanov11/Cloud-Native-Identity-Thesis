@@ -8,11 +8,11 @@ public abstract class EntityBase : HasDomainEventsBase
 
     public int Id { get; }
 
-    public byte[] ? RowVersion { get; }
+    public byte[]? RowVersion { get; }
 }
 
 public abstract class EntityBase<TId> : HasDomainEventsBase
-  where TId : struct, IEquatable<TId>
+  where TId : class, IEquatable<TId>
 {
     protected EntityBase()
     {
@@ -25,5 +25,5 @@ public abstract class EntityBase<TId> : HasDomainEventsBase
 
     public TId Id { get; }
 
-    public byte[] ? RowVersion { get; }
+    public byte[]? RowVersion { get; }
 }

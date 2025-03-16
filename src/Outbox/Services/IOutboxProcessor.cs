@@ -1,4 +1,4 @@
-﻿namespace SharedKernel;
+﻿namespace Outbox.Services;
 
 public interface IOutboxProcessor
 {

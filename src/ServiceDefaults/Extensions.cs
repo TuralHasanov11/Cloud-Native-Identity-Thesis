@@ -74,6 +74,9 @@ public static partial class Extensions
 
     public static IHostApplicationBuilder ConfigureDiagnostics(this IHostApplicationBuilder builder)
     {
+        builder.Logging.EnableEnrichment();
+        builder.Logging.EnableRedaction();
+
         builder.Services.AddSerilog((services, options) =>
         {
             options.ReadFrom.Configuration(builder.Configuration)
@@ -210,6 +213,7 @@ public static partial class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
+        app.UseMiddleware<RequestContextMiddleware>();
         // Uncomment the following line to enable the Prometheus endpoint (requires the OpenTelemetry.Exporter.Prometheus.AspNetCore package)
         // app.MapPrometheusScrapingEndpoint();
 
@@ -224,6 +228,8 @@ public static partial class Extensions
 
             return app;
         }
+
+        app.UseMiddleware<RequestTimeMiddleware>();
 
         return app;
     }

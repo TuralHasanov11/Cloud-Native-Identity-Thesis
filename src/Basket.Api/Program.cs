@@ -1,24 +1,67 @@
 using Basket.Api.Extensions;
 using Basket.Api.Features.Basket;
+using Serilog;
+using ServiceDefaults.Middleware;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .CreateLogger();
 
-builder.AddBasicServiceDefaults();
-builder.AddApplicationServices();
+try
+{
+    Log.Information("Starting web host");
 
-builder.Services.AddGrpc();
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+    var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
+    builder.Host.UseDefaultServiceProvider(config => config.ValidateOnBuild = true);
+    builder.WebHost.UseKestrel(options => options.AddServerHeader = false);
 
-app.UseHttpsRedirection();
+    builder.AddBasicServiceDefaults();
+    builder.AddApplicationServices();
 
-app.MapDefaultEndpoints();
+    builder.Services.AddGrpc();
 
-app.MapGrpcService<BasketService>();
+    var app = builder.Build();
 
-app.UseDefaultOpenApi();
+    app.UseDefaultLogging();
 
-app.Run();
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/Error");
+        app.UseHsts();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseMiddleware<ContentTypeOptionsMiddleware>();
+
+    //app.UseRateLimiter();
+    //app.UseRequestLocalization();
+    //app.UseCors(Policies.DefaultCorsPolicy);
+
+    //app.UseOutputCache();
+
+    //app.UseRequestDecompression();
+
+    //app.UseAuthentication();
+    //app.UseAuthorization();
+    //app.UseResponseCompression();
+
+    app.MapDefaultEndpoints();
+
+    app.MapGrpcService<BasketService>();
+
+    app.UseDefaultOpenApi();
+
+    await app.RunAsync();
+}
+catch (Exception ex)
+{
+    Log.Error(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    await Log.CloseAndFlushAsync();
+}
+
+public partial class Program;
