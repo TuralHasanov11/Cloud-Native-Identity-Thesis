@@ -1,4 +1,5 @@
 using Catalog.Api.Extensions;
+using Catalog.Api.Features;
 using Serilog;
 using ServiceDefaults.Middleware;
 

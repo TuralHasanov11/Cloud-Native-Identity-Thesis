@@ -96,6 +96,26 @@ public sealed class Product : EntityBase<ProductId>
         PictureFileName = pictureUri;
     }
 
+    public void Update(
+        string name,
+        string description,
+        decimal price,
+        ProductTypeId productTypeId,
+        BrandId brandId,
+        int availableStock,
+        int restockThreshold,
+        int maxStockThreshold)
+    {
+        Name = name;
+        Description = description;
+        Price = price;
+        ProductTypeId = productTypeId;
+        BrandId = brandId;
+        AvailableStock = availableStock;
+        RestockThreshold = restockThreshold;
+        MaxStockThreshold = maxStockThreshold;
+    }
+
     public static Product Create(
         string name,
         string description,

@@ -1,9 +1,12 @@
 ﻿using Audit;
 using Catalog.Contracts.IntegrationEvents;
 using Catalog.Infrastructure.IntegrationEvents;
+using EventBus.Extensions;
 using Hangfire;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.Extensions.Options;
 using Outbox.Services;
 
 namespace Catalog.Api.Extensions;
@@ -40,9 +43,7 @@ public static class Extensions
 
         builder.Services.AddTransient<ICatalogIntegrationEventService, CatalogIntegrationEventService>();
 
-        //builder.AddRabbitMqEventBus("eventbus")
-        //       .AddSubscription<OrderStatusChangedToAwaitingValidationIntegrationEvent, OrderStatusChangedToAwaitingValidationIntegrationEventHandler>()
-        //       .AddSubscription<OrderStatusChangedToPaidIntegrationEvent, OrderStatusChangedToPaidIntegrationEventHandler>();
+        builder.ConfigureEventBus();
 
         builder.Services.AddOptions<CatalogOptions>()
             .BindConfiguration(nameof(CatalogOptions))
@@ -64,6 +65,9 @@ public static class Extensions
 
         //builder.Services.AddScoped<ICatalogAI, CatalogAI>();
 
+        builder.Services.AddMediatR(config
+            => config.RegisterServicesFromAssemblies(UseCases.AssemblyReference.Assembly));
+
     }
 
     public static IApplicationBuilder UseBackgroundJobs(this WebApplication app)
@@ -75,5 +79,37 @@ public static class Extensions
                 "0/15 * * * * *");
 
         return app;
+    }
+
+    private static void ConfigureEventBus(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddOptions<MessageBrokerSettings>()
+            .Bind(builder.Configuration.GetSection(MessageBrokerSettings.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        builder.Services.AddSingleton<IValidateOptions<MessageBrokerSettings>, ValidateMessageBrokerSettings>();
+
+        builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<MessageBrokerSettings>>().Value);
+
+        builder.Services.AddMassTransit(options =>
+        {
+            options.SetKebabCaseEndpointNameFormatter();
+
+            options.AddConsumers(Infrastructure.AssemblyReference.Assembly);
+
+            options.UsingRabbitMq((context, config) =>
+            {
+                var settings = context.GetRequiredService<MessageBrokerSettings>();
+
+                config.Host(new Uri(settings.Host), h =>
+                {
+                    h.Username(settings.Username);
+                    h.Password(settings.Password);
+                });
+
+                config.ConfigureEndpoints(context);
+            });
+        });
     }
 }
