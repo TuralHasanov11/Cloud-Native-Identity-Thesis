@@ -3,11 +3,11 @@ using Catalog.Core.CatalogAggregate.Specifications;
 
 namespace Catalog.UseCases.Products.List;
 
-public sealed class ListProductsQueryHandler : IQueryHandler<ListProductsQuery, PaginatedItems<ProductDto, Guid>>
+public sealed class ListBrandsQueryHandler : IQueryHandler<ListProductsQuery, PaginatedItems<ProductDto, Guid>>
 {
     private readonly IProductRepository _productRepository;
 
-    public ListProductsQueryHandler(IProductRepository productRepository)
+    public ListBrandsQueryHandler(IProductRepository productRepository)
     {
         _productRepository = productRepository;
     }
@@ -20,7 +20,7 @@ public sealed class ListProductsQueryHandler : IQueryHandler<ListProductsQuery, 
 
         (var products, long count) = await _productRepository.ListAsync(
             specification,
-            ProductMapper.ToProductDto,
+            BrandMapper.ToProductDto,
             new ProductId(request.PageCursor),
             request.PageSize,
             cancellationToken);

@@ -1,4 +1,7 @@
-﻿using Catalog.UseCases.Products;
+﻿using Catalog.UseCases.Brands;
+using Catalog.UseCases.Products;
+using Catalog.UseCases.ProductTypes;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.Api.Features;
 
@@ -74,39 +77,48 @@ public static class Endpoints
         //    .WithDescription("Get a list of catalog products for the specified brand")
         //    .WithTags("Brands");
 
-        //api.MapGet("/catalogtypes",
-        //    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
-        //async (CatalogContext context) => await context.CatalogTypes.OrderBy(x => x.Type).ToListAsync())
-        //    .WithName("ListItemTypes")
-        //    .WithSummary("List catalog product types")
-        //    .WithDescription("Get a list of the types of catalog products")
-        //    .WithTags("Types");
-        //api.MapGet("/catalogbrands",
-        //    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
-        //async (CatalogContext context) => await context.CatalogBrands.OrderBy(x => x.Brand).ToListAsync())
-        //    .WithName("ListItemBrands")
-        //    .WithSummary("List catalog product brands")
-        //    .WithDescription("Get a list of the brands of catalog products")
-        //    .WithTags("Brands");
+        api.MapGet("/product-types", ProductTypes.List.Handle)
+            .WithName(nameof(ProductTypes.List))
+            .WithSummary("List catalog product types")
+            .WithDescription("Get a list of the types of catalog products")
+            .WithTags("Types")
+            .Produces<IEnumerable<ProductTypeDto>>()
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json");
 
-        // Routes for modifying catalog products.
+        api.MapGet("/brands", Brands.List.Handle)
+            .WithName(nameof(Brands.List))
+            .WithSummary("List catalog product brands")
+            .WithDescription("Get a list of the brands of catalog products")
+            .WithTags("Brands")
+            .Produces<IEnumerable<BrandDto>>()
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json");
+
         api.MapPost("/products", Products.Create.Handle)
             .WithName(nameof(Products.Create))
             .WithSummary("Create a catalog product")
             .WithDescription("Create a new product in the catalog")
-            .WithTags("Products");
+            .WithTags("Products")
+            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json")
+            .ProducesProblem(StatusCodes.Status404NotFound, "application/problem+json")
+            .Produces(StatusCodes.Status201Created);
 
         api.MapPut("/products/{id:guid}", Products.Update.Handle)
             .WithName(nameof(Products.Update))
             .WithSummary("Create or replace a catalog product")
             .WithDescription("Create or replace a catalog product")
-            .WithTags("Products");
+            .WithTags("Products")
+            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json")
+            .ProducesProblem(StatusCodes.Status404NotFound, "application/problem+json")
+            .Produces(StatusCodes.Status204NoContent);
 
         api.MapDelete("/products/{id:guid}", Products.DeleteById.Handle)
             .WithName(nameof(Products.DeleteById))
             .WithSummary("Delete catalog product")
             .WithDescription("Delete the specified catalog product")
-            .WithTags("Products");
+            .WithTags("Products")
+            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json")
+            .ProducesProblem(StatusCodes.Status404NotFound, "application/problem+json")
+            .Produces(StatusCodes.Status204NoContent);
 
         return app;
     }
