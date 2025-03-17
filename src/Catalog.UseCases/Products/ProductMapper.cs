@@ -6,6 +6,7 @@ public static partial class ProductMapper
     public static ProductDto ToProductDto(this Product product)
     {
         return new ProductDto(
+            product.Id,
             product.Name,
             product.Description,
             product.Price,

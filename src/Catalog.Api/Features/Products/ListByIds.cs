@@ -11,7 +11,7 @@ public static class ListByIds
         IMediator mediator,
         [Description("List of ids for catalog items to return")] int[] ids)
     {
-        var result = await mediator.Send(new ListProductsByIdsQuery(ids));
+        var result = await mediator.Send(new GetProductByIdQueryHandler(ids));
         return TypedResults.Ok(result.Value);
     }
 }

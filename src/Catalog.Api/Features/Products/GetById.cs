@@ -1,23 +1,22 @@
 ﻿using System.ComponentModel;
 using Catalog.UseCases.Products;
-using Catalog.UseCases.Products.List;
+using Catalog.UseCases.Products.GetById;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Catalog.Api.Features.Products;
 
-public static class List
+public static class GetById
 {
-    public static async Task<Ok<PaginatedItems<ProductDto, Guid>>> Handle(
+    public static async Task<Results<Ok<ProductDto>, NotFound>> Handle(
         IMediator mediator,
-        [AsParameters] PaginationRequest<Guid> paginationRequest,
-        [Description("The name of the item to return")] string name,
-        [Description("The type of items to return")] Guid? type,
-        [Description("The brand of items to return")] Guid? brand)
+        [Description("The catalog item id")] Guid id)
     {
-        var pageSize = paginationRequest.PageSize;
-        var pageIndex = paginationRequest.PageCursor;
+        var result = await mediator.Send(new GetProductByIdQuery(id));
 
-        var result = await mediator.Send(new ListProductsQuery(pageIndex, pageSize, name, type, brand));
+        if (result.IsNotFound())
+        {
+            return TypedResults.NotFound();
+        }
 
         return TypedResults.Ok(result.Value);
     }

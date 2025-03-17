@@ -31,8 +31,7 @@ public static class Endpoints
             .WithDescription("Get an product from the catalog")
             .WithTags("Products")
             .Produces<ProductDto>()
-            .ProducesProblem(StatusCodes.Status404NotFound, "application/problem+json")
-            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json");
+            .ProducesProblem(StatusCodes.Status404NotFound, "application/problem+json");
 
         api.MapGet("/products/by/{name:minlength(1)}", Products.ListByName.Handle)
             .WithName(nameof(Products.ListByName))

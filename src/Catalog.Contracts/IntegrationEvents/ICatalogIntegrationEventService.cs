@@ -1,6 +1,4 @@
-﻿using EventBus.Events;
-
-namespace Catalog.Contracts.IntegrationEvents;
+﻿namespace Catalog.Contracts.IntegrationEvents;
 
 public interface ICatalogIntegrationEventService
 {

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using Catalog.UseCases.Products;
-using Catalog.UseCases.Products.GetById;
+﻿using Catalog.UseCases.Products.Create;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,12 +6,21 @@ namespace Catalog.Api.Features.Products;
 
 public static class Create
 {
-    public static async Task<Results<Ok<ProductDto>, NotFound, BadRequest<ProblemDetails>>> Handle(
+    public static async Task<Results<Created, BadRequest<ProblemDetails>>> Handle(
         IMediator mediator,
-        [Description("The catalog item id")] Guid id)
+        CreateProductRequest request)
     {
-        var result = await mediator.Send(new GetProductByIdQuery(id));
+        var result = await mediator.Send(
+            new CreateProductCommand(
+                request.Name,
+                request.Description,
+                request.Price,
+                request.ProductTypeId,
+                request.BrandId,
+                request.AvailableStock,
+                request.RestockThreshold,
+                request.MaxStockThreshold));
 
-        return result.IsNotFound() ? TypedResults.NotFound() : TypedResults.Ok(result.Value);
+        return TypedResults.Created(new Uri($"/api/catalog/products/{result.Value.Id}", UriKind.Relative));
     }
 }

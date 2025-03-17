@@ -1,18 +1,25 @@
-﻿using Catalog.Contracts.IntegrationEvents.Events;
+﻿using Catalog.Contracts.IntegrationEvents;
+using Catalog.Contracts.IntegrationEvents.Events;
 using Catalog.Core.CatalogAggregate;
 using Catalog.Core.CatalogAggregate.Specifications;
 
 namespace Catalog.UseCases.Products.Update;
 
-public sealed class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand, ProductDto>
+public sealed class DeleteByIdCommandHandler : ICommandHandler<UpdateProductCommand, ProductDto>
 {
     private readonly IProductRepository _productRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICatalogIntegrationEventService _catalogIntegrationEventService;
 
 
-    public UpdateProductCommandHandler(
-        IProductRepository productRepository)
+    public DeleteByIdCommandHandler(
+        IProductRepository productRepository,
+        IUnitOfWork unitOfWork,
+        ICatalogIntegrationEventService catalogIntegrationEventService)
     {
         _productRepository = productRepository;
+        _unitOfWork = unitOfWork;
+        _catalogIntegrationEventService = catalogIntegrationEventService;
     }
 
     public async Task<Result<ProductDto>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
@@ -38,23 +45,20 @@ public sealed class UpdateProductCommandHandler : ICommandHandler<UpdateProductC
 
         //product.Embedding = await services.CatalogAI.GetEmbeddingAsync(product);
 
-        var priceEntry = catalogEntry.Property(i => i.Price);
+        var productEntry = _unitOfWork.GetEntry(product);
 
-        if (priceEntry.IsModified) // Save product's data and publish integration event through the Event Bus if price has changed
+        var priceEntry = productEntry.Property(i => i.Price);
+
+        if (priceEntry.IsModified)
         {
-            //Create Integration Event to be published through the Event Bus
             var priceChangedEvent = new ProductPriceChangedIntegrationEvent(product.Id, product.Price, priceEntry.OriginalValue);
 
-            // Achieving atomicity between original Catalog database operation and the IntegrationEventLog thanks to a local transaction
-            await services.EventService.SaveEventAndCatalogContextChangesAsync(priceChangedEvent);
+            await _catalogIntegrationEventService.SaveEventAndCatalogContextChangesAsync(priceChangedEvent);
 
-            // Publish through the Event Bus and mark the saved event as published
-            await services.EventService.PublishThroughEventBusAsync(priceChangedEvent);
+            await _catalogIntegrationEventService.PublishThroughEventBusAsync(priceChangedEvent);
         }
-        else // Just save the updated product because the Product's Price hasn't changed.
-        {
-            await services.Context.SaveChangesAsync();
-        }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success(product.ToProductDto());
     }

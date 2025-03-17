@@ -1,19 +1,17 @@
 ﻿using System.ComponentModel;
-using Catalog.UseCases.Products;
-using Catalog.UseCases.Products.GetById;
+using Catalog.UseCases.Products.DeleteById;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.Api.Features.Products;
 
 public static class DeleteById
 {
-    public static async Task<Results<Ok<ProductDto>, NotFound, BadRequest<ProblemDetails>>> Handle(
+    public static async Task<Results<NoContent, NotFound>> Handle(
         IMediator mediator,
-        [Description("The catalog item id")] Guid id)
+        [Description("The id of the catalog item to delete")] Guid id)
     {
-        var result = await mediator.Send(new GetProductByIdQuery(id));
+        var result = await mediator.Send(new DeleteProductByIdCommand(id));
 
-        return result.IsNotFound() ? TypedResults.NotFound() : TypedResults.Ok(result.Value);
+        return result.IsNotFound() ? TypedResults.NotFound() : TypedResults.NoContent();
     }
 }
