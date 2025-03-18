@@ -26,10 +26,12 @@
     <ProjectReference Include="..\..\src\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Catalog.UseCases\Catalog.UseCases.csproj" />
     <ProjectReference Include="..\..\src\Ordering.Api\Ordering.Api.csproj" />
+    <ProjectReference Include="..\..\src\Ordering.Contracts\Ordering.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Ordering.Core\Ordering.Core.csproj" />
     <ProjectReference Include="..\..\src\Ordering.Infrastructure\Ordering.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Ordering.UseCases\Ordering.UseCases.csproj" />
     <ProjectReference Include="..\..\src\SharedKernel\SharedKernel.csproj" />
+    <ProjectReference Include="..\Catalog.IntegrationTests\Catalog.IntegrationTests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

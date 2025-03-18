@@ -31,8 +31,17 @@ public sealed class Order
         IsDraft = true;
     }
 
-    protected Order(Guid userId, string userName, Address address, int cardTypeId, string cardNumber, string cardSecurityNumber,
-            string cardHolderName, DateTime cardExpiration, CustomerId? customerId = null, PaymentMethodId? paymentMethodId = null)
+    public Order(
+        Guid userId,
+        string userName,
+        Address address,
+        int cardTypeId,
+        string cardNumber,
+        string cardSecurityNumber,
+        string cardHolderName,
+        DateTime cardExpiration,
+        CustomerId? customerId = null,
+        PaymentMethodId? paymentMethodId = null)
     {
         CustomerId = customerId;
         PaymentMethodId = paymentMethodId;
@@ -85,7 +94,7 @@ public sealed class Order
         }
     }
 
-    public void SetStockConfirmedStatus()
+    public void ConfirmStock()
     {
         if (OrderStatus == OrderStatus.AwaitingValidation)
         {
@@ -96,7 +105,7 @@ public sealed class Order
         }
     }
 
-    public void SetPaidStatus()
+    public void Pay()
     {
         if (OrderStatus == OrderStatus.StockConfirmed)
         {
@@ -107,7 +116,7 @@ public sealed class Order
         }
     }
 
-    public void SetShippedStatus()
+    public void Ship()
     {
         if (OrderStatus != OrderStatus.Paid)
         {
@@ -119,7 +128,7 @@ public sealed class Order
         AddDomainEvent(new OrderShippedDomainEvent(this, DateTime.UtcNow));
     }
 
-    public void SetCanceledStatus()
+    public void Cancel()
     {
         if (OrderStatus is OrderStatus.Paid or OrderStatus.Shipped)
         {
@@ -131,7 +140,7 @@ public sealed class Order
         AddDomainEvent(new OrderCanceledDomainEvent(this, DateTime.UtcNow));
     }
 
-    public void SetCanceledStatusWhenStockIsRejected(IEnumerable<Guid> orderStockRejectedItems)
+    public void Cancel(IEnumerable<Guid> orderStockRejectedItems)
     {
         if (OrderStatus == OrderStatus.AwaitingValidation)
         {

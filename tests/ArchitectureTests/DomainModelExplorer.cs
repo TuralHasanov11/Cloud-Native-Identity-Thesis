@@ -1,4 +1,6 @@
-﻿namespace ArchitectureTests;
+﻿using EventBus.Events;
+
+namespace ArchitectureTests;
 
 internal static class DomainModelExplorer
 {
@@ -36,4 +38,14 @@ internal static class DomainModelExplorer
         .AreClasses()
         .And()
         .Inherit(typeof(DomainEventBase));
+
+    public static readonly PredicateList IntegrationEvents = Types.InAssemblies(
+    [
+        Catalog.Contracts.AssemblyReference.Assembly,
+        Ordering.Contracts.AssemblyReference.Assembly,
+    ])
+        .That()
+        .AreClasses()
+        .And()
+        .Inherit(typeof(IntegrationEvent));
 }

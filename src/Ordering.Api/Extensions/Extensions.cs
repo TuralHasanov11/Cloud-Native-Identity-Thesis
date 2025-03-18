@@ -5,7 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Options;
 using Ordering.Contracts.IntegrationEvents;
+using Ordering.Core.CustomerAggregate;
+using Ordering.Core.OrderAggregate;
 using Ordering.Infrastructure.Data;
+using Ordering.Infrastructure.Data.Queries;
+using Ordering.Infrastructure.Idempotency;
+using Ordering.Infrastructure.IntegrationEvents;
+using Ordering.Infrastructure.Repositories;
 using Outbox.Services;
 
 namespace Ordering.Api.Extensions;
@@ -63,18 +69,9 @@ public static class Extensions
         builder.Services.AddValidatorsFromAssembly(Api.AssemblyReference.Assembly);
 
         builder.Services.AddScoped<IOrderQueries, OrderQueries>();
-        builder.Services.AddScoped<IBuyerRepository, BuyerRepository>();
+        builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
         builder.Services.AddScoped<IRequestManager, RequestManager>();
-    }
-
-    private static void AddEventBusSubscriptions(this IEventBusBuilder eventBus)
-    {
-        eventBus.AddSubscription<GracePeriodConfirmedIntegrationEvent, GracePeriodConfirmedIntegrationEventHandler>();
-        eventBus.AddSubscription<OrderStockConfirmedIntegrationEvent, OrderStockConfirmedIntegrationEventHandler>();
-        eventBus.AddSubscription<OrderStockRejectedIntegrationEvent, OrderStockRejectedIntegrationEventHandler>();
-        eventBus.AddSubscription<OrderPaymentFailedIntegrationEvent, OrderPaymentFailedIntegrationEventHandler>();
-        eventBus.AddSubscription<OrderPaymentSucceededIntegrationEvent, OrderPaymentSucceededIntegrationEventHandler>();
     }
 
     private static void ConfigureEventBus(this IHostApplicationBuilder builder)

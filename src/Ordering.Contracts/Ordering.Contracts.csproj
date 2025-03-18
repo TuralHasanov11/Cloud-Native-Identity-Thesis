@@ -10,8 +10,4 @@
     <ProjectReference Include="..\EventBus\EventBus.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="IntegrationEvents\Events\" />
-  </ItemGroup>
-
 </Project>
