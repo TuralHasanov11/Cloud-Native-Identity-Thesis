@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ordering.Core\Ordering.Core.csproj" />
+    <ProjectReference Include="..\EventBus\EventBus.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Orders\Queries\" />
+    <Folder Include="IntegrationEvents\Events\" />
   </ItemGroup>
 
 </Project>

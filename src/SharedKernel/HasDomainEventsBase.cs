@@ -9,20 +9,21 @@ public interface IHasDomainEvents
 
 public abstract class HasDomainEventsBase : IHasDomainEvents
 {
-    private readonly List<DomainEventBase> _domainEvents =[];
+    private readonly List<DomainEventBase> _domainEvents = [];
 
     [NotMapped]
     public IReadOnlyCollection<DomainEventBase> DomainEvents => _domainEvents.AsReadOnly();
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
+    }
 
     protected void AddDomainEvent(DomainEventBase eventItem)
     {
         _domainEvents.Add(eventItem);
     }
 
-    protected void ClearDomainEvents()
-    {
-        _domainEvents.Clear();
-    }
 
     protected void RemoveDomainEvent(DomainEventBase eventItem)
     {

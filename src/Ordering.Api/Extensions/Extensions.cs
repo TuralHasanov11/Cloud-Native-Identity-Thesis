@@ -1,26 +1,26 @@
-﻿using Audit;
-using Catalog.Contracts.IntegrationEvents;
-using Catalog.Infrastructure.IntegrationEvents;
-using EventBus.Extensions;
-using Hangfire;
+﻿using EventBus.Extensions;
+using FluentValidation;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Options;
+using Ordering.Contracts.IntegrationEvents;
+using Ordering.Infrastructure.Data;
 using Outbox.Services;
 
-namespace Catalog.Api.Extensions;
-
+namespace Ordering.Api.Extensions;
 public static class Extensions
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
+        builder.AddDefaultAuthentication();
+
         builder.AddAudit();
 
         var connectionString = builder.Configuration.GetConnectionString("Database")
             ?? throw new InvalidOperationException("Connection string 'Database' not found.");
 
-        builder.Services.AddDbContextPool<CatalogDbContext>((sp, options) =>
+        builder.Services.AddDbContextPool<OrderingDbContext>((sp, options) =>
         {
             options.UseNpgsql(
                 connectionString,
@@ -37,46 +37,44 @@ public static class Extensions
             }
         });
 
-        builder.Services.AddTransient<IOutboxService, OutboxService<CatalogDbContext>>();
+        builder.Services.AddTransient<IOutboxService, OutboxService<OrderingDbContext>>();
 
-        builder.Services.AddTransient<ICatalogIntegrationEventService, CatalogIntegrationEventService>();
+        //services.AddMigration<OrderingDbContext, OrderingContextSeed>();
+
+        builder.Services.AddTransient<IOrderingIntegrationEventService, OrderingIntegrationEventService>();
 
         builder.ConfigureEventBus();
 
-        builder.Services.AddOptions<CatalogOptions>()
-            .BindConfiguration(nameof(CatalogOptions))
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
+        builder.Services.AddHttpContextAccessor();
+        //services.AddTransient<IIdentityService, IdentityService>();
 
-        //if (builder.Configuration["OllamaEnabled"] is string ollamaEnabled && bool.Parse(ollamaEnabled))
-        //{
-        //    builder.AddOllamaApiClient("embedding")
-        //        .AddEmbeddingGenerator();
-        //}
-        //else if (!string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("openai")))
-        //{
-        //    builder.AddOpenAIClientFromConfiguration("openai");
-        //    builder.Services.AddEmbeddingGenerator(sp => sp.GetRequiredService<OpenAIClient>().AsEmbeddingGenerator(builder.Configuration["AI:OpenAI:EmbeddingModel"]!))
-        //        .UseOpenTelemetry()
-        //        .UseLogging();
-        //}
+        // Configure mediatR
+        builder.Services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssemblies(
+                UseCases.AssemblyReference.Assembly,
+                Api.AssemblyReference.Assembly);
 
-        //builder.Services.AddScoped<ICatalogAI, CatalogAI>();
+            cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
+            //cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
+            //cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
+        });
 
-        builder.Services.AddMediatR(config
-            => config.RegisterServicesFromAssemblies(UseCases.AssemblyReference.Assembly));
+        builder.Services.AddValidatorsFromAssembly(Api.AssemblyReference.Assembly);
 
+        builder.Services.AddScoped<IOrderQueries, OrderQueries>();
+        builder.Services.AddScoped<IBuyerRepository, BuyerRepository>();
+        builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+        builder.Services.AddScoped<IRequestManager, RequestManager>();
     }
 
-    public static IApplicationBuilder UseBackgroundJobs(this WebApplication app)
+    private static void AddEventBusSubscriptions(this IEventBusBuilder eventBus)
     {
-        app.Services.GetRequiredService<IRecurringJobManager>()
-           .AddOrUpdate<IOutboxProcessor>(
-                "outbox-processor",
-                job => job.ExecuteAsync(CancellationToken.None),
-                "0/15 * * * * *");
-
-        return app;
+        eventBus.AddSubscription<GracePeriodConfirmedIntegrationEvent, GracePeriodConfirmedIntegrationEventHandler>();
+        eventBus.AddSubscription<OrderStockConfirmedIntegrationEvent, OrderStockConfirmedIntegrationEventHandler>();
+        eventBus.AddSubscription<OrderStockRejectedIntegrationEvent, OrderStockRejectedIntegrationEventHandler>();
+        eventBus.AddSubscription<OrderPaymentFailedIntegrationEvent, OrderPaymentFailedIntegrationEventHandler>();
+        eventBus.AddSubscription<OrderPaymentSucceededIntegrationEvent, OrderPaymentSucceededIntegrationEventHandler>();
     }
 
     private static void ConfigureEventBus(this IHostApplicationBuilder builder)

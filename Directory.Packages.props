@@ -8,6 +8,7 @@
     <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageVersion Include="Farfetch.LoadShedding.AspNetCore" Version="1.0.2" />
     <PackageVersion Include="FluentValidation" Version="11.11.0" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
     <PackageVersion Include="Grpc.AspNetCore" Version="2.70.0" />
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.18" />
     <PackageVersion Include="Hangfire.InMemory" Version="1.0.0" />

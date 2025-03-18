@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Ordering.Core;
+﻿namespace Ordering.Core;
 
 public static class AssemblyReference
 {

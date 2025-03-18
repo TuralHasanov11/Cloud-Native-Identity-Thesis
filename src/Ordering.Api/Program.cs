@@ -1,39 +1,68 @@
-var builder = WebApplication.CreateBuilder(args);
+using ServiceDefaults.Middleware;
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .CreateLogger();
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.MapOpenApi();
+    Log.Information("Starting web host");
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Host.UseDefaultServiceProvider(config => config.ValidateOnBuild = true);
+    builder.WebHost.UseKestrel(options => options.AddServerHeader = false);
+
+    builder.AddBasicServiceDefaults();
+    builder.AddApplicationServices();
+
+    var withApiVersioning = builder.Services.AddApiVersioning();
+
+    builder.AddDefaultOpenApi(withApiVersioning);
+
+    var app = builder.Build();
+
+    app.UseDefaultLogging();
+
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/Error");
+        app.UseHsts();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseMiddleware<ContentTypeOptionsMiddleware>();
+
+    //app.UseRateLimiter();
+    //app.UseRequestLocalization();
+    //app.UseCors(Policies.DefaultCorsPolicy);
+
+    //app.UseOutputCache();
+
+    //app.UseRequestDecompression();
+
+    //app.UseAuthentication();
+    //app.UseAuthorization();
+    //app.UseResponseCompression();
+
+    app.MapDefaultEndpoints();
+
+    app.UseStatusCodePages();
+
+    app.MapOrdersApiV1();
+
+    app.UseDefaultOpenApi();
+
+    await app.RunAsync();
+}
+catch (Exception ex)
+{
+    Log.Error(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    await Log.CloseAndFlushAsync();
 }
 
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching",
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast(
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
-app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+public partial class Program;
