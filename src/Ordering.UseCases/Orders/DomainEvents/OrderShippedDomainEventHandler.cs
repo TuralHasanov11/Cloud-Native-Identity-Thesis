@@ -1,10 +1,8 @@
-﻿using Ordering.Core.CustomerAggregate;
-using Ordering.Core.CustomerAggregate.Specifications;
-using Ordering.Core.Events;
+﻿using Ordering.Contracts.Abstractions;
 
 namespace Ordering.UseCases.Orders.DomainEvents;
 
-public class OrderShippedDomainEventHandler(
+public sealed class OrderShippedDomainEventHandler(
     IOrderRepository orderRepository,
     ILogger<OrderShippedDomainEventHandler> logger,
     ICustomerRepository customerRepository,
@@ -35,7 +33,7 @@ public class OrderShippedDomainEventHandler(
 
         var integrationEvent = new OrderStatusChangedToShippedIntegrationEvent(
             order.Id,
-            nameof(order.OrderStatus),
+            order.OrderStatus.ToString(),
             customer.Name,
             customer.IdentityId);
 

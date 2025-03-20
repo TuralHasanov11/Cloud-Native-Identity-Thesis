@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ServiceDefaults;
 
@@ -11,9 +12,9 @@ public static class HttpClientExtensions
     {
         builder.Services.AddHttpContextAccessor();
 
-        //builder.Services.TryAddTransient<HttpClientAuthorizationDelegatingHandler>();
+        builder.Services.TryAddTransient<HttpClientAuthorizationDelegatingHandler>();
 
-        //builder.AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+        builder.AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
         return builder;
     }
@@ -27,7 +28,10 @@ public static class HttpClientExtensions
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public HttpClientAuthorizationDelegatingHandler(IHttpContextAccessor httpContextAccessor, HttpMessageHandler innerHandler) : base(innerHandler)
+        public HttpClientAuthorizationDelegatingHandler(
+            IHttpContextAccessor httpContextAccessor,
+            HttpMessageHandler innerHandler)
+            : base(innerHandler)
         {
             _httpContextAccessor = httpContextAccessor;
         }
@@ -47,5 +51,4 @@ public static class HttpClientExtensions
             return await base.SendAsync(request, cancellationToken);
         }
     }
-
 }

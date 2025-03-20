@@ -15,7 +15,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using ServiceDefaults.Middleware;
 
@@ -27,7 +29,7 @@ public static partial class Extensions
     {
         builder.AddBasicServiceDefaults();
 
-        //builder.Services.AddServiceDiscovery();
+        builder.Services.AddServiceDiscovery();
 
         builder.Services.ConfigureHttpJsonOptions(options =>
         {
@@ -41,14 +43,12 @@ public static partial class Extensions
             options.SerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
         });
 
-        //builder.Services.ConfigureHttpClientDefaults(http =>
-        //{
-        //    // Turn on resilience by default
-        //    http.AddStandardResilienceHandler();
+        builder.Services.ConfigureHttpClientDefaults(http =>
+        {
+            http.AddStandardResilienceHandler();
 
-        //    // Turn on service discovery by default
-        //    http.AddServiceDiscovery();
-        //});
+            http.AddServiceDiscovery();
+        });
 
         return builder;
     }
@@ -108,95 +108,67 @@ public static partial class Extensions
             logging.IncludeScopes = true;
         });
 
+        builder.AddOpenTelemetryExporters();
+
         builder.Services.AddOpenTelemetry()
+            .ConfigureResource(resource =>
+            {
+                resource.AddService(
+                        builder.Environment.ApplicationName,
+                        serviceInstanceId: Environment.MachineName);
+
+                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                if (environment is not null)
+                {
+                    resource.AddAttributes(new Dictionary<string, object>
+                    {
+                        ["environment.name"] = environment,
+                    });
+                }
+            })
             .WithMetrics(metrics =>
             {
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
-                    .AddMeter("Experimental.Microsoft.Extensions.AI");
+                    .AddMeter(
+                        //DiagnosticsConfiguration.Meter.Name,
+                        //MassTransit.Monitoring.InstrumentationOptions.MeterName, // MassTransit Meter
+                        "Microsoft.AspNetCore.Hosting",
+                        "System.Net.Http",
+                        "Microsoft.AspNetCore.Server.Kestrel",
+                        "Experimental.Microsoft.Extensions.AI",
+                        builder.Environment.ApplicationName);
             })
             .WithTracing(tracing =>
             {
                 if (builder.Environment.IsDevelopment())
                 {
-                    // We want to view all traces in development
                     tracing.SetSampler(new AlwaysOnSampler());
                 }
 
                 tracing.AddAspNetCoreInstrumentation()
                     .AddGrpcClientInstrumentation()
                     .AddHttpClientInstrumentation()
+                    //.AddSource(DiagnosticsConfiguration.Source.Name)
+                    //.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName) // MassTransit ActivitySource
                     .AddSource("Experimental.Microsoft.Extensions.AI");
             });
-
-        //builder.AddOpenTelemetryExporters();
-
-        //services.AddOpenTelemetry()
-        //    .ConfigureResource(resource =>
-        //    {
-        //        resource.AddService(
-        //                DiagnosticsConfiguration.ServiceName,
-        //                serviceInstanceId: Environment.MachineName)
-        //            .AddAttributes(new Dictionary<string, object>
-        //            {
-        //                ["service.name"] = "ModularMonolith",
-        //                ["machine.name"] = Environment.MachineName,
-        //                // endpoint and protocol are optional
-        //            });
-
-        //        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-        //        if (environment is not null)
-        //        {
-        //            resource.AddAttributes(new Dictionary<string, object>
-        //            {
-        //                ["environment.name"] = environment,
-        //            });
-        //        }
-        //    })
-        //    .WithMetrics(b =>
-        //    {
-        //        b.AddRuntimeInstrumentation()
-        //            .AddAspNetCoreInstrumentation()
-        //            .AddHttpClientInstrumentation()
-        //            .AddMeter(
-        //                DiagnosticsConfiguration.Meter.Name,
-        //                MassTransit.Monitoring.InstrumentationOptions.MeterName, // MassTransit Meter
-        //                "Microsoft.AspNetCore.Hosting",
-        //                "System.Net.Http",
-        //                "Microsoft.AspNetCore.Server.Kestrel",
-        //                "ModularMonolith.Web")
-        //            .AddOtlpExporter();
-        //    })
-        //    .WithTracing(b =>
-        //    {
-        //        b.AddSource(DiagnosticsConfiguration.Source.Name)
-        //            .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName) // MassTransit ActivitySource
-        //            .AddNpgsql()
-        //            .AddAspNetCoreInstrumentation()
-        //            .AddHttpClientInstrumentation()
-        //            .AddOtlpExporter();
-
-        //        if (environment.IsDevelopment())
-        //        {
-        //            b.SetSampler<AlwaysOnSampler>();
-        //        }
-        //    });
 
         return builder;
     }
 
     private static IHostApplicationBuilder AddOpenTelemetryExporters(this IHostApplicationBuilder builder)
     {
-        //var useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
+        var useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
 
-        //if (useOtlpExporter)
-        //{
-        //    builder.Services.Configure<OpenTelemetryLoggerOptions>(logging => logging.AddOtlpExporter());
-        //    builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
-        //    builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
-        //}
+        if (useOtlpExporter)
+        {
+            builder.Services.Configure<OpenTelemetryLoggerOptions>(logging => logging.AddOtlpExporter());
+            builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
+            builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
+        }
 
         return builder;
     }

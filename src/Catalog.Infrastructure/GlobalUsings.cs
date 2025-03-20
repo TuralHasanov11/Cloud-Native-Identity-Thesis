@@ -1,6 +1,9 @@
 ﻿global using Audit;
+global using Catalog.Contracts.Abstractions;
 global using Catalog.Contracts.IntegrationEvents;
 global using Catalog.Core.CatalogAggregate;
 global using Catalog.Infrastructure.Data;
+global using EventBus.Events;
 global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Logging;
 global using SharedKernel;

@@ -4,7 +4,7 @@ public interface IOutboxService
 {
     Task<IEnumerable<OutboxMessage>> RetrieveEventLogsPendingToPublishAsync(Guid transactionId);
 
-    Task SaveEventAsync(IntegrationEvent @event, IDbContextTransaction transaction);
+    Task SaveEventAsync(IntegrationEvent message, IDbContextTransaction transaction);
 
     Task MarkEventAsPublishedAsync(Guid eventId);
 

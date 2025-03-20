@@ -1,12 +1,13 @@
 ﻿using MassTransit;
+using Ordering.Contracts.IntegrationEvents;
 using Ordering.UseCases.Orders.Commands;
 
 namespace Ordering.Infrastructure.IntegrationEvents.EventHandlers;
 
 public sealed class OrderStockConfirmedIntegrationEventHandler(
     IMediator mediator,
-    ILogger<OrderStockConfirmedIntegrationEventHandler> logger) :
-    IIntegrationEventHandler<OrderStockConfirmedIntegrationEvent>
+    ILogger<OrderStockConfirmedIntegrationEventHandler> logger)
+    : IConsumer<OrderStockConfirmedIntegrationEvent>
 {
     public async Task Consume(ConsumeContext<OrderStockConfirmedIntegrationEvent> context)
     {

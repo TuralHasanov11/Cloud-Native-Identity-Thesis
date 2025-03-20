@@ -6,7 +6,7 @@ public static class OutboxMessageExtensions
     {
         builder.Entity<OutboxMessage>(builder =>
         {
-            builder.ToTable("OutboxMessages");
+            builder.ToTable("outbox_messages");
 
             builder.HasKey(e => e.Id);
 
@@ -19,7 +19,8 @@ public static class OutboxMessageExtensions
                 .HasColumnType("jsonb");
 
             builder.Property(x => x.State)
-                .IsRequired();
+                .IsRequired()
+                .HasConversion<string>();
 
             builder.Property(x => x.TimesSent)
                 .IsRequired();

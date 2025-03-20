@@ -1,25 +1,22 @@
-﻿namespace eShop.Ordering.API.Application.DomainEventHandlers;
+﻿namespace Ordering.UseCases.Orders.DomainEvents;
 
-public class UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler : INotificationHandler<BuyerAndPaymentMethodVerifiedDomainEvent>
+public class UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler(
+    IOrderRepository orderRepository,
+    ILogger<UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler> logger)
+    : IDomainEventHandler<CustomerAndPaymentMethodVerifiedDomainEvent>
 {
-    private readonly IOrderRepository _orderRepository;
-    private readonly ILogger _logger;
-
-    public UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler(
-        IOrderRepository orderRepository,
-        ILogger<UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler> logger)
+    public async Task Handle(CustomerAndPaymentMethodVerifiedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+        var order = await orderRepository.SingleOrDefaultAsync(
+            new GetOrderByIdSpecification(new OrderId(domainEvent.OrderId)),
+            cancellationToken);
 
-    // Domain Logic comment:
-    // When the Buyer and Buyer's payment method have been created or verified that they existed, 
-    // then we can update the original Order with the BuyerId and PaymentId (foreign keys)
-    public async Task Handle(BuyerAndPaymentMethodVerifiedDomainEvent domainEvent, CancellationToken cancellationToken)
-    {
-        var orderToUpdate = await _orderRepository.GetAsync(domainEvent.OrderId);
-        orderToUpdate.SetPaymentMethodVerified(domainEvent.Buyer.Id, domainEvent.Payment.Id); 
-        OrderingApiTrace.LogOrderPaymentMethodUpdated(_logger, domainEvent.OrderId, nameof(domainEvent.Payment), domainEvent.Payment.Id);
+        if (order == null)
+        {
+            return;
+        }
+
+        order.VerifyPayment(domainEvent.Customer.Id, domainEvent.Payment.Id);
+        //OrderingApiTrace.LogOrderPaymentMethodUpdated(logger, domainEvent.OrderId, nameof(domainEvent.Payment), domainEvent.Payment.Id);
     }
 }

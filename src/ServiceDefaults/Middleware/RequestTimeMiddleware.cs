@@ -20,14 +20,14 @@ public class RequestTimeMiddleware(ILogger<RequestTimeMiddleware> logger) : IMid
     }
 }
 
-public static partial class RequestTimeMiddlewareLogger
+internal static partial class RequestTimeMiddlewareLogger
 {
     [LoggerMessage(LogLevel.Information, "Request started")]
-    public static partial void LogRequestStarted(
+    internal static partial void LogRequestStarted(
         this ILogger<RequestTimeMiddleware> logger);
 
     [LoggerMessage(LogLevel.Information, "Request finished in {ElapsedTime}")]
-    public static partial void LogRequestFinished(
+    internal static partial void LogRequestFinished(
         this ILogger<RequestTimeMiddleware> logger,
         TimeSpan elapsedTime);
 }

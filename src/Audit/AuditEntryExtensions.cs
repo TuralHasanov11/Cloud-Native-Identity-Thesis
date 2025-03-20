@@ -1,7 +1,4 @@
-﻿using MassTransit;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Audit;
@@ -36,7 +33,7 @@ public static class AuditEntryExtensions
 
     public static void AddAudit(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddKeyedScoped<List<AuditEntry>>("Audit", (_, _) => []);
+        builder.Services.AddKeyedScoped<ICollection<AuditEntry>>("Audit", (_, _) => []);
     }
 
     public static IInterceptor GetAuditInterceptor(
@@ -44,7 +41,15 @@ public static class AuditEntryExtensions
         IServiceProvider serviceProvider)
     {
         return new AuditInterceptor(
-                serviceProvider.GetRequiredKeyedService<List<AuditEntry>>("Audit"),
+                serviceProvider.GetRequiredKeyedService<ICollection<AuditEntry>>("Audit"),
                 serviceProvider.GetRequiredService<IPublishEndpoint>());
+    }
+
+    public static void AddRange(this ICollection<AuditEntry> source, ICollection<AuditEntry> entries)
+    {
+        foreach (var entry in entries)
+        {
+            source.Add(entry);
+        }
     }
 }

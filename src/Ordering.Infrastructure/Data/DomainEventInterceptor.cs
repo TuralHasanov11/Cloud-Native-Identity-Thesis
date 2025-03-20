@@ -1,5 +1,4 @@
-﻿using MassTransit.Mediator;
-using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Ordering.Infrastructure.Data;
 

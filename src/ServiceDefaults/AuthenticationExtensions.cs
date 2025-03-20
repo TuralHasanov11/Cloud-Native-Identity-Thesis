@@ -20,9 +20,6 @@ public static class AuthenticationExtensions
             return builder.Services;
         }
 
-        // prevent from mapping "sub" claim to nameidentifier.
-        //JsonWebTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
-
         builder.Services.AddAuthentication()
             .AddJwtBearer(options =>
             {

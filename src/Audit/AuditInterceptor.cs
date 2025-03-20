@@ -1,14 +1,8 @@
-﻿using MassTransit;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿namespace Audit;
 
-namespace Audit;
-
-public class AuditInterceptor(List<AuditEntry> auditEntryList, IPublishEndpoint publishEndpoint) : SaveChangesInterceptor
+public class AuditInterceptor(ICollection<AuditEntry> auditEntryList, IPublishEndpoint publishEndpoint)
+    : SaveChangesInterceptor
 {
-    private readonly List<AuditEntry> _auditEntries = auditEntryList;
-    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
-
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
@@ -23,9 +17,10 @@ public class AuditInterceptor(List<AuditEntry> auditEntryList, IPublishEndpoint 
                 .Where(e =>
                     e.Entity is not AuditEntry &&
                     (e.State == EntityState.Added
-                        || e.State == EntityState.Modified || e.References.Any(r => r.TargetEntry?.Metadata.IsOwned() == true &&
-                                    (r.TargetEntry.State == EntityState.Added ||
-                                    r.TargetEntry.State == EntityState.Modified))))
+                        || e.State == EntityState.Modified
+                        || e.References.Any(r => r.TargetEntry?.Metadata.IsOwned() == true
+                                                && (r.TargetEntry.State == EntityState.Added
+                                                    || r.TargetEntry.State == EntityState.Modified))))
                 .Select(x => new AuditEntry
                 {
                     Id = Guid.CreateVersion7(),
@@ -35,7 +30,7 @@ public class AuditInterceptor(List<AuditEntry> auditEntryList, IPublishEndpoint 
 
             if (auditEntries.Count != 0)
             {
-                _auditEntries.AddRange(auditEntries);
+                auditEntryList.AddRange(auditEntries);
             }
         }
 
@@ -51,16 +46,16 @@ public class AuditInterceptor(List<AuditEntry> auditEntryList, IPublishEndpoint 
         {
             var endTime = DateTime.UtcNow;
 
-            foreach (var item in _auditEntries)
+            foreach (var item in auditEntryList)
             {
                 item.EndTimeUtc = endTime;
                 item.Succeeded = true;
             }
 
-            if (_auditEntries.Count > 0)
+            if (auditEntryList.Count > 0)
             {
-                _auditEntries.Clear();
-                await _publishEndpoint.Publish(new AuditTrailMessage(_auditEntries), cancellationToken);
+                auditEntryList.Clear();
+                await publishEndpoint.Publish(new AuditTrailMessage(auditEntryList), cancellationToken);
             }
         }
 
@@ -75,17 +70,17 @@ public class AuditInterceptor(List<AuditEntry> auditEntryList, IPublishEndpoint 
         {
             var endTime = DateTime.UtcNow;
 
-            foreach (var item in _auditEntries)
+            foreach (var item in auditEntryList)
             {
                 item.EndTimeUtc = endTime;
                 item.Succeeded = false;
                 item.ErrorMessage = eventData.Exception.Message;
             }
 
-            if (_auditEntries.Count > 0)
+            if (auditEntryList.Count > 0)
             {
-                _auditEntries.Clear();
-                await _publishEndpoint.Publish(new AuditTrailMessage(_auditEntries), cancellationToken);
+                auditEntryList.Clear();
+                await publishEndpoint.Publish(new AuditTrailMessage(auditEntryList), cancellationToken);
             }
         }
     }

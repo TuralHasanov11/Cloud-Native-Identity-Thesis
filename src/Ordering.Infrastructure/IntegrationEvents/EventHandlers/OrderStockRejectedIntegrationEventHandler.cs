@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Ordering.Contracts.IntegrationEvents;
 using Ordering.UseCases.Orders.Commands;
 
 namespace Ordering.Infrastructure.IntegrationEvents.EventHandlers;
@@ -6,7 +7,7 @@ namespace Ordering.Infrastructure.IntegrationEvents.EventHandlers;
 public class OrderStockRejectedIntegrationEventHandler(
     IMediator mediator,
     ILogger<OrderStockRejectedIntegrationEventHandler> logger)
-    : IIntegrationEventHandler<OrderStockRejectedIntegrationEvent>
+    : IConsumer<OrderStockRejectedIntegrationEvent>
 {
     public async Task Consume(ConsumeContext<OrderStockRejectedIntegrationEvent> context)
     {

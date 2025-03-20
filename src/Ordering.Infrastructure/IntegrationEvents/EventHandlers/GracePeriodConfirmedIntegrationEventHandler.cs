@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Ordering.Contracts.IntegrationEvents;
 using Ordering.UseCases.Orders.Commands;
 
 namespace Ordering.Infrastructure.IntegrationEvents.EventHandlers;
@@ -6,7 +7,7 @@ namespace Ordering.Infrastructure.IntegrationEvents.EventHandlers;
 public sealed class GracePeriodConfirmedIntegrationEventHandler(
     IMediator mediator,
     ILogger<GracePeriodConfirmedIntegrationEventHandler> logger)
-    : IIntegrationEventHandler<GracePeriodConfirmedIntegrationEvent>
+    : IConsumer<GracePeriodConfirmedIntegrationEvent>
 {
     public async Task Consume(ConsumeContext<GracePeriodConfirmedIntegrationEvent> context)
     {

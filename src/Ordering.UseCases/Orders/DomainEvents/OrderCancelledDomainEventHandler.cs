@@ -1,33 +1,18 @@
-﻿using Ordering.Core.CustomerAggregate;
-using Ordering.Core.CustomerAggregate.Specifications;
-using Ordering.Core.Events;
+﻿using Ordering.Contracts.Abstractions;
 
 namespace Ordering.UseCases.Orders.DomainEvents;
 
-public sealed class OrderCancelledDomainEventHandler : IDomainEventHandler<OrderCanceledDomainEvent>
+public sealed class OrderCancelledDomainEventHandler(
+    IOrderRepository orderRepository,
+    ILogger<OrderCancelledDomainEventHandler> logger,
+    ICustomerRepository customerRepository,
+    IOrderingIntegrationEventService orderingIntegrationEventService) : IDomainEventHandler<OrderCanceledDomainEvent>
 {
-    private readonly IOrderRepository _orderRepository;
-    private readonly ICustomerRepository _customerRepository;
-    private readonly ILogger _logger;
-    private readonly IOrderingIntegrationEventService _orderingIntegrationEventService;
-
-    public OrderCancelledDomainEventHandler(
-        IOrderRepository orderRepository,
-        ILogger<OrderCancelledDomainEventHandler> logger,
-        ICustomerRepository customerRepository,
-        IOrderingIntegrationEventService orderingIntegrationEventService)
-    {
-        _orderRepository = orderRepository;
-        _logger = logger;
-        _customerRepository = customerRepository;
-        _orderingIntegrationEventService = orderingIntegrationEventService;
-    }
-
     public async Task Handle(OrderCanceledDomainEvent notification, CancellationToken cancellationToken)
     {
-        OrderingApiTrace.LogOrderStatusUpdated(_logger, notification.Order.Id, OrderStatus.Cancelled);
+        //OrderingApiTrace.LogOrderStatusUpdated(_logger, notification.Order.Id, OrderStatus.Cancelled);
 
-        var order = await _orderRepository.SingleOrDefaultAsync(
+        var order = await orderRepository.SingleOrDefaultAsync(
             new GetOrderByIdSpecification(new OrderId(notification.Order.Id)),
             cancellationToken);
 
@@ -36,8 +21,8 @@ public sealed class OrderCancelledDomainEventHandler : IDomainEventHandler<Order
             return;
         }
 
-        var customer = await _customerRepository.SingleOrDefaultAsync(
-            new GetCustomerByIdSpecification(order.CustomerId),
+        var customer = await customerRepository.SingleOrDefaultAsync(
+            new GetCustomerByIdSpecification(order.CustomerId!), // TODO: Check if CustomerId is nullable
             cancellationToken);
 
         if (customer == null)
@@ -45,7 +30,7 @@ public sealed class OrderCancelledDomainEventHandler : IDomainEventHandler<Order
             return;
         }
 
-        await _orderingIntegrationEventService.AddAndSaveEventAsync(
+        await orderingIntegrationEventService.AddAndSaveEventAsync(
             new OrderStatusChangedToCanceledIntegrationEvent(
                 order.Id,
                 (int)order.OrderStatus,

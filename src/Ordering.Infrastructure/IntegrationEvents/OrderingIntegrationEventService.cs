@@ -1,49 +1,45 @@
-﻿using EventBus.Abstractions;
-using EventBus.Events;
-using Microsoft.Extensions.Logging;
-using Ordering.Contracts.IntegrationEvents;
+﻿using EventBus.Events;
+using MassTransit;
+using Ordering.Contracts.Abstractions;
 using Outbox.Services;
 
 namespace Ordering.Infrastructure.IntegrationEvents;
 
-public class OrderingIntegrationEventService(IEventBus eventBus,
+public class OrderingIntegrationEventService(
+    IPublishEndpoint eventBus,
     OrderingDbContext orderingContext,
     IOutboxService outboxService,
-    ILogger<OrderingIntegrationEventService> logger) : IOrderingIntegrationEventService
+    ILogger<OrderingIntegrationEventService> logger)
+    : IOrderingIntegrationEventService
 {
-    private readonly IEventBus _eventBus = eventBus;
-    private readonly OrderingDbContext _orderingContext = orderingContext;
-    private readonly IOutboxService _outboxService = outboxService;
-    private readonly ILogger<OrderingIntegrationEventService> _logger = logger;
-
     public async Task PublishEventsThroughEventBusAsync(Guid transactionId)
     {
-        var pendingLogEvents = await _outboxService.RetrieveEventLogsPendingToPublishAsync(transactionId);
+        var pendingLogEvents = await outboxService.RetrieveEventLogsPendingToPublishAsync(transactionId);
 
         foreach (var logEvt in pendingLogEvents)
         {
-            _logger.LogPublishingIntegrationEvent(logEvt.Id, logEvt.IntegrationEvent);
+            logger.LogPublishingIntegrationEvent(logEvt.Id, logEvt.IntegrationEvent);
 
             try
             {
-                await _outboxService.MarkEventAsInProgressAsync(logEvt.Id);
-                await _eventBus.Publish(logEvt.IntegrationEvent);
-                await _outboxService.MarkEventAsPublishedAsync(logEvt.Id);
+                await outboxService.MarkEventAsInProgressAsync(logEvt.Id);
+                await eventBus.Publish(logEvt.IntegrationEvent);
+                await outboxService.MarkEventAsPublishedAsync(logEvt.Id);
             }
             catch (Exception ex)
             {
-                _logger.LogErrorPublishingIntegrationEvent(ex, logEvt.Id);
+                logger.LogErrorPublishingIntegrationEvent(ex, logEvt.Id);
 
-                await _outboxService.MarkEventAsFailedAsync(logEvt.Id);
+                await outboxService.MarkEventAsFailedAsync(logEvt.Id);
             }
         }
     }
 
     public async Task AddAndSaveEventAsync(IntegrationEvent evt)
     {
-        _logger.LogEnqueuingIntegrationEventToRepository(evt.Id, evt);
+        logger.LogEnqueuingIntegrationEventToRepository(evt.Id, evt);
 
-        await _outboxService.SaveEventAsync(evt, _orderingContext.GetCurrentTransaction());
+        await outboxService.SaveEventAsync(evt, orderingContext.GetCurrentTransaction());
     }
 }
 

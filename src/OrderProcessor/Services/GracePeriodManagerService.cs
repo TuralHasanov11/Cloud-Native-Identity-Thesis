@@ -1,4 +1,4 @@
-﻿using EventBus.Abstractions;
+﻿using MassTransit;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using OrderProcessor.Events;
@@ -6,12 +6,13 @@ using OrderProcessor.Events;
 namespace OrderProcessor.Services;
 
 public class GracePeriodManagerService(
-        IOptions<BackgroundTaskOptions> options,
-        IEventBus eventBus,
-        ILogger<GracePeriodManagerService> logger,
-        IConfiguration configuration) : BackgroundService
+    IOptions<BackgroundTaskOptions> options,
+    IPublishEndpoint eventBus,
+    ILogger<GracePeriodManagerService> logger,
+    IConfiguration configuration)
+    : BackgroundService
 {
-    private readonly BackgroundTaskOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+    private readonly BackgroundTaskOptions _options = options.Value;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -59,8 +60,8 @@ public class GracePeriodManagerService(
         {
             await using var dataSource = NpgsqlDataSource.Create(configuration.GetConnectionString("Database")!);
 
-            using var conn = dataSource.CreateConnection();
-            using var command = conn.CreateCommand();
+            await using var conn = dataSource.CreateConnection();
+            await using var command = conn.CreateCommand();
             command.CommandText = """
                     SELECT "Id"
                     FROM ordering.orders
@@ -87,7 +88,6 @@ public class GracePeriodManagerService(
         return [];
     }
 }
-
 
 public static partial class GracePeriodManagerServiceLogger
 {

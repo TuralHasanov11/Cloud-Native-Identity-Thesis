@@ -1,4 +1,6 @@
-﻿namespace Ordering.UseCases.Orders.Commands;
+﻿using Ordering.Contracts.Abstractions;
+
+namespace Ordering.UseCases.Orders.Commands;
 
 public class CreateOrderCommandHandler(
     IOrderingIntegrationEventService orderingIntegrationEventService,

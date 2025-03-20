@@ -15,4 +15,4 @@ public class AuditEntry
     public string? ErrorMessage { get; set; }
 }
 
-public record AuditTrailMessage(List<AuditEntry> Entries);
+public record AuditTrailMessage(ICollection<AuditEntry> Entries);

@@ -1,30 +1,14 @@
-﻿using Catalog.Contracts.IntegrationEvents;
-using Catalog.Contracts.IntegrationEvents.Events;
-using Catalog.Core.CatalogAggregate;
-using Catalog.Core.CatalogAggregate.Specifications;
+﻿namespace Catalog.UseCases.Products.Update;
 
-namespace Catalog.UseCases.Products.Update;
-
-public sealed class DeleteByIdCommandHandler : ICommandHandler<UpdateProductCommand, ProductDto>
+public sealed class DeleteByIdCommandHandler(
+    IProductRepository productRepository,
+    IUnitOfWork unitOfWork,
+    ICatalogIntegrationEventService catalogIntegrationEventService)
+    : ICommandHandler<UpdateProductCommand, ProductDto>
 {
-    private readonly IProductRepository _productRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly ICatalogIntegrationEventService _catalogIntegrationEventService;
-
-
-    public DeleteByIdCommandHandler(
-        IProductRepository productRepository,
-        IUnitOfWork unitOfWork,
-        ICatalogIntegrationEventService catalogIntegrationEventService)
-    {
-        _productRepository = productRepository;
-        _unitOfWork = unitOfWork;
-        _catalogIntegrationEventService = catalogIntegrationEventService;
-    }
-
     public async Task<Result<ProductDto>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.SingleOrDefaultAsync(
+        var product = await productRepository.SingleOrDefaultAsync(
             new GetProductByIdSpecification(new ProductId(request.Id)),
             cancellationToken);
 
@@ -45,7 +29,7 @@ public sealed class DeleteByIdCommandHandler : ICommandHandler<UpdateProductComm
 
         //product.Embedding = await services.CatalogAI.GetEmbeddingAsync(product);
 
-        var productEntry = _unitOfWork.GetEntry(product);
+        var productEntry = unitOfWork.GetEntry(product);
 
         var priceEntry = productEntry.Property(i => i.Price);
 
@@ -53,12 +37,12 @@ public sealed class DeleteByIdCommandHandler : ICommandHandler<UpdateProductComm
         {
             var priceChangedEvent = new ProductPriceChangedIntegrationEvent(product.Id, product.Price, priceEntry.OriginalValue);
 
-            await _catalogIntegrationEventService.SaveEventAndCatalogContextChangesAsync(priceChangedEvent);
+            await catalogIntegrationEventService.SaveEventAndCatalogContextChangesAsync(priceChangedEvent);
 
-            await _catalogIntegrationEventService.PublishThroughEventBusAsync(priceChangedEvent);
+            await catalogIntegrationEventService.PublishThroughEventBusAsync(priceChangedEvent);
         }
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success(product.ToProductDto());
     }

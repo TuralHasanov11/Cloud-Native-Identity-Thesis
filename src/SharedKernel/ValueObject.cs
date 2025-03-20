@@ -35,7 +35,7 @@ public abstract class ValueObject
             .Aggregate((x, y) => x ^ y);
     }
 
-    public ValueObject GetCopy()
+    public ValueObject? GetCopy()
     {
         return MemberwiseClone() as ValueObject;
     }

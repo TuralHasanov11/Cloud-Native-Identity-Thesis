@@ -3,16 +3,16 @@
 public class OutboxService<TContext> : IOutboxService, IDisposable
     where TContext : DbContext
 {
-    private volatile bool _disposedValue;
     private readonly TContext _context;
     private readonly Type[] _eventTypes;
+    private volatile bool _disposedValue;
 
     public OutboxService(TContext context, Assembly assembly)
     {
         _context = context;
         _eventTypes = [.. assembly
             .GetTypes()
-            .Where(t => t.Name.EndsWith(nameof(IntegrationEvent), StringComparison.OrdinalIgnoreCase))];
+            .Where(t => t.IsSubclassOf(typeof(IntegrationEvent)))];
     }
 
     public async Task<IEnumerable<OutboxMessage>> RetrieveEventLogsPendingToPublishAsync(Guid transactionId)
@@ -27,11 +27,11 @@ public class OutboxService<TContext> : IOutboxService, IDisposable
             : [];
     }
 
-    public Task SaveEventAsync(IntegrationEvent @event, IDbContextTransaction transaction)
+    public Task SaveEventAsync(IntegrationEvent message, IDbContextTransaction transaction)
     {
         ArgumentNullException.ThrowIfNull(transaction);
 
-        var eventLogEntry = new OutboxMessage(@event, DateTime.UtcNow, transaction.TransactionId);
+        var eventLogEntry = new OutboxMessage(message, DateTime.UtcNow, transaction.TransactionId);
 
         _context.Database.UseTransaction(transaction.GetDbTransaction());
         _context.Set<OutboxMessage>().Add(eventLogEntry);

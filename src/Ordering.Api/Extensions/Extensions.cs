@@ -3,7 +3,7 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Options;
-using Ordering.Contracts.IntegrationEvents;
+using Ordering.Contracts.Abstractions;
 using Ordering.Core.CustomerAggregate;
 using Ordering.Core.OrderAggregate;
 using Ordering.Infrastructure.Data;

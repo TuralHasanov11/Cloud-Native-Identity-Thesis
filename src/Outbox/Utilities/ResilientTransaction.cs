@@ -1,11 +1,14 @@
 ﻿namespace Outbox.Utilities;
 
-public class ResilientTransaction
+public sealed class ResilientTransaction
 {
     private readonly DbContext _context;
 
-    private ResilientTransaction(DbContext context) =>
-        _context = context ?? throw new ArgumentNullException(nameof(context));
+    private ResilientTransaction(DbContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        _context = context;
+    }
 
     public static ResilientTransaction New(DbContext context) => new(context);
 

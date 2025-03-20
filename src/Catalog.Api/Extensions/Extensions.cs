@@ -1,5 +1,5 @@
 ﻿using Audit;
-using Catalog.Contracts.IntegrationEvents;
+using Catalog.Contracts.Abstractions;
 using Catalog.Infrastructure.IntegrationEvents;
 using EventBus.Extensions;
 using Hangfire;

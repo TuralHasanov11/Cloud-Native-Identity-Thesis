@@ -1,6 +1,4 @@
-﻿using EventBus.Events;
-using MassTransit;
-using Microsoft.Extensions.Logging;
+﻿using MassTransit;
 using Outbox.Services;
 using Outbox.Utilities;
 
@@ -14,36 +12,32 @@ public sealed class CatalogIntegrationEventService(
     : ICatalogIntegrationEventService, IDisposable
 {
     private volatile bool disposedValue;
-    private readonly ILogger<CatalogIntegrationEventService> _logger = logger;
-    private readonly IPublishEndpoint _eventBus = eventBus;
-    private readonly CatalogDbContext _catalogDbContext = catalogDbContext;
-    private readonly IOutboxService _outboxService = outboxService;
 
     public async Task PublishThroughEventBusAsync(IntegrationEvent message)
     {
         try
         {
-            _logger.LogPublishingIntegrationEvent(message.Id, message);
+            logger.LogPublishingIntegrationEvent(message.Id, message);
 
-            await _outboxService.MarkEventAsInProgressAsync(message.Id);
-            await _eventBus.Publish(message);
-            await _outboxService.MarkEventAsPublishedAsync(message.Id);
+            await outboxService.MarkEventAsInProgressAsync(message.Id);
+            await eventBus.Publish(message);
+            await outboxService.MarkEventAsPublishedAsync(message.Id);
         }
         catch (Exception ex)
         {
-            _logger.LogErrorPublishingIntegrationEvent(ex, message.Id, message);
-            await _outboxService.MarkEventAsFailedAsync(message.Id);
+            logger.LogErrorPublishingIntegrationEvent(ex, message.Id, message);
+            await outboxService.MarkEventAsFailedAsync(message.Id);
         }
     }
 
     public async Task SaveEventAndCatalogContextChangesAsync(IntegrationEvent message)
     {
-        _logger.LogSavingChangesAndIntegrationEvent(message.Id);
+        logger.LogSavingChangesAndIntegrationEvent(message.Id);
 
-        await ResilientTransaction.New(_catalogDbContext).ExecuteAsync(async () =>
+        await ResilientTransaction.New(catalogDbContext).ExecuteAsync(async () =>
         {
-            await _catalogDbContext.SaveChangesAsync();
-            await _outboxService.SaveEventAsync(message, _catalogDbContext.Database.CurrentTransaction!);
+            await catalogDbContext.SaveChangesAsync();
+            await outboxService.SaveEventAsync(message, catalogDbContext.Database.CurrentTransaction!);
         });
     }
 
@@ -53,8 +47,8 @@ public sealed class CatalogIntegrationEventService(
         {
             if (disposing)
             {
-                (_outboxService as IDisposable)?.Dispose();
-                _catalogDbContext?.Dispose();
+                (outboxService as IDisposable)?.Dispose();
+                catalogDbContext?.Dispose();
             }
 
             disposedValue = true;

@@ -79,7 +79,7 @@ public sealed class Order
         }
     }
 
-    public void SetPaymentMethodVerified(CustomerId customerId, PaymentMethodId paymentId)
+    public void VerifyPayment(CustomerId customerId, PaymentMethodId paymentId)
     {
         CustomerId = customerId;
         PaymentMethodId = paymentId;

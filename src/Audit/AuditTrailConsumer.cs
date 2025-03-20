@@ -1,7 +1,4 @@
-﻿using MassTransit;
-using Microsoft.EntityFrameworkCore;
-
-namespace Audit;
+﻿namespace Audit;
 
 public class AuditTrailConsumer(DbContext dbContext) : IConsumer<AuditTrailMessage>
 {

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Basket.Api.Extensions;
 using Basket.Core.BasketAggregate;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -12,8 +13,9 @@ public class BasketService(
     [AllowAnonymous]
     public override async Task<CustomerBasketResponse> GetBasket(GetBasketRequest request, ServerCallContext context)
     {
-        var userId = context.GetUserIdentity();
-        if (string.IsNullOrEmpty(userId))
+        var userId = context.GetUserId();
+
+        if (userId == Guid.Empty)
         {
             return new();
         }
@@ -25,18 +27,14 @@ public class BasketService(
 
         var data = await repository.GetBasketAsync(userId);
 
-        if (data is not null)
-        {
-            return MapToCustomerBasketResponse(data);
-        }
-
-        return new();
+        return data is not null ? MapToCustomerBasketResponse(data) : new();
     }
 
     public override async Task<CustomerBasketResponse> UpdateBasket(UpdateBasketRequest request, ServerCallContext context)
     {
-        var userId = context.GetUserIdentity();
-        if (string.IsNullOrEmpty(userId))
+        var userId = context.GetUserId();
+
+        if (userId == Guid.Empty)
         {
             ThrowNotAuthenticated();
         }
@@ -58,8 +56,8 @@ public class BasketService(
 
     public override async Task<DeleteBasketResponse> DeleteBasket(DeleteBasketRequest request, ServerCallContext context)
     {
-        var userId = context.GetUserIdentity();
-        if (string.IsNullOrEmpty(userId))
+        var userId = context.GetUserId();
+        if (userId == Guid.Empty)
         {
             ThrowNotAuthenticated();
         }
@@ -72,7 +70,7 @@ public class BasketService(
     private static void ThrowNotAuthenticated() => throw new RpcException(new Status(StatusCode.Unauthenticated, "The caller is not authenticated."));
 
     [DoesNotReturn]
-    private static void ThrowBasketDoesNotExist(string userId) => throw new RpcException(new Status(StatusCode.NotFound, $"Basket with buyer id {userId} does not exist"));
+    private static void ThrowBasketDoesNotExist(Guid userId) => throw new RpcException(new Status(StatusCode.NotFound, $"Basket with buyer id {userId} does not exist"));
 
     private static CustomerBasketResponse MapToCustomerBasketResponse(CustomerBasket customerBasket)
     {

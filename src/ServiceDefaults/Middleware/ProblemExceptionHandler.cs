@@ -41,7 +41,7 @@ public class ProblemExceptionHandler(
     }
 }
 
-public static partial class ProblemExceptionHandlerLogger
+internal static partial class ProblemExceptionHandlerLogger
 {
     [LoggerMessage(Level = LogLevel.Error, Message = "Error Message: {Message}, Time of occurrence {Time}")]
     public static partial void LogProblemException(
