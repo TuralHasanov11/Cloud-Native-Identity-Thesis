@@ -1,7 +1,7 @@
 ﻿namespace Ordering.UseCases.Orders.Commands;
 
 public sealed record CreateOrderCommand(
-    IReadOnlyCollection<OrderItemDto> OrderItems,
+    IEnumerable<OrderItemDto> OrderItems,
     Guid UserId,
     string UserName,
     string City,

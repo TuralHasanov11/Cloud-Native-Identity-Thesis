@@ -16,9 +16,14 @@ COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY ["src/Catalog.Api/Catalog.Api.csproj", "src/Catalog.Api/"]
 COPY ["src/Catalog.Core/Catalog.Core.csproj", "src/Catalog.Core/"]
-COPY ["src/Catalog.Infrastructure/Catalog.Infrastructure.csproj", "src/Catalog.Infrastructure/"]
-COPY ["src/Catalog.UseCases/Catalog.UseCases.csproj", "src/Catalog.UseCases/"]
 COPY ["src/SharedKernel/SharedKernel.csproj", "src/SharedKernel/"]
+COPY ["src/Catalog.Infrastructure/Catalog.Infrastructure.csproj", "src/Catalog.Infrastructure/"]
+COPY ["src/Audit/Audit.csproj", "src/Audit/"]
+COPY ["src/Catalog.Contracts/Catalog.Contracts.csproj", "src/Catalog.Contracts/"]
+COPY ["src/EventBus/EventBus.csproj", "src/EventBus/"]
+COPY ["src/Outbox/Outbox.csproj", "src/Outbox/"]
+COPY ["src/Catalog.UseCases/Catalog.UseCases.csproj", "src/Catalog.UseCases/"]
+COPY ["src/ServiceDefaults/ServiceDefaults.csproj", "src/ServiceDefaults/"]
 RUN dotnet restore "./src/Catalog.Api/Catalog.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Catalog.Api"

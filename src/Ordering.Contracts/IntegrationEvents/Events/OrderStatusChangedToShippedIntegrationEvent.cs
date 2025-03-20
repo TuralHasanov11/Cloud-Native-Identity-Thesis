@@ -2,6 +2,6 @@
 
 public sealed record OrderStatusChangedToShippedIntegrationEvent(
     Guid OrderId,
-    int OrderStatus,
-    Guid CustomerName,
+    string OrderStatus,
+    string CustomerName,
     Guid CustomerIdentityId) : IntegrationEvent;

@@ -1,5 +1,4 @@
 ﻿using EventBus.Extensions;
-using FluentValidation;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -8,7 +7,6 @@ using Ordering.Contracts.IntegrationEvents;
 using Ordering.Core.CustomerAggregate;
 using Ordering.Core.OrderAggregate;
 using Ordering.Infrastructure.Data;
-using Ordering.Infrastructure.Data.Queries;
 using Ordering.Infrastructure.Idempotency;
 using Ordering.Infrastructure.IntegrationEvents;
 using Ordering.Infrastructure.Repositories;
@@ -68,7 +66,6 @@ public static class Extensions
 
         builder.Services.AddValidatorsFromAssembly(Api.AssemblyReference.Assembly);
 
-        builder.Services.AddScoped<IOrderQueries, OrderQueries>();
         builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
         builder.Services.AddScoped<IRequestManager, RequestManager>();

@@ -5,8 +5,8 @@ namespace ServiceDefaults;
 
 public static class ClaimsPrincipalExtensions
 {
-    public static string? GetUserId(this ClaimsPrincipal principal)
-        => principal.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+    public static Guid GetUserId(this ClaimsPrincipal principal)
+        => Guid.Parse(principal.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
 
     public static string? GetUserName(this ClaimsPrincipal principal) =>
         principal.FindFirst(x => x.Type == JwtRegisteredClaimNames.Name)?.Value;

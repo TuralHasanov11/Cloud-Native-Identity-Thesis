@@ -382,7 +382,7 @@ dotnet_diagnostic.CA1502.severity = warning
 dotnet_diagnostic.CA1505.severity = warning
 
 # Avoid excessive class coupling
-dotnet_diagnostic.CA1506.severity = error
+dotnet_diagnostic.CA1506.severity = warning
 
 # Use nameof in place of string
 dotnet_diagnostic.CA1507.severity = warning

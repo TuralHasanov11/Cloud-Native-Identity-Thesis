@@ -15,10 +15,15 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY ["src/Ordering.Api/Ordering.Api.csproj", "src/Ordering.Api/"]
+COPY ["src/Audit/Audit.csproj", "src/Audit/"]
+COPY ["src/Ordering.Contracts/Ordering.Contracts.csproj", "src/Ordering.Contracts/"]
+COPY ["src/EventBus/EventBus.csproj", "src/EventBus/"]
 COPY ["src/Ordering.Core/Ordering.Core.csproj", "src/Ordering.Core/"]
+COPY ["src/SharedKernel/SharedKernel.csproj", "src/SharedKernel/"]
 COPY ["src/Ordering.Infrastructure/Ordering.Infrastructure.csproj", "src/Ordering.Infrastructure/"]
 COPY ["src/Ordering.UseCases/Ordering.UseCases.csproj", "src/Ordering.UseCases/"]
-COPY ["src/SharedKernel/SharedKernel.csproj", "src/SharedKernel/"]
+COPY ["src/ServiceDefaults/ServiceDefaults.csproj", "src/ServiceDefaults/"]
+COPY ["src/Outbox/Outbox.csproj", "src/Outbox/"]
 RUN dotnet restore "./src/Ordering.Api/Ordering.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Ordering.Api"

@@ -4,5 +4,5 @@ namespace ServiceDefaults.Identity;
 
 public interface IIdentityService
 {
-    ClaimsPrincipal? GetUser();
+    ClaimsPrincipal GetUser();
 }

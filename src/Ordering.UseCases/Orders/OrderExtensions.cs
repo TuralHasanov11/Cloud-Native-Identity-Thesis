@@ -19,4 +19,29 @@ public static class OrderExtensions
                 Discount: oi.Discount)),
             order.GetTotal());
     }
+
+    public static OrderDto ToOrderDto(this Order order)
+    {
+        return new OrderDto(
+            order.Id,
+            order.OrderDate,
+            order.Description,
+            order.Address.City,
+            order.Address.Country,
+            order.Address.State,
+            order.Address.Street,
+            order.Address.ZipCode,
+            order.OrderStatus.ToString(),
+            order.GetTotal(),
+            [.. order.OrderItems.Select(oi => new OrderItemDto(oi.ProductId, oi.ProductName, oi.PictureUrl, oi.UnitPrice, oi.Units))]);
+    }
+
+    public static OrderSummary ToOrderSummary(this Order order)
+    {
+        return new OrderSummary(
+            order.Id,
+            order.OrderDate,
+            order.OrderStatus.ToString(),
+            order.OrderItems.Sum(oi => oi.UnitPrice * oi.Units));
+    }
 }

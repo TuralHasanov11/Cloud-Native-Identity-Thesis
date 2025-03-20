@@ -1,3 +1,5 @@
+using Ordering.Api.Extensions;
+using Ordering.Api.Features;
 using ServiceDefaults.Middleware;
 
 Log.Logger = new LoggerConfiguration()
@@ -50,7 +52,7 @@ try
 
     app.UseStatusCodePages();
 
-    app.MapOrdersApiV1();
+    app.MapOrdersApi();
 
     app.UseDefaultOpenApi();
 

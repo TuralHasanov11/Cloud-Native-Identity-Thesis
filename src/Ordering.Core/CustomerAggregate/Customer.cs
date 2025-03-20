@@ -16,8 +16,13 @@ public sealed class Customer : EntityBase<CustomerId>, IAggregateRoot
 
 
     public PaymentMethod VerifyOrAddPaymentMethod(
-        int cardTypeId, string alias, string cardNumber,
-        string securityNumber, string cardHolderName, DateTime expiration, int orderId)
+        int cardTypeId,
+        string alias,
+        string cardNumber,
+        string securityNumber,
+        string cardHolderName,
+        DateTime expiration,
+        OrderId orderId)
     {
         var existingPayment = PaymentMethods
             .SingleOrDefault(p => p.IsEqualTo(cardTypeId, cardNumber, expiration));

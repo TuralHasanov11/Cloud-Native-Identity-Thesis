@@ -56,6 +56,7 @@ services:
     - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
     depends_on:
     - rabbitmq
+    - ordering.postgres
 
   orderprocessor:
     image: ${DOCKER_REGISTRY-}orderprocessor
@@ -63,6 +64,8 @@ services:
     build:
       context: .
       dockerfile: src/OrderProcessor/Dockerfile
+    depends_on:
+    - ordering.postgres
 
   ordering.postgres:
     image: postgres:latest

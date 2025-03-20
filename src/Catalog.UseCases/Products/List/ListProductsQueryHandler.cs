@@ -20,7 +20,7 @@ public sealed class ListBrandsQueryHandler : IQueryHandler<ListProductsQuery, Pa
 
         (var products, long count) = await _productRepository.ListAsync(
             specification,
-            BrandMapper.ToProductDto,
+            p => p.ToProductDto(),
             new ProductId(request.PageCursor),
             request.PageSize,
             cancellationToken);

@@ -1,4 +1,10 @@
 ﻿global using Audit;
+global using FluentValidation;
+global using MediatR;
+global using Microsoft.AspNetCore.Http.HttpResults;
+global using Ordering.UseCases.Orders;
+global using Ordering.UseCases.Orders.Commands;
+global using Ordering.UseCases.Orders.Queries;
 global using Serilog;
 global using ServiceDefaults;
 global using SharedKernel;
