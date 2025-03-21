@@ -44,8 +44,8 @@ try
 
     //app.UseRequestDecompression();
 
-    //app.UseAuthentication();
-    //app.UseAuthorization();
+    app.UseAuthentication();
+    app.UseAuthorization();
     //app.UseResponseCompression();
 
     app.MapDefaultEndpoints();

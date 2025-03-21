@@ -5,8 +5,8 @@ public class PaginatedItems<TEntity, TCursor>(
     int pageSize,
     long count,
     IEnumerable<TEntity> data)
-    where TEntity : class
-    where TCursor : IEquatable<TCursor>
+    where TEntity : EntityBase<TCursor>
+    where TCursor : class, IEquatable<TCursor>
 {
     public TCursor PageCursor { get; } = pageCursor;
 

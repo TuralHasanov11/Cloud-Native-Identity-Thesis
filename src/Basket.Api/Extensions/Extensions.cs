@@ -21,7 +21,6 @@ public static class Extensions
 
         builder.Services.AddSingleton<IBasketRepository, BasketRepository>();
 
-        //builder.Services.ConfigureEventBus(builder.Configuration, Infrastructure.AssemblyReference.Assembly);
         builder.ConfigureEventBus();
     }
 
@@ -57,9 +56,3 @@ public static class Extensions
         });
     }
 }
-
-//[JsonSerializable(typeof(OrderStartedIntegrationEvent))]
-//partial class IntegrationEventContext : JsonSerializerContext
-//{
-
-//}

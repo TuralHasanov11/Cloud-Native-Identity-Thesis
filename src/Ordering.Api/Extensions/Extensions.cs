@@ -41,7 +41,10 @@ public static class Extensions
             }
         });
 
-        builder.Services.AddTransient<IOutboxService, OutboxService<OrderingDbContext>>();
+        builder.Services.AddTransient<IOutboxService, OutboxService<OrderingDbContext>>(
+            sp => new OutboxService<OrderingDbContext>(
+                sp.GetRequiredService<OrderingDbContext>(),
+                Contracts.AssemblyReference.Assembly));
 
         //services.AddMigration<OrderingDbContext, OrderingContextSeed>();
 

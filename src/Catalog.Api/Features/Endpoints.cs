@@ -13,6 +13,7 @@ public static class Endpoints
         var api = vApi.MapGroup("api/catalog");
 
         api.MapGet("/products", Products.List.Handle)
+            .AllowAnonymous()
             .WithName(nameof(Products.List))
             .WithSummary("List catalog products")
             .WithDescription("Get a paginated list of products in the catalog.")
@@ -21,6 +22,7 @@ public static class Endpoints
             .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json");
 
         api.MapGet("/products/by", Products.ListByIds.Handle)
+            .AllowAnonymous()
             .WithName(nameof(Products.ListByIds))
             .WithSummary("Batch get catalog products")
             .WithDescription("Get multiple products from the catalog")
@@ -29,6 +31,7 @@ public static class Endpoints
             .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json");
 
         api.MapGet("/products/{id:guid}", Products.GetById.Handle)
+            .AllowAnonymous()
             .WithName(nameof(Products.GetById))
             .WithSummary("Get catalog product")
             .WithDescription("Get an product from the catalog")
@@ -37,6 +40,7 @@ public static class Endpoints
             .ProducesProblem(StatusCodes.Status404NotFound, "application/problem+json");
 
         api.MapGet("/products/by/{name:minlength(1)}", Products.ListByName.Handle)
+            .AllowAnonymous()
             .WithName(nameof(Products.ListByName))
             .WithSummary("Get catalog products by name")
             .WithDescription("Get a paginated list of catalog products with the specified name.")
@@ -78,6 +82,7 @@ public static class Endpoints
         //    .WithTags("Brands");
 
         api.MapGet("/product-types", ProductTypes.List.Handle)
+            .AllowAnonymous()
             .WithName(nameof(ProductTypes.List))
             .WithSummary("List catalog product types")
             .WithDescription("Get a list of the types of catalog products")
@@ -86,6 +91,7 @@ public static class Endpoints
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json");
 
         api.MapGet("/brands", Brands.List.Handle)
+            .AllowAnonymous()
             .WithName(nameof(Brands.List))
             .WithSummary("List catalog product brands")
             .WithDescription("Get a list of the brands of catalog products")

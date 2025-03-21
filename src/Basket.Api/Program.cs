@@ -21,6 +21,9 @@ try
 
     builder.Services.AddGrpc();
 
+    var withApiVersioning = builder.Services.AddApiVersioning();
+    builder.AddDefaultOpenApi(withApiVersioning);
+
     var app = builder.Build();
 
     app.UseDefaultLogging();
@@ -43,8 +46,8 @@ try
 
     //app.UseRequestDecompression();
 
-    //app.UseAuthentication();
-    //app.UseAuthorization();
+    app.UseAuthentication();
+    app.UseAuthorization();
     //app.UseResponseCompression();
 
     app.MapDefaultEndpoints();

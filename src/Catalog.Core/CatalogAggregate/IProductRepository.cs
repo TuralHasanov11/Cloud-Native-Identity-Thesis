@@ -14,13 +14,13 @@ public interface IProductRepository
         Specification<Product> specification,
         CancellationToken cancellationToken = default);
 
-    Task<(IEnumerable<TResponse>, long)> ListAsync<TResponse>(
-        Specification<Product> specification,
-        Expression<Func<Product, TResponse>> mapper,
-        ProductId pageCursor,
-        int pageSize = 10,
-        CancellationToken cancellationToken = default)
-        where TResponse : class;
+    //Task<(IEnumerable<TResponse>, long)> ListAsync<TResponse>(
+    //    Specification<Product> specification,
+    //    Expression<Func<Product, TResponse>> mapper,
+    //    ProductId pageCursor,
+    //    int pageSize = 10,
+    //    CancellationToken cancellationToken = default)
+    //    where TResponse : class;
 
     Task<IEnumerable<TResponse>> ListAsync<TResponse>(
         Specification<Product> specification,
@@ -39,14 +39,14 @@ public interface IProductRepository
         where TResponse : class;
 
     Task CreateAsync(
-        Product course,
+        Product product,
         CancellationToken cancellationToken = default);
 
-    void Update(Product course);
+    void Update(Product product);
 
-    void Delete(Product course);
+    void Delete(Product product);
 
-    void ForceDelete(Product course);
+    void ForceDelete(Product product);
 
     Task<int> ForceDeleteAsync(
         Specification<Product> specification,

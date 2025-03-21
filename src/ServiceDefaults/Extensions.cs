@@ -189,12 +189,13 @@ public static partial class Extensions
 
         if (app.Environment.IsDevelopment())
         {
-            app.MapHealthChecks("/health");
+            app.MapHealthChecks("/health")
+                .AllowAnonymous();
 
             app.MapHealthChecks("/live", new HealthCheckOptions
             {
                 Predicate = r => r.Tags.Contains("live"),
-            });
+            }).AllowAnonymous();
 
             return app;
         }

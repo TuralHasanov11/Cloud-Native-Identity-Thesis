@@ -1,14 +1,13 @@
-﻿using EventBus.Abstractions;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.Extensions.Options;
 
 namespace PaymentProcessor.IntegrationEvents.EventHandling;
 
 public class OrderStatusChangedToStockConfirmedIntegrationEventHandler(
-    IEventBus eventBus,
+    IPublishEndpoint eventBus,
     IOptionsMonitor<PaymentOptions> options,
     ILogger<OrderStatusChangedToStockConfirmedIntegrationEventHandler> logger) :
-    IIntegrationEventHandler<OrderStatusChangedToStockConfirmedIntegrationEvent>
+    IConsumer<OrderStatusChangedToStockConfirmedIntegrationEvent>
 {
     public async Task Consume(ConsumeContext<OrderStatusChangedToStockConfirmedIntegrationEvent> context)
     {

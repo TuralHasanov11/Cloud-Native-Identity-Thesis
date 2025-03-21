@@ -1,6 +1,8 @@
 ﻿using Audit;
 using Catalog.Contracts.Abstractions;
+using Catalog.Core.CatalogAggregate;
 using Catalog.Infrastructure.IntegrationEvents;
+using Catalog.Infrastructure.Repositories;
 using EventBus.Extensions;
 using Hangfire;
 using MassTransit;
@@ -37,7 +39,10 @@ public static class Extensions
             }
         });
 
-        builder.Services.AddTransient<IOutboxService, OutboxService<CatalogDbContext>>();
+        builder.Services.AddTransient<IOutboxService, OutboxService<CatalogDbContext>>(
+            sp => new OutboxService<CatalogDbContext>(
+                sp.GetRequiredService<CatalogDbContext>(),
+                Contracts.AssemblyReference.Assembly));
 
         builder.Services.AddTransient<ICatalogIntegrationEventService, CatalogIntegrationEventService>();
 
@@ -66,6 +71,9 @@ public static class Extensions
         builder.Services.AddMediatR(config
             => config.RegisterServicesFromAssemblies(UseCases.AssemblyReference.Assembly));
 
+        builder.Services.AddScoped<IProductRepository, ProductRepository>();
+        builder.Services.AddScoped<IBrandRepository, BrandRepository>();
+        builder.Services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
     }
 
     public static IApplicationBuilder UseBackgroundJobs(this WebApplication app)

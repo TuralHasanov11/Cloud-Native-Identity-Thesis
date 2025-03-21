@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,17 +19,28 @@ public static class AuthenticationExtensions
             return builder.Services;
         }
 
+        var enabledProvider = identitySettings.EnabledProvider;
+
+        if (enabledProvider is null)
+        {
+            return builder.Services;
+        }
+
         builder.Services.AddAuthentication()
             .AddJwtBearer(options =>
             {
-                options.Authority = identitySettings.Authority;
-                options.Audience = identitySettings.Audience;
+                options.Authority = enabledProvider.Authority;
+                options.Audience = identitySettings?.Audience;
                 options.RequireHttpsMetadata = false;
                 options.MapInboundClaims = false;
-                options.TokenValidationParameters.ValidIssuers = [identitySettings.Authority];
-                options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
-                options.TokenValidationParameters.RoleClaimType = JwtRegisteredClaimNames.Sub;
+                options.TokenValidationParameters.ValidIssuer = enabledProvider.Authority;
+                //options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Sub;
+                //options.TokenValidationParameters.RoleClaimType = JwtRegisteredClaimNames.Sub;
                 options.TokenValidationParameters.ValidateAudience = true;
+                options.TokenValidationParameters.ValidateIssuer = true;
+                options.TokenValidationParameters.ValidateLifetime = true;
+                options.TokenValidationParameters.ValidateIssuerSigningKey = true;
+                options.TokenValidationParameters.ValidateTokenReplay = true;
 
                 if (builder.Environment.IsDevelopment())
                 {
@@ -59,7 +69,17 @@ public class IdentitySettings
     public string Audience { get; set; }
 
     [Required]
-    public string Authority { get; set; }
+    public IReadOnlyDictionary<string, IdentityProviderSettings> Providers { get; set; }
+        = new Dictionary<string, IdentityProviderSettings>();
 
-    public IReadOnlyDictionary<string, string?> Scopes { get; set; } = new Dictionary<string, string?>();
+    public IdentityProviderSettings? EnabledProvider => Providers.FirstOrDefault(p => p.Value.Enabled).Value;
+
+    public class IdentityProviderSettings
+    {
+        public bool Enabled { get; set; }
+
+        public string Authority { get; set; }
+
+        public IReadOnlyDictionary<string, string?> Scopes { get; set; } = new Dictionary<string, string?>();
+    }
 }
