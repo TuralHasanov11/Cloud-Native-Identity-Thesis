@@ -11,17 +11,12 @@ public class ProductRepository(CatalogDbContext dbContext) : IProductRepository
 
     public void Delete(Product product)
     {
-        dbContext.Products.Remove(product); // TODO: Implement soft delete
-    }
-
-    public void ForceDelete(Product product)
-    {
         dbContext.Products.Remove(product);
     }
 
-    public async Task<int> ForceDeleteAsync(Specification<Product> specification, CancellationToken cancellationToken = default)
+    public Task<int> DeleteAsync(Specification<Product> specification, CancellationToken cancellationToken = default)
     {
-        return await dbContext.Products.GetQuery(specification).ExecuteDeleteAsync(cancellationToken);
+        return dbContext.Products.GetQuery(specification).ExecuteDeleteAsync(cancellationToken);
     }
 
     public async Task<(IEnumerable<Product>, long)> ListAsync(
@@ -69,20 +64,20 @@ public class ProductRepository(CatalogDbContext dbContext) : IProductRepository
         return await dbContext.Products.GetQuery(specification).Select(mapper).ToListAsync(cancellationToken);
     }
 
-    public async Task<Product?> SingleOrDefaultAsync(
+    public Task<Product?> SingleOrDefaultAsync(
         Specification<Product> specification,
         CancellationToken cancellationToken = default)
     {
-        return await dbContext.Products.GetQuery(specification).SingleOrDefaultAsync(cancellationToken);
+        return dbContext.Products.GetQuery(specification).SingleOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<TResponse?> SingleOrDefaultAsync<TResponse>(
+    public Task<TResponse?> SingleOrDefaultAsync<TResponse>(
         Specification<Product> specification,
         Expression<Func<Product, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class
     {
-        return await dbContext.Products.GetQuery(specification).Select(mapper).SingleOrDefaultAsync(cancellationToken);
+        return dbContext.Products.GetQuery(specification).Select(mapper).SingleOrDefaultAsync(cancellationToken);
     }
 
     public void Update(Product product)

@@ -18,11 +18,6 @@ try
     builder.AddServiceDefaults();
     builder.AddApplicationServices();
 
-    builder.Services.AddOptions<PaymentOptions>()
-        .BindConfiguration(nameof(PaymentOptions))
-        .ValidateDataAnnotations()
-        .ValidateOnStart();
-
     var app = builder.Build();
 
     app.UseHttpsRedirection();

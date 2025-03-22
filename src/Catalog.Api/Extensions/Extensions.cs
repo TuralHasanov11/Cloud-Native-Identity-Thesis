@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Options;
 using Outbox.Services;
+using SharedKernel;
 
 namespace Catalog.Api.Extensions;
 
@@ -17,6 +18,8 @@ public static class Extensions
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
+        builder.AddDefaultAuthentication();
+
         builder.AddAudit();
 
         var connectionString = builder.Configuration.GetConnectionString("Database")
@@ -74,15 +77,36 @@ public static class Extensions
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddScoped<IBrandRepository, BrandRepository>();
         builder.Services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
+
+        builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+        builder.Services.AddHangfire(options =>
+        {
+            options.UseInMemoryStorage();
+        });
+
+        builder.Services.AddHangfireServer(options =>
+        {
+            options.SchedulePollingInterval = TimeSpan.FromSeconds(10);
+        });
     }
 
     public static IApplicationBuilder UseBackgroundJobs(this WebApplication app)
     {
-        app.Services.GetRequiredService<IRecurringJobManager>()
-           .AddOrUpdate<IOutboxProcessor>(
-                "outbox-processor",
-                job => job.ExecuteAsync(CancellationToken.None),
-                "0/15 * * * * *");
+        //app.Services.GetRequiredService<IRecurringJobManager>()
+        //   .AddOrUpdate<IOutboxProcessor>(
+        //        "outbox-processor",
+        //        job => job.ExecuteAsync(CancellationToken.None),
+        //        "0/15 * * * * *");
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseHangfireDashboard(options: new DashboardOptions
+            {
+                Authorization = [],
+                DarkModeEnabled = false,
+            });
+        }
 
         return app;
     }

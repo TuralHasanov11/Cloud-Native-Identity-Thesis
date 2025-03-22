@@ -2,7 +2,7 @@
 
 public sealed class Brand : EntityBase<BrandId>
 {
-    private Brand(string name)
+    private Brand(string name) : base(new BrandId(Guid.CreateVersion7()))
     {
         Name = name;
     }

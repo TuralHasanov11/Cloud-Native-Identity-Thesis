@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace PaymentProcessor.IntegrationEvents.EventHandling;
 
-public class OrderStatusChangedToStockConfirmedIntegrationEventHandler(
+public sealed class OrderStatusChangedToStockConfirmedIntegrationEventHandler(
     IPublishEndpoint eventBus,
     IOptionsMonitor<PaymentOptions> options,
     ILogger<OrderStatusChangedToStockConfirmedIntegrationEventHandler> logger) :

@@ -9,7 +9,9 @@ public static class Draft
         DraftOrderRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new CreateOrderDraftCommand(request.CustomerId, request.Items), cancellationToken);
+        var result = await mediator.Send(
+            new CreateOrderDraftCommand(request.CustomerId, request.Items),
+            cancellationToken);
 
         if (result.IsSuccess)
         {

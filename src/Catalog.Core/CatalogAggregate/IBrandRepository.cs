@@ -1,4 +1,6 @@
-﻿namespace Catalog.Core.CatalogAggregate;
+﻿using System.Linq.Expressions;
+
+namespace Catalog.Core.CatalogAggregate;
 
 public interface IBrandRepository
 {
@@ -8,7 +10,7 @@ public interface IBrandRepository
 
     Task<IEnumerable<TResponse>> ListAsync<TResponse>(
         Specification<Brand> specification,
-        Func<Brand, TResponse> mapper,
+        Expression<Func<Brand, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class;
 
@@ -18,21 +20,17 @@ public interface IBrandRepository
 
     Task<TResponse?> SingleOrDefaultAsync<TResponse>(
         Specification<Brand> specification,
-        Func<Brand, TResponse> mapper,
+        Expression<Func<Brand, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class;
 
     Task CreateAsync(
-        Brand course,
+        Brand brand,
         CancellationToken cancellationToken = default);
 
-    void Update(Brand course);
+    void Update(Brand brand);
 
-    void Delete(Brand course);
+    void Delete(Brand brand);
 
-    void ForceDelete(Brand course);
-
-    Task<int> ForceDeleteAsync(
-        Specification<Brand> specification,
-        CancellationToken cancellationToken = default);
+    Task<int> DeleteAsync(Specification<Brand> specification, CancellationToken cancellationToken = default);
 }

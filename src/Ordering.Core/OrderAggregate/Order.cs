@@ -21,15 +21,15 @@ public sealed class Order
 
     public PaymentMethodId? PaymentMethodId { get; private set; }
 
-    public static Order NewDraft()
-    {
-        return new Order();
-    }
+    //public static Order NewDraft()
+    //{
+    //    return new Order();
+    //}
 
-    protected Order()
-    {
-        IsDraft = true;
-    }
+    //protected Order()
+    //{
+    //    IsDraft = true;
+    //}
 
     public Order(
         Guid userId,
@@ -42,6 +42,7 @@ public sealed class Order
         DateTime cardExpiration,
         CustomerId? customerId = null,
         PaymentMethodId? paymentMethodId = null)
+        : base(new OrderId(Guid.CreateVersion7()))
     {
         CustomerId = customerId;
         PaymentMethodId = paymentMethodId;

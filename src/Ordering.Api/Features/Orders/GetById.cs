@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Ordering.UseCases.Orders.Queries;
-
-namespace Ordering.Api.Features.Orders;
+﻿namespace Ordering.Api.Features.Orders;
 
 public static class GetById
 {
     public static async Task<Results<Ok<OrderDto>, NotFound>> Handle(
         IMediator mediator,
-        Guid orderId,
+        Guid id,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetOrderByIdQuery(orderId), cancellationToken);
+        var result = await mediator.Send(new GetOrderByIdQuery(id), cancellationToken);
 
         if (result.IsSuccess)
         {

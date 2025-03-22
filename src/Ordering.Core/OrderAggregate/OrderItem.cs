@@ -16,7 +16,15 @@ public class OrderItem : EntityBase<OrderItemId>
 
     public OrderId OrderId { get; }
 
-    public OrderItem(OrderId orderId, Guid productId, string productName, decimal unitPrice, decimal discount, Uri pictureUrl, int units = 1)
+    public OrderItem(
+        OrderId orderId,
+        Guid productId,
+        string productName,
+        decimal unitPrice,
+        decimal discount,
+        Uri pictureUrl,
+        int units = 1)
+        : base(new OrderItemId(Guid.CreateVersion7()))
     {
         if (units <= 0)
         {

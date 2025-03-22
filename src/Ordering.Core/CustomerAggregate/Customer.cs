@@ -3,6 +3,7 @@
 public sealed class Customer : EntityBase<CustomerId>, IAggregateRoot
 {
     private Customer(IdentityId identity, string name)
+        : base(new CustomerId(Guid.CreateVersion7()))
     {
         IdentityId = identity;
         Name = !string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentNullException(nameof(name));

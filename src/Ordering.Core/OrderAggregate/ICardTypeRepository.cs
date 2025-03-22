@@ -18,7 +18,7 @@ public interface ICardTypeRepository
 
     Task<TResponse?> SingleOrDefaultAsync<TResponse>(
         Specification<CardType> specification,
-        Func<CardType, TResponse> mapper,
+        Expression<Func<CardType, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class;
 

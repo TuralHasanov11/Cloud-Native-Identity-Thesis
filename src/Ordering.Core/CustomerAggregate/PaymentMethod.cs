@@ -16,7 +16,14 @@ public class PaymentMethod : EntityBase<PaymentMethodId>
 
     public CardType CardType { get; private set; }
 
-    public PaymentMethod(int cardTypeId, string alias, string cardNumber, string securityNumber, string cardHolderName, DateTime expiration)
+    public PaymentMethod(
+        int cardTypeId,
+        string alias,
+        string cardNumber,
+        string securityNumber,
+        string cardHolderName,
+        DateTime expiration)
+        : base(new PaymentMethodId(Guid.CreateVersion7()))
     {
         CardNumber = !string.IsNullOrWhiteSpace(cardNumber) ? cardNumber : throw new OrderingDomainException(nameof(cardNumber));
         SecurityNumber = !string.IsNullOrWhiteSpace(securityNumber) ? securityNumber : throw new OrderingDomainException(nameof(securityNumber));

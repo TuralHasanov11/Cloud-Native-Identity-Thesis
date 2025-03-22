@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using Catalog.UseCases.Products;
-using Catalog.UseCases.Products.ListByIds;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Catalog.UseCases.Products.ListByIds;
 
 namespace Catalog.Api.Features.Products;
 
@@ -9,7 +6,7 @@ public static class ListByIds
 {
     public static async Task<Ok<IEnumerable<ProductDto>>> Handle(
         IMediator mediator,
-        [Description("List of ids for catalog items to return")] int[] ids)
+        int[] ids)
     {
         var result = await mediator.Send(new GetProductByIdQueryHandler(ids));
         return TypedResults.Ok(result.Value);

@@ -1,7 +1,4 @@
-﻿using Catalog.UseCases.Brands;
-using Catalog.UseCases.Products;
-using Catalog.UseCases.ProductTypes;
-using Microsoft.AspNetCore.Mvc;
+﻿using Catalog.Core.Identity;
 
 namespace Catalog.Api.Features;
 
@@ -9,122 +6,103 @@ public static class Endpoints
 {
     public static IEndpointRouteBuilder MapCatalogApi(this IEndpointRouteBuilder app)
     {
-        var vApi = app.NewVersionedApi("Catalog");
-        var api = vApi.MapGroup("api/catalog");
+        var api = app.MapGroup("api/catalog");
 
-        api.MapGet("/products", Products.List.Handle)
+        api.MapGet("products", Products.List.Handle)
             .AllowAnonymous()
-            .WithName(nameof(Products.List))
+            .WithName("ListProducts")
             .WithSummary("List catalog products")
             .WithDescription("Get a paginated list of products in the catalog.")
-            .WithTags("Products")
-            .Produces<PaginatedItems<ProductDto, Guid>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json");
+            .WithTags("Products");
 
-        api.MapGet("/products/by", Products.ListByIds.Handle)
+        api.MapGet("products/by", Products.ListByIds.Handle)
             .AllowAnonymous()
-            .WithName(nameof(Products.ListByIds))
+            .WithName("ListProductsByIds")
             .WithSummary("Batch get catalog products")
             .WithDescription("Get multiple products from the catalog")
-            .WithTags("Products")
-            .Produces<IEnumerable<ProductDto>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json");
+            .WithTags("Products");
 
-        api.MapGet("/products/{id:guid}", Products.GetById.Handle)
+        api.MapGet("products/{id:guid}", Products.GetById.Handle)
             .AllowAnonymous()
-            .WithName(nameof(Products.GetById))
+            .WithName("GetProductById")
             .WithSummary("Get catalog product")
             .WithDescription("Get an product from the catalog")
-            .WithTags("Products")
-            .Produces<ProductDto>()
-            .ProducesProblem(StatusCodes.Status404NotFound, "application/problem+json");
+            .WithTags("Products");
 
-        api.MapGet("/products/by/{name:minlength(1)}", Products.ListByName.Handle)
+        api.MapGet("products/by/{name:minlength(1)}", Products.ListByName.Handle)
             .AllowAnonymous()
-            .WithName(nameof(Products.ListByName))
+            .WithName("ListProductsByName")
             .WithSummary("Get catalog products by name")
             .WithDescription("Get a paginated list of catalog products with the specified name.")
-            .WithTags("Products")
-            .Produces<PaginatedItems<ProductDto, Guid>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json");
+            .WithTags("Products");
 
-        //api.MapGet("/products/{id:int}/pic", GetItemPictureById)
-        //    .WithName("GetItemPicture")
-        //    .WithSummary("Get catalog product picture")
-        //    .WithDescription("Get the picture for a catalog product")
-        //    .WithTags("Items");
+        ////api.MapGet("/products/{id:int}/pic", GetItemPictureById)
+        ////    .WithName("GetItemPicture")
+        ////    .WithSummary("Get catalog product picture")
+        ////    .WithDescription("Get the picture for a catalog product")
+        ////    .WithTags("Items");
 
-        // Routes for resolving catalog products using AI.
-        //v1.MapGet("/products/withsemanticrelevance/{text:minlength(1)}", GetItemsBySemanticRelevanceV1)
-        //    .WithName("GetRelevantItems")
-        //    .WithSummary("Search catalog for relevant products")
-        //    .WithDescription("Search the catalog for products related to the specified text")
-        //    .WithTags("Search");
+        //// Routes for resolving catalog products using AI.
+        ////v1.MapGet("/products/withsemanticrelevance/{text:minlength(1)}", GetItemsBySemanticRelevanceV1)
+        ////    .WithName("GetRelevantItems")
+        ////    .WithSummary("Search catalog for relevant products")
+        ////    .WithDescription("Search the catalog for products related to the specified text")
+        ////    .WithTags("Search");
 
-        // Routes for resolving catalog products using AI.
-        //v2.MapGet("/products/withsemanticrelevance", GetItemsBySemanticRelevance)
-        //    .WithName("GetRelevantItems-V2")
-        //    .WithSummary("Search catalog for relevant products")
-        //    .WithDescription("Search the catalog for products related to the specified text")
-        //    .WithTags("Search");
+        //// Routes for resolving catalog products using AI.
+        ////v2.MapGet("/products/withsemanticrelevance", GetItemsBySemanticRelevance)
+        ////    .WithName("GetRelevantItems-V2")
+        ////    .WithSummary("Search catalog for relevant products")
+        ////    .WithDescription("Search the catalog for products related to the specified text")
+        ////    .WithTags("Search");
 
-        // Routes for resolving catalog products by type and brand.
-        //v1.MapGet("/products/type/{typeId}/brand/{brandId?}", GetItemsByBrandAndTypeId)
-        //    .WithName("GetItemsByTypeAndBrand")
-        //    .WithSummary("Get catalog products by type and brand")
-        //    .WithDescription("Get catalog products of the specified type and brand")
-        //    .WithTags("Types");
+        //// Routes for resolving catalog products by type and brand.
+        ////v1.MapGet("/products/type/{typeId}/brand/{brandId?}", GetItemsByBrandAndTypeId)
+        ////    .WithName("GetItemsByTypeAndBrand")
+        ////    .WithSummary("Get catalog products by type and brand")
+        ////    .WithDescription("Get catalog products of the specified type and brand")
+        ////    .WithTags("Types");
 
-        //v1.MapGet("/products/type/all/brand/{brandId:int?}", GetItemsByBrandId)
-        //    .WithName("GetItemsByBrand")
-        //    .WithSummary("List catalog products by brand")
-        //    .WithDescription("Get a list of catalog products for the specified brand")
-        //    .WithTags("Brands");
+        ////v1.MapGet("/products/type/all/brand/{brandId:int?}", GetItemsByBrandId)
+        ////    .WithName("GetItemsByBrand")
+        ////    .WithSummary("List catalog products by brand")
+        ////    .WithDescription("Get a list of catalog products for the specified brand")
+        ////    .WithTags("Brands");
 
-        api.MapGet("/product-types", ProductTypes.List.Handle)
+        api.MapGet("product-types", ProductTypes.List.Handle)
             .AllowAnonymous()
-            .WithName(nameof(ProductTypes.List))
+            .WithName("ListProductTypes")
             .WithSummary("List catalog product types")
             .WithDescription("Get a list of the types of catalog products")
-            .WithTags("Types")
-            .Produces<IEnumerable<ProductTypeDto>>()
-            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json");
+            .WithTags("Product Types");
 
-        api.MapGet("/brands", Brands.List.Handle)
+        api.MapGet("brands", Brands.List.Handle)
             .AllowAnonymous()
-            .WithName(nameof(Brands.List))
+            .WithName("ListBrands")
             .WithSummary("List catalog product brands")
             .WithDescription("Get a list of the brands of catalog products")
-            .WithTags("Brands")
-            .Produces<IEnumerable<BrandDto>>()
-            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json");
+            .WithTags("Brands");
 
-        api.MapPost("/products", Products.Create.Handle)
-            .WithName(nameof(Products.Create))
+        api.MapPost("products", Products.Create.Handle)
+            .RequireAuthorization(p => p.RequireRole(Roles.Editor))
+            .WithName("CreateProduct")
             .WithSummary("Create a catalog product")
             .WithDescription("Create a new product in the catalog")
-            .WithTags("Products")
-            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json")
-            .ProducesProblem(StatusCodes.Status404NotFound, "application/problem+json")
-            .Produces(StatusCodes.Status201Created);
+            .WithTags("Products");
 
-        api.MapPut("/products/{id:guid}", Products.Update.Handle)
-            .WithName(nameof(Products.Update))
+        api.MapPut("products/{id:guid}", Products.Update.Handle)
+            .RequireAuthorization(p => p.RequireRole(Roles.Editor))
+            .WithName("UpdateProduct")
             .WithSummary("Create or replace a catalog product")
             .WithDescription("Create or replace a catalog product")
-            .WithTags("Products")
-            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json")
-            .ProducesProblem(StatusCodes.Status404NotFound, "application/problem+json")
-            .Produces(StatusCodes.Status204NoContent);
+            .WithTags("Products");
 
-        api.MapDelete("/products/{id:guid}", Products.DeleteById.Handle)
-            .WithName(nameof(Products.DeleteById))
+        api.MapDelete("products/{id:guid}", Products.DeleteById.Handle)
+            .RequireAuthorization(p => p.RequireRole(Roles.Editor))
+            .WithName("DeleteProductById")
             .WithSummary("Delete catalog product")
             .WithDescription("Delete the specified catalog product")
-            .WithTags("Products")
-            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json")
-            .ProducesProblem(StatusCodes.Status404NotFound, "application/problem+json")
-            .Produces(StatusCodes.Status204NoContent);
+            .WithTags("Products");
 
         return app;
     }

@@ -1,22 +1,20 @@
-﻿using System.ComponentModel;
-using Catalog.UseCases.Products;
-using Catalog.UseCases.Products.List;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Catalog.UseCases.Products.List;
 
 namespace Catalog.Api.Features.Products;
 
 public static class List
 {
     public static async Task<Ok<PaginatedItems<ProductDto, Guid>>> Handle(
-        IMediator mediator,
-        [AsParameters] PaginationRequest<Guid> paginationRequest,
-        [Description("The name of the item to return")] string name,
-        [Description("The type of items to return")] Guid? type,
-        [Description("The brand of items to return")] Guid? brand)
+    IMediator mediator,
+    string? name,
+    Guid? type,
+    Guid? brand,
+    int pageSize = 10,
+    Guid? pageCursor = default)
     {
         var result = await mediator.Send(new ListProductsQuery(
-            paginationRequest.PageCursor,
-            paginationRequest.PageSize,
+            pageCursor ?? Guid.Empty,
+            pageSize,
             name,
             type,
             brand));

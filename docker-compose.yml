@@ -30,7 +30,7 @@ services:
     - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
     - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
     depends_on:
-    # - rabbitmq
+    - rabbitmq
     - catalog.postgres
 
   catalog.postgres:
@@ -41,59 +41,64 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - ./.containers/postgres:/var/lib/postgresql/data
+      - ./.containers/catalog-postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
-  # ordering.api:
-  #   image: ${DOCKER_REGISTRY-}ordering-api
-  #   build:
-  #     context: .
-  #     dockerfile: src/Ordering.Api/Dockerfile
-  #   ports:
-  #   - "5104:5104"
-  #   - "5105:5105"
-  #   environment:
-  #   - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
-  #   - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
-  #   - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
-  #   depends_on:
-  #   - rabbitmq
-  #   - ordering.postgres
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}ordering-api
+    container_name: ordering.api
+    build:
+      context: .
+      dockerfile: src/Ordering.Api/Dockerfile
+    ports:
+    - "5104:5104"
+    - "5105:5105"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - rabbitmq
+    - ordering.postgres
 
-  # orderprocessor:
-  #   image: ${DOCKER_REGISTRY-}orderprocessor
-  #   container_name: orderprocessor
-  #   build:
-  #     context: .
-  #     dockerfile: src/OrderProcessor/Dockerfile
-  #   depends_on:
-  #   - ordering.postgres
+  orderprocessor:
+    image: ${DOCKER_REGISTRY-}orderprocessor
+    container_name: orderprocessor
+    build:
+      context: .
+      dockerfile: src/OrderProcessor/Dockerfile
+    depends_on:
+    - rabbitmq
+    - ordering.postgres
 
-  # ordering.postgres:
-  #   image: postgres:latest
-  #   container_name: "ordering.postgres"
-  #   environment:
-  #     - POSTGRES_DB=ordering
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=postgres
-  #   volumes:
-  #     - ./.containers/postgres:/var/lib/postgresql/data
-  #   ports:
-  #     - "5432:5432"
+  ordering.postgres:
+    image: postgres:latest
+    container_name: "ordering.postgres"
+    environment:
+      - POSTGRES_DB=ordering
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/ordering-postgres:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
 
-  # paymentprocessor:
-  #   image: ${DOCKER_REGISTRY-}paymentprocessor
-  #   build:
-  #     context: .
-  #     dockerfile: src/PaymentProcessor/Dockerfile
-  #   ports:
-  #   - "5106:5106"
-  #   - "5107:5107"
-  #   environment:
-  #   - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
-  #   - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
-  #   - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+  paymentprocessor:
+    image: ${DOCKER_REGISTRY-}paymentprocessor
+    container_name: paymentprocessor
+    build:
+      context: .
+      dockerfile: src/PaymentProcessor/Dockerfile
+    ports:
+    - "5106:5106"
+    - "5107:5107"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - rabbitmq
 
   # webapp:
   #   image: ${DOCKER_REGISTRY-}webapp

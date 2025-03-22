@@ -1,35 +1,10 @@
-﻿namespace Ordering.Infrastructure.Repositories;
+﻿using System.Linq.Expressions;
+
+namespace Ordering.Infrastructure.Repositories;
 
 public class CustomerRepository(OrderingDbContext dbContext) : ICustomerRepository
 {
     private readonly OrderingDbContext _dbContext = dbContext;
-
-    //public Buyer Update(Buyer buyer)
-    //{
-    //    return _dbContext.Buyers
-    //            .Update(buyer)
-    //            .Entity;
-    //}
-
-    //public async Task<Buyer> FindAsync(string identity)
-    //{
-    //    var buyer = await _dbContext.Buyers
-    //        .Include(b => b.PaymentMethods)
-    //        .Where(b => b.IdentityGuid == identity)
-    //        .SingleOrDefaultAsync();
-
-    //    return buyer;
-    //}
-
-    //public async Task<Buyer> FindByIdAsync(int id)
-    //{
-    //    var buyer = await _dbContext.Buyers
-    //        .Include(b => b.PaymentMethods)
-    //        .Where(b => b.Id == id)
-    //        .SingleOrDefaultAsync();
-
-    //    return buyer;
-    //}
 
     public async Task<IEnumerable<Customer>> ListAsync(
         Specification<Customer> specification,
@@ -42,13 +17,13 @@ public class CustomerRepository(OrderingDbContext dbContext) : ICustomerReposito
 
     public async Task<IEnumerable<TResponse>> ListAsync<TResponse>(
         Specification<Customer> specification,
-        Func<Customer, TResponse> mapper,
+        Expression<Func<Customer, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class
     {
         return await _dbContext.Customers
             .GetQuery(specification)
-            .Select(c => mapper(c))
+            .Select(mapper)
             .ToListAsync(cancellationToken);
     }
 
@@ -63,19 +38,17 @@ public class CustomerRepository(OrderingDbContext dbContext) : ICustomerReposito
 
     public async Task<TResponse?> SingleOrDefaultAsync<TResponse>(
         Specification<Customer> specification,
-        Func<Customer, TResponse> mapper,
+        Expression<Func<Customer, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class
     {
         return await _dbContext.Customers
             .GetQuery(specification)
-            .Select(c => mapper(c))
+            .Select(mapper)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task CreateAsync(
-        Customer customer,
-        CancellationToken cancellationToken = default)
+    public async Task CreateAsync(Customer customer, CancellationToken cancellationToken = default)
     {
         await _dbContext.Customers.AddAsync(customer, cancellationToken);
     }

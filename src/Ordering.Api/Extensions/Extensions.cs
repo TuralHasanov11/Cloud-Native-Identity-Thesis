@@ -11,6 +11,7 @@ using Ordering.Infrastructure.Idempotency;
 using Ordering.Infrastructure.IntegrationEvents;
 using Ordering.Infrastructure.Repositories;
 using Outbox.Services;
+using ServiceDefaults.Identity;
 
 namespace Ordering.Api.Extensions;
 public static class Extensions
@@ -53,7 +54,7 @@ public static class Extensions
         builder.ConfigureEventBus();
 
         builder.Services.AddHttpContextAccessor();
-        //services.AddTransient<IIdentityService, IdentityService>();
+        builder.Services.AddTransient<IIdentityService, IdentityService>();
 
         // Configure mediatR
         builder.Services.AddMediatR(cfg =>
@@ -71,7 +72,10 @@ public static class Extensions
 
         builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+        builder.Services.AddScoped<ICardTypeRepository, CardTypeRepository>();
         builder.Services.AddScoped<IRequestManager, RequestManager>();
+
+        builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
     }
 
     private static void ConfigureEventBus(this IHostApplicationBuilder builder)

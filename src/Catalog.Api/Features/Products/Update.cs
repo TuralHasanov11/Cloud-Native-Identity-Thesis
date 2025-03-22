@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using Catalog.UseCases.Products.Update;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Catalog.UseCases.Products.Update;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.Api.Features.Products;
@@ -9,7 +7,7 @@ public static class Update
 {
     public static async Task<Results<NoContent, BadRequest<ProblemDetails>, NotFound<ProblemDetails>>> Handle(
         IMediator mediator,
-        [Description("The id of the catalog item to update")] Guid id,
+        Guid id,
         UpdateProductRequest request)
     {
         var result = await mediator.Send(

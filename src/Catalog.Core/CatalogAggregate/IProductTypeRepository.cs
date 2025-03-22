@@ -1,4 +1,6 @@
-﻿namespace Catalog.Core.CatalogAggregate;
+﻿using System.Linq.Expressions;
+
+namespace Catalog.Core.CatalogAggregate;
 
 public interface IProductTypeRepository
 {
@@ -8,7 +10,7 @@ public interface IProductTypeRepository
 
     Task<IEnumerable<TResponse>> ListAsync<TResponse>(
         Specification<ProductType> specification,
-        Func<ProductType, TResponse> mapper,
+        Expression<Func<ProductType, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class;
 
@@ -18,21 +20,15 @@ public interface IProductTypeRepository
 
     Task<TResponse?> SingleOrDefaultAsync<TResponse>(
         Specification<ProductType> specification,
-        Func<ProductType, TResponse> mapper,
+        Expression<Func<ProductType, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class;
 
-    Task CreateAsync(
-        ProductType course,
-        CancellationToken cancellationToken = default);
+    Task CreateAsync(ProductType course, CancellationToken cancellationToken = default);
 
     void Update(ProductType course);
 
     void Delete(ProductType course);
 
-    void ForceDelete(ProductType course);
-
-    Task<int> ForceDeleteAsync(
-        Specification<ProductType> specification,
-        CancellationToken cancellationToken = default);
+    Task<int> DeleteAsync(Specification<ProductType> specification, CancellationToken cancellationToken = default);
 }

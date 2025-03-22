@@ -1,4 +1,6 @@
-﻿namespace Ordering.Core.OrderAggregate;
+﻿using System.Linq.Expressions;
+
+namespace Ordering.Core.OrderAggregate;
 
 public interface IOrderRepository
 {
@@ -8,7 +10,7 @@ public interface IOrderRepository
 
     Task<IEnumerable<TResponse>> ListAsync<TResponse>(
         Specification<Order> specification,
-        Func<Order, TResponse> mapper,
+        Expression<Func<Order, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class;
 
@@ -18,7 +20,7 @@ public interface IOrderRepository
 
     Task<TResponse?> SingleOrDefaultAsync<TResponse>(
         Specification<Order> specification,
-        Func<Order, TResponse> mapper,
+        Expression<Func<Order, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class;
 

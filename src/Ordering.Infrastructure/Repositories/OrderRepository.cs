@@ -1,4 +1,6 @@
-﻿namespace Ordering.Infrastructure.Repositories;
+﻿using System.Linq.Expressions;
+
+namespace Ordering.Infrastructure.Repositories;
 
 public class OrderRepository(OrderingDbContext dbContext) : IOrderRepository
 {
@@ -14,19 +16,6 @@ public class OrderRepository(OrderingDbContext dbContext) : IOrderRepository
         _dbContext.Orders.Remove(order);
     }
 
-    //public async Task<Order> GetAsync(int orderId)
-    //{
-    //    var order = await _dbContext.Orders.FindAsync(orderId);
-
-    //    if (order != null)
-    //    {
-    //        await _dbContext.Entry(order)
-    //            .Collection(i => i.OrderItems).LoadAsync();
-    //    }
-
-    //    return order;
-    //}
-
     public async Task<IEnumerable<Order>> ListAsync(
         Specification<Order> specification,
         CancellationToken cancellationToken = default)
@@ -38,13 +27,13 @@ public class OrderRepository(OrderingDbContext dbContext) : IOrderRepository
 
     public async Task<IEnumerable<TResponse>> ListAsync<TResponse>(
         Specification<Order> specification,
-        Func<Order, TResponse> mapper,
+        Expression<Func<Order, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class
     {
         return await _dbContext.Orders
             .GetQuery(specification)
-            .Select(o => mapper(o))
+            .Select(mapper)
             .ToListAsync(cancellationToken);
     }
 
@@ -59,13 +48,13 @@ public class OrderRepository(OrderingDbContext dbContext) : IOrderRepository
 
     public async Task<TResponse?> SingleOrDefaultAsync<TResponse>(
         Specification<Order> specification,
-        Func<Order, TResponse> mapper,
+        Expression<Func<Order, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class
     {
         return await _dbContext.Orders
             .GetQuery(specification)
-            .Select(o => mapper(o))
+            .Select(mapper)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

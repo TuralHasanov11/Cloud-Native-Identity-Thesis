@@ -1,6 +1,4 @@
-﻿using Catalog.UseCases.Brands;
-using Catalog.UseCases.Brands.List;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Catalog.UseCases.Brands.List;
 
 namespace Catalog.Api.Features.Brands;
 

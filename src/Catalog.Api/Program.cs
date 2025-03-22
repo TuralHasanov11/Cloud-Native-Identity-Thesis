@@ -16,7 +16,7 @@ try
     builder.Host.UseDefaultServiceProvider(config => config.ValidateOnBuild = true);
     builder.WebHost.UseKestrel(options => options.AddServerHeader = false);
 
-    builder.AddBasicServiceDefaults();
+    builder.AddServiceDefaults();
     builder.AddApplicationServices();
 
     var withApiVersioning = builder.Services.AddApiVersioning();

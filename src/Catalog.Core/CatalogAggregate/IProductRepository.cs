@@ -46,9 +46,7 @@ public interface IProductRepository
 
     void Delete(Product product);
 
-    void ForceDelete(Product product);
-
-    Task<int> ForceDeleteAsync(
+    Task<int> DeleteAsync(
         Specification<Product> specification,
         CancellationToken cancellationToken = default);
 }

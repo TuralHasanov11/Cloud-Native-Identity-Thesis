@@ -9,6 +9,11 @@ public static class Extensions
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
         builder.ConfigureEventBus();
+
+        builder.Services.AddOptions<PaymentOptions>()
+            .BindConfiguration(nameof(PaymentOptions))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
     }
 
     private static void ConfigureEventBus(this IHostApplicationBuilder builder)

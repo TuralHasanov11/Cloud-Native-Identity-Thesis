@@ -1,4 +1,6 @@
-﻿namespace Ordering.Core.CustomerAggregate;
+﻿using System.Linq.Expressions;
+
+namespace Ordering.Core.CustomerAggregate;
 public interface ICustomerRepository
 {
     Task<IEnumerable<Customer>> ListAsync(
@@ -7,7 +9,7 @@ public interface ICustomerRepository
 
     Task<IEnumerable<TResponse>> ListAsync<TResponse>(
         Specification<Customer> specification,
-        Func<Customer, TResponse> mapper,
+        Expression<Func<Customer, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class;
 
@@ -17,7 +19,7 @@ public interface ICustomerRepository
 
     Task<TResponse?> SingleOrDefaultAsync<TResponse>(
         Specification<Customer> specification,
-        Func<Customer, TResponse> mapper,
+        Expression<Func<Customer, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class;
 

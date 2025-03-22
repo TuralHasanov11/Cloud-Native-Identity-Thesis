@@ -3,6 +3,6 @@
 public sealed record ListProductsQuery(
     Guid PageCursor,
     int PageSize,
-    string Name,
+    string? Name,
     Guid? ProductType,
     Guid? Brand) : IQuery<PaginatedItems<ProductDto, Guid>>;

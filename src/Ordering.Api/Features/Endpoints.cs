@@ -1,4 +1,4 @@
-﻿using Ordering.UseCases.CardTypes;
+﻿using Ordering.Core.Identity;
 
 namespace Ordering.Api.Features;
 
@@ -8,55 +8,55 @@ public static class Endpoints
     {
         var api = app.MapGroup("api/orders");
 
-        api.MapPost("/", Orders.Create.Handle)
-            .WithName(nameof(Orders.Create))
+        api.MapPost("", Orders.Create.Handle)
+            .AllowAnonymous()
+            .WithName("CreateOrder")
             .WithSummary("Creates a new order")
-            .WithDescription("Creates a new order for the authenticated user.")
-            .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json");
+            .WithDescription("Creates a new order.")
+            .WithTags("Orders");
 
-        api.MapPut("/cancel", Orders.Cancel.Handle)
-            .WithName(nameof(Orders.Cancel))
+        api.MapPut("cancel", Orders.Cancel.Handle)
+            .RequireAuthorization(p => p.RequireRole(Roles.Customer))
+            .WithName("CancelOrder")
             .WithSummary("Cancels an order")
-            .WithDescription("Cancels an order for the authenticated user.")
-            .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json");
+            .WithDescription("Cancels an order.")
+            .WithTags("Orders");
 
-        api.MapPut("/ship", Orders.Ship.Handle)
-            .WithName(nameof(Orders.Ship))
+        api.MapPut("ship", Orders.Ship.Handle)
+            .RequireAuthorization(p => p.RequireRole(Roles.Operator))
+            .WithName("ShipOrder")
             .WithSummary("Ships an order")
-            .WithDescription("Ships an order for the authenticated user.")
-            .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json");
+            .WithDescription("Ships an order.")
+            .WithTags("Orders");
 
-        api.MapGet("{orderId:guid}", Orders.GetById.Handle)
-            .WithName(nameof(Orders.GetById))
+        api.MapGet("{id:guid}", Orders.GetById.Handle)
+            .AllowAnonymous()
+            .WithName("GetOrderById")
             .WithSummary("Gets an order by ID")
             .WithDescription("Gets an order by its unique identifier.")
-            .Produces<OrderDto>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status404NotFound, "application/problem+json");
+            .WithTags("Orders");
 
-        api.MapGet("/user", Orders.ListByUser.Handle)
-            .WithName(nameof(Orders.ListByUser))
+        api.MapGet("user", Orders.ListByUser.Handle)
+            .RequireAuthorization(p => p.RequireRole(Roles.Customer))
+            .WithName("ListOrdersByUser")
             .WithSummary("Lists orders by user")
-            .WithDescription("Lists orders for the authenticated user.")
-            .Produces<IEnumerable<OrderSummary>>(StatusCodes.Status200OK);
+            .WithDescription("Lists orders.")
+            .WithTags("Orders");
 
-        api.MapGet("/card-types", CardTypes.List.Handle)
-            .WithName(nameof(CardTypes.List))
+        api.MapGet("card-types", CardTypes.List.Handle)
+            .AllowAnonymous()
+            .WithName("ListCardTypes")
             .WithSummary("Lists card types")
             .WithDescription("Lists available card types.")
-            .Produces<IEnumerable<CardTypeDto>>(StatusCodes.Status200OK);
+            .WithTags("Card Types");
 
-        api.MapPost("/draft", Orders.Draft.Handle)
-            .WithName(nameof(Orders.Draft))
+        api.MapPost("draft", Orders.Draft.Handle)
+            .AllowAnonymous()
+            .WithName("DraftOrder")
             .WithSummary("Creates a draft order")
-            .WithDescription("Creates a draft order for the authenticated user.")
-            .Produces<OrderDraftDto>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest, "application/problem+json");
+            .WithDescription("Creates a draft order.")
+            .WithTags("Orders");
 
         return api;
     }
 }
-
-

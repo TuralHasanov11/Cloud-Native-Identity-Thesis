@@ -1,6 +1,4 @@
-﻿using Catalog.UseCases.ProductTypes;
-using Catalog.UseCases.ProductTypes.List;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Catalog.UseCases.ProductTypes.List;
 
 namespace Catalog.Api.Features.ProductTypes;
 

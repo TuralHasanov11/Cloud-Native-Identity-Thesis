@@ -11,6 +11,7 @@ public sealed class Product : EntityBase<ProductId>
         int availableStock,
         int restockThreshold,
         int maxStockThreshold)
+        : base(new ProductId(Guid.CreateVersion7()))
     {
         Name = name;
         Description = description;

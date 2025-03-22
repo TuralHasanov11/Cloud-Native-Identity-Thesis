@@ -20,7 +20,6 @@ public static class Extensions
     {
         builder.Services.AddOptions<MessageBrokerSettings>()
             .Bind(builder.Configuration.GetSection(MessageBrokerSettings.SectionName))
-            //.ValidateDataAnnotations()
             .ValidateOnStart();
 
         builder.Services.AddSingleton<IValidateOptions<MessageBrokerSettings>, ValidateMessageBrokerSettings>();

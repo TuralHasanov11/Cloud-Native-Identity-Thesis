@@ -1,6 +1,6 @@
 ﻿namespace Catalog.Core.CatalogAggregate;
 
-public class ProductType : EntityBase<ProductTypeId>
+public sealed class ProductType : EntityBase<ProductTypeId>
 {
     private ProductType(string name)
     {

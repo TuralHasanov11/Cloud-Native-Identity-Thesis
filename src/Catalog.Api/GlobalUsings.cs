@@ -1,5 +1,9 @@
 ﻿global using Ardalis.Result;
 global using Catalog.Infrastructure.Data;
 global using Catalog.UseCases;
+global using Catalog.UseCases.Brands;
+global using Catalog.UseCases.Products;
+global using Catalog.UseCases.ProductTypes;
 global using MediatR;
+global using Microsoft.AspNetCore.Http.HttpResults;
 global using ServiceDefaults;

@@ -2,7 +2,7 @@
 
 public class GetProductsSpecification : Specification<Product>
 {
-    public GetProductsSpecification(string name, Guid? productTypeId, Guid? brandId)
+    public GetProductsSpecification(string? name, Guid? productTypeId, Guid? brandId)
     {
         AddCriteria(p => p.Name == name, name != null);
 
