@@ -9,7 +9,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Audit\Audit.csproj" />
     <ProjectReference Include="..\Outbox\Outbox.csproj" />
+    <ProjectReference Include="..\Webhooks.Contracts\Webhooks.Contracts.csproj" />
     <ProjectReference Include="..\Webhooks.Core\Webhooks.Core.csproj" />
+    <ProjectReference Include="..\Webhooks.UseCases\Webhooks.UseCases.csproj" />
   </ItemGroup>
 
 </Project>

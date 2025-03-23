@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Webhooks.Contracts;
+namespace Webhooks.Infrastructure;
 
 public static class AssemblyReference
 {

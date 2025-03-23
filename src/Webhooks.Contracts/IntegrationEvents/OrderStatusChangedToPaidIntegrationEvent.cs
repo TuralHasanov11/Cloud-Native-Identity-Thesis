@@ -1,6 +1,6 @@
-﻿namespace Catalog.Contracts.IntegrationEvents;
+﻿namespace Webhooks.Contracts.IntegrationEvents;
 
 public record OrderStatusChangedToPaidIntegrationEvent(
-    int OrderId,
+    Guid OrderId,
     IEnumerable<OrderStockItem> OrderStockItems)
     : IntegrationEvent;

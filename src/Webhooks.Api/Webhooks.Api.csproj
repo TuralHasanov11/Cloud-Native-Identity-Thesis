@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Audit\Audit.csproj" />
     <ProjectReference Include="..\ServiceDefaults\ServiceDefaults.csproj" />
     <ProjectReference Include="..\Webhooks.Core\Webhooks.Core.csproj" />
     <ProjectReference Include="..\Webhooks.Infrastructure\Webhooks.Infrastructure.csproj" />

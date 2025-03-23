@@ -1,6 +1,4 @@
-﻿using Ordering.UseCases.Orders;
-
-namespace Ordering.Api.Features.Orders;
+﻿namespace Ordering.Api.Features.Orders;
 
 public sealed record CreateOrderRequest(
     Guid UserId,

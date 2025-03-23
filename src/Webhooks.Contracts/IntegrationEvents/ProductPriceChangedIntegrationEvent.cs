@@ -1,4 +1,4 @@
-﻿namespace Catalog.Contracts.IntegrationEvents;
+﻿namespace Webhooks.Contracts.IntegrationEvents;
 
 public record ProductPriceChangedIntegrationEvent(
     Guid ProductId,
