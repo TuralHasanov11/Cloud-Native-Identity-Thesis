@@ -2,7 +2,6 @@
 
 public sealed class DeleteByIdCommandHandler(
     IProductRepository productRepository,
-    IUnitOfWork unitOfWork,
     ICatalogIntegrationEventService catalogIntegrationEventService)
     : ICommandHandler<UpdateProductCommand, ProductDto>
 {
@@ -17,6 +16,8 @@ public sealed class DeleteByIdCommandHandler(
             return Result.NotFound($"Item with id {request.Id} not found.");
         }
 
+        var oldPrice = product.Price;
+
         product.Update(
             request.Name,
             request.Description,
@@ -29,20 +30,16 @@ public sealed class DeleteByIdCommandHandler(
 
         //product.Embedding = await services.CatalogAI.GetEmbeddingAsync(product);
 
-        var productEntry = unitOfWork.GetEntry(product);
-
-        var priceEntry = productEntry.Property(i => i.Price);
-
-        if (priceEntry.IsModified)
+        if (product.Price != oldPrice)
         {
-            var priceChangedEvent = new ProductPriceChangedIntegrationEvent(product.Id, product.Price, priceEntry.OriginalValue);
+            var priceChangedEvent = new ProductPriceChangedIntegrationEvent(product.Id, product.Price, oldPrice);
 
             await catalogIntegrationEventService.SaveEventAndCatalogContextChangesAsync(priceChangedEvent);
 
             await catalogIntegrationEventService.PublishThroughEventBusAsync(priceChangedEvent);
         }
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await productRepository.SaveChangesAsync(cancellationToken);
 
         return Result.Success(product.ToProductDto());
     }

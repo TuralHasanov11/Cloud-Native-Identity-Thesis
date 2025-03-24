@@ -1,24 +1,12 @@
-﻿using Catalog.Core.CatalogAggregate;
-using Catalog.Core.CatalogAggregate.Specifications;
+﻿namespace Catalog.UseCases.Products.DeleteById;
 
-namespace Catalog.UseCases.Products.DeleteById;
-
-public sealed class DeleteByIdCommandHandler : ICommandHandler<DeleteProductByIdCommand>
+public sealed class DeleteByIdCommandHandler(
+    IProductRepository productRepository)
+    : ICommandHandler<DeleteProductByIdCommand>
 {
-    private readonly IProductRepository _productRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public DeleteByIdCommandHandler(
-        IProductRepository productRepository,
-        IUnitOfWork unitOfWork)
-    {
-        _productRepository = productRepository;
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task<Result> Handle(DeleteProductByIdCommand request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.SingleOrDefaultAsync(
+        var product = await productRepository.SingleOrDefaultAsync(
             new GetProductByIdSpecification(new ProductId(request.Id)),
             cancellationToken);
 
@@ -27,9 +15,9 @@ public sealed class DeleteByIdCommandHandler : ICommandHandler<DeleteProductById
             return Result.NotFound($"Item with id {request.Id} not found.");
         }
 
-        _productRepository.Delete(product);
+        productRepository.Delete(product);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await productRepository.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

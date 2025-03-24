@@ -1,7 +1,5 @@
-﻿using Catalog.Core.CatalogAggregate;
-
-namespace Catalog.UseCases.Brands;
-public static partial class BrandMapper
+﻿namespace Catalog.UseCases.Brands;
+public static partial class BrandExtensions
 {
     public static BrandDto ToBrandDto(this Brand product)
     {

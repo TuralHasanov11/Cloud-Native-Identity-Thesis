@@ -1,4 +1,4 @@
-﻿namespace Ordering.IntegrationTests;
+﻿namespace Ordering.IntegrationTests.Orders;
 
 public class OrderRepositoryTests : IClassFixture<OrderingFactory>
 {

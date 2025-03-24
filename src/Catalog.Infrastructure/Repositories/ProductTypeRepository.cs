@@ -57,4 +57,9 @@ public class ProductTypeRepository(CatalogDbContext dbContext) : IProductTypeRep
     {
         dbContext.ProductTypes.Update(productType);
     }
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return dbContext.SaveChangesAsync(cancellationToken);
+    }
 }

@@ -33,4 +33,6 @@ public interface IBrandRepository
     void Delete(Brand brand);
 
     Task<int> DeleteAsync(Specification<Brand> specification, CancellationToken cancellationToken = default);
+
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

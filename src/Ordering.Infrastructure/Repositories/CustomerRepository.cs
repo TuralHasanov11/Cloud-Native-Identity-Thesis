@@ -76,4 +76,9 @@ public class CustomerRepository(OrderingDbContext dbContext) : ICustomerReposito
             .GetQuery(specification)
             .ExecuteDeleteAsync(cancellationToken);
     }
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return _dbContext.SaveChangesAsync(cancellationToken);
+    }
 }

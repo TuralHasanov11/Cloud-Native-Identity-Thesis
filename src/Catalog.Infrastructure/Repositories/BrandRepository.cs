@@ -69,4 +69,9 @@ public class BrandRepository(CatalogDbContext dbContext) : IBrandRepository
     {
         dbContext.Brands.Update(brand);
     }
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return dbContext.SaveChangesAsync(cancellationToken);
+    }
 }

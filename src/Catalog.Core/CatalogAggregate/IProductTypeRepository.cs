@@ -31,4 +31,6 @@ public interface IProductTypeRepository
     void Delete(ProductType productType);
 
     Task<int> DeleteAsync(Specification<ProductType> specification, CancellationToken cancellationToken = default);
+
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

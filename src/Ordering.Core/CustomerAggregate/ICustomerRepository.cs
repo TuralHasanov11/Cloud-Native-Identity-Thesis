@@ -36,4 +36,6 @@ public interface ICustomerRepository
     Task<int> ForceDeleteAsync(
         Specification<Customer> specification,
         CancellationToken cancellationToken = default);
+
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

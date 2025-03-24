@@ -5,18 +5,13 @@ namespace Ordering.UseCases.Orders.Commands;
 public class CreateOrderCommandHandler(
     IOrderingIntegrationEventService orderingIntegrationEventService,
     IOrderRepository orderRepository,
-    ILogger<CreateOrderCommandHandler> logger,
-    IUnitOfWork unitOfWork) : ICommandHandler<CreateOrderCommand, bool>
+    ILogger<CreateOrderCommandHandler> logger)
+    : ICommandHandler<CreateOrderCommand, bool>
 {
-    private readonly IOrderRepository _orderRepository = orderRepository;
-    private readonly IOrderingIntegrationEventService _orderingIntegrationEventService = orderingIntegrationEventService;
-    private readonly ILogger<CreateOrderCommandHandler> _logger = logger;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
     public async Task<Result<bool>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         var orderStartedIntegrationEvent = new OrderStartedIntegrationEvent(request.UserId);
-        await _orderingIntegrationEventService.AddAndSaveEventAsync(orderStartedIntegrationEvent);
+        await orderingIntegrationEventService.AddAndSaveEventAsync(orderStartedIntegrationEvent);
 
 
         var order = new Order(
@@ -34,11 +29,11 @@ public class CreateOrderCommandHandler(
             order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice, item.Discount, item.PictureUrl, item.Units);
         }
 
-        _logger.LogCreatingOrder(order);
+        logger.LogCreatingOrder(order);
 
-        await _orderRepository.CreateAsync(order, cancellationToken);
+        await orderRepository.CreateAsync(order, cancellationToken);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await orderRepository.SaveChangesAsync(cancellationToken);
 
         return Result<bool>.Success(true);
     }

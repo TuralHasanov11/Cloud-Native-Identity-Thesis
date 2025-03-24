@@ -1,20 +1,9 @@
-﻿using Catalog.Core.CatalogAggregate;
+﻿namespace Catalog.UseCases.Products.Create;
 
-namespace Catalog.UseCases.Products.Create;
-
-public sealed class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, ProductDto>
+public sealed class CreateProductCommandHandler(
+    IProductRepository productRepository)
+    : ICommandHandler<CreateProductCommand, ProductDto>
 {
-    private readonly IProductRepository _productRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public CreateProductCommandHandler(
-        IProductRepository productRepository,
-        IUnitOfWork unitOfWork)
-    {
-        _productRepository = productRepository;
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task<Result<ProductDto>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var product = Product.Create(
@@ -29,9 +18,9 @@ public sealed class CreateProductCommandHandler : ICommandHandler<CreateProductC
 
         //product.Embedding = await services.CatalogAI.GetEmbeddingAsync(item);
 
-        await _productRepository.CreateAsync(product);
+        await productRepository.CreateAsync(product, cancellationToken);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await productRepository.SaveChangesAsync(cancellationToken);
 
         return Result.Success(product.ToProductDto());
     }

@@ -1,7 +1,7 @@
 ﻿using Catalog.Core.CatalogAggregate;
 
 namespace Catalog.UseCases.Products;
-public static partial class ProductMapper
+public static partial class ProductExtensions
 {
     public static ProductDto ToProductDto(this Product product)
     {

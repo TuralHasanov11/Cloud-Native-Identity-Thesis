@@ -64,6 +64,11 @@ public class ProductRepository(CatalogDbContext dbContext) : IProductRepository
         return await dbContext.Products.GetQuery(specification).Select(mapper).ToListAsync(cancellationToken);
     }
 
+    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return dbContext.SaveChangesAsync(cancellationToken);
+    }
+
     public Task<Product?> SingleOrDefaultAsync(
         Specification<Product> specification,
         CancellationToken cancellationToken = default)

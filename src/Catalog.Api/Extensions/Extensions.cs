@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Options;
 using Outbox.Services;
-using SharedKernel;
 
 namespace Catalog.Api.Extensions;
 
@@ -77,8 +76,6 @@ public static class Extensions
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddScoped<IBrandRepository, BrandRepository>();
         builder.Services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
-
-        builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
         builder.Services.AddHangfire(options =>
         {

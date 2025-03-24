@@ -50,4 +50,9 @@ public class CardTypeRepository(OrderingDbContext dbContext) : ICardTypeReposito
     {
         dbContext.CardTypes.Update(order);
     }
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return _dbContext.SaveChangesAsync(cancellationToken);
+    }
 }

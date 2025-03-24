@@ -29,4 +29,6 @@ public interface ICardTypeRepository
     void Update(CardType order);
 
     void Delete(CardType order);
+
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }
