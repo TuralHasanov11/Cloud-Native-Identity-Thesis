@@ -24,7 +24,6 @@ public abstract class HasDomainEventsBase : IHasDomainEvents
         _domainEvents.Add(eventItem);
     }
 
-
     protected void RemoveDomainEvent(DomainEventBase eventItem)
     {
         _domainEvents?.Remove(eventItem);

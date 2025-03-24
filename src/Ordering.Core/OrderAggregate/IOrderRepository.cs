@@ -31,4 +31,6 @@ public interface IOrderRepository
     void Update(Order order);
 
     void Delete(Order order);
+
+    Task SaveChangedAsync(CancellationToken cancellationToken = default);
 }

@@ -1,3 +1,3 @@
 ﻿namespace Ordering.UseCases.Orders.Queries;
 
-public sealed record ListOrdersByUserQuery(Guid Id) : IQuery<IEnumerable<OrderSummary>>;
+public sealed record ListOrdersByUserQuery(Guid UserId) : IQuery<IEnumerable<OrderSummary>>;

@@ -23,10 +23,10 @@ public class BasketRepository(ILogger<BasketRepository> logger, HybridCache cach
     {
         var basket = await _cache.GetOrCreateAsync(
             GetBasketKey(customerId),
-            _ => ValueTask.FromResult(new CustomerBasket(customerId)),
+            _ => ValueTask.FromResult(new CustomerBasket { CustomerId = customerId }),
             cancellationToken: cancellationToken);
 
-        return basket ?? new CustomerBasket(customerId);
+        return basket ?? new CustomerBasket { CustomerId = customerId };
     }
 
     public async Task<CustomerBasket> UpdateBasketAsync(CustomerBasket basket, CancellationToken cancellationToken = default)

@@ -37,6 +37,11 @@ public class OrderRepository(OrderingDbContext dbContext) : IOrderRepository
             .ToListAsync(cancellationToken);
     }
 
+    public Task SaveChangedAsync(CancellationToken cancellationToken = default)
+    {
+        return _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task<Order?> SingleOrDefaultAsync(
         Specification<Order> specification,
         CancellationToken cancellationToken = default)
