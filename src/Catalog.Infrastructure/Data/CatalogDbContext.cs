@@ -2,12 +2,8 @@
 
 namespace Catalog.Infrastructure.Data;
 
-public class CatalogDbContext : DbContext
+public class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbContext(options)
 {
-    public CatalogDbContext(DbContextOptions<CatalogDbContext> options) : base(options)
-    {
-    }
-
     public DbSet<Product> Products { get; set; }
 
     public DbSet<Brand> Brands { get; set; }

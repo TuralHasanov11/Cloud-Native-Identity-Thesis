@@ -21,15 +21,16 @@ public sealed class Order
 
     public PaymentMethodId? PaymentMethodId { get; private set; }
 
-    //public static Order NewDraft()
-    //{
-    //    return new Order();
-    //}
+    public static Order NewDraft()
+    {
+        return new Order();
+    }
 
-    //protected Order()
-    //{
-    //    IsDraft = true;
-    //}
+    protected Order()
+        : base(new OrderId(Guid.CreateVersion7()))
+    {
+        IsDraft = true;
+    }
 
     public Order(
         Guid userId,

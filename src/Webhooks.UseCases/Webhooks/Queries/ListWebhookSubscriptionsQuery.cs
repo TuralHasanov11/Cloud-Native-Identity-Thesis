@@ -1,5 +1,3 @@
-﻿using SharedKernel;
-
-namespace Webhooks.UseCases.Webhooks.Queries;
+﻿namespace Webhooks.UseCases.Webhooks.Queries;
 
 public sealed record ListWebhookSubscriptionsQuery(Guid UserId) : IQuery<IEnumerable<WebhookSubscriptionDto>>;

@@ -9,7 +9,9 @@
         "paymentprocessor": "StartDebugging",
         "webapp": "StartDebugging",
         "catalog.api": "StartDebugging",
-        "orderprocessor": "StartDebugging"
+        "orderprocessor": "StartDebugging",
+        "webhooks.api": "StartDebugging",
+        "webhooks.client": "StartDebugging"
       }
     }
   }

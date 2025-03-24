@@ -6,7 +6,7 @@ public sealed class BrandConfiguration : IEntityTypeConfiguration<Brand>
 {
     public void Configure(EntityTypeBuilder<Brand> builder)
     {
-        builder.ToTable("Brands");
+        builder.ToTable("brands");
 
         builder.Property(b => b.Id)
             .HasConversion(

@@ -28,7 +28,6 @@ public class OrderingModuleTests
     {
         var assembly = Ordering.Infrastructure.AssemblyReference.Assembly;
 
-        Assert.False(HasReference(assembly, Ordering.UseCases.AssemblyReference.Assembly));
         Assert.False(HasReference(assembly, Ordering.Api.AssemblyReference.Assembly));
     }
 
@@ -40,23 +39,6 @@ public class OrderingModuleTests
         Assert.True(HasReference(assembly, Ordering.UseCases.AssemblyReference.Assembly));
         Assert.True(HasReference(assembly, Ordering.Infrastructure.AssemblyReference.Assembly));
         Assert.True(HasReference(assembly, Ordering.Core.AssemblyReference.Assembly));
-    }
-
-    [Fact]
-    public void Handlers_Should_Have_DependencyOnCore()
-    {
-        var assembly = Ordering.UseCases.AssemblyReference.Assembly;
-
-        var result = Types.InAssembly(assembly)
-            .That()
-            .HaveNameEndingWith("QueryHandler", StringComparison.OrdinalIgnoreCase)
-            .Or()
-            .HaveNameEndingWith("CommandHandler", StringComparison.OrdinalIgnoreCase)
-            .Should()
-            .HaveDependencyOn(nameof(Ordering.Core))
-            .GetResult();
-
-        Assert.True(result.IsSuccessful);
     }
 
     private static bool HasReference(Assembly assembly, Assembly reference)

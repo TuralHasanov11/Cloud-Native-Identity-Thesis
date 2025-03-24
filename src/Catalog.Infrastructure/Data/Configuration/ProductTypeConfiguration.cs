@@ -6,7 +6,7 @@ public sealed class ProductTypeConfiguration : IEntityTypeConfiguration<ProductT
 {
     public void Configure(EntityTypeBuilder<ProductType> builder)
     {
-        builder.ToTable("ProductTypes");
+        builder.ToTable("product_types");
 
         builder.Property(pt => pt.Id)
             .HasConversion(

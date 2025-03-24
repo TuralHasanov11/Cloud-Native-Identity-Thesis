@@ -115,6 +115,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webhooks.UseCases", "src\We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webhooks.Contracts", "src\Webhooks.Contracts\Webhooks.Contracts.csproj", "{0D6674DC-7BFA-49F2-826A-31F1DDD8D36A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webhooks.Client", "src\Webhooks.Client\Webhooks.Client.csproj", "{EBB92B75-6932-49DF-8FF2-C627FE15FB52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -289,6 +291,10 @@ Global
 		{0D6674DC-7BFA-49F2-826A-31F1DDD8D36A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D6674DC-7BFA-49F2-826A-31F1DDD8D36A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D6674DC-7BFA-49F2-826A-31F1DDD8D36A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBB92B75-6932-49DF-8FF2-C627FE15FB52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBB92B75-6932-49DF-8FF2-C627FE15FB52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBB92B75-6932-49DF-8FF2-C627FE15FB52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBB92B75-6932-49DF-8FF2-C627FE15FB52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -335,6 +341,7 @@ Global
 		{6BB3BBB4-F48B-4B5E-B005-18013A0FE182} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{9ED05DA0-66C4-4438-BF86-59C324723E4A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{0D6674DC-7BFA-49F2-826A-31F1DDD8D36A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{EBB92B75-6932-49DF-8FF2-C627FE15FB52} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBBAF4C0-A40F-4954-A1FE-27E274F76118}

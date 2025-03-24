@@ -1,7 +1,11 @@
-﻿namespace ArchitectureTests;
+﻿using Xunit.Abstractions;
 
-public class IntegrationTests
+namespace ArchitectureTests;
+
+public class IntegrationTests(ITestOutputHelper testOutputHelper)
 {
+    private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
+
     [Fact]
     public void IntegrationEvents_ShouldBe_Immutable_and_Sealed()
     {
@@ -11,6 +15,12 @@ public class IntegrationTests
             .And()
             .BeSealed()
             .GetResult();
+
+        if (result.FailingTypeNames is not null)
+        {
+            _testOutputHelper.WriteLine($"Failing Types: {string.Join(',', result.FailingTypeNames)}");
+        }
+
 
         Assert.True(result.IsSuccessful);
     }
@@ -22,6 +32,28 @@ public class IntegrationTests
             .Should()
             .HaveNameEndingWith("IntegrationEvent", StringComparison.OrdinalIgnoreCase)
             .GetResult();
+
+        if (result.FailingTypeNames is not null)
+        {
+            _testOutputHelper.WriteLine($"Failing Types: {string.Join(',', result.FailingTypeNames)}");
+        }
+
+
+        Assert.True(result.IsSuccessful);
+    }
+
+    [Fact]
+    public void IntegrationEventHandlers_Should_HaveIntegrationEventHandlerPostfix()
+    {
+        var result = DomainModelExplorer.IntegrationEventHandlers
+            .Should()
+            .HaveNameEndingWith("IntegrationEventHandler", StringComparison.OrdinalIgnoreCase)
+            .GetResult();
+
+        if (result.FailingTypeNames is not null)
+        {
+            _testOutputHelper.WriteLine($"Failing Types: {string.Join(',', result.FailingTypeNames)}");
+        }
 
         Assert.True(result.IsSuccessful);
     }

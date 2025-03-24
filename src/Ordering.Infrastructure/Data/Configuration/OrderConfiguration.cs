@@ -11,7 +11,29 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
                 v => v.Value,
                 v => new OrderId(v));
 
-        builder.ComplexProperty(o => o.Address);
+        builder.ComplexProperty(
+            o => o.Address,
+            o =>
+            {
+                o.Property(a => a.Street)
+                    .HasMaxLength(180)
+                    .IsRequired();
+
+                o.Property(a => a.City)
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                o.Property(a => a.State)
+                    .HasMaxLength(60);
+
+                o.Property(a => a.Country)
+                    .HasMaxLength(90)
+                    .IsRequired();
+
+                o.Property(a => a.ZipCode)
+                    .HasMaxLength(18)
+                    .IsRequired();
+            });
 
         builder.Property(o => o.OrderDate);
 
@@ -23,6 +45,9 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasMaxLength(30);
 
         builder.Property(o => o.IsDraft);
+
+        builder.Property(b => b.RowVersion)
+            .IsRowVersion();
 
         builder.HasOne<PaymentMethod>()
             .WithMany()

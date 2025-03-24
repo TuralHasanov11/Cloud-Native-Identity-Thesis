@@ -6,11 +6,13 @@ public sealed class CardTypeConfiguration : IEntityTypeConfiguration<CardType>
     {
         builder.ToTable("card_types");
 
-        builder.Property(ct => ct.Id)
-            .ValueGeneratedNever();
+        builder.HasKey(x => x.Id);
 
         builder.Property(ct => ct.Name)
             .HasMaxLength(200)
             .IsRequired();
+
+        builder.Property(b => b.RowVersion)
+            .IsRowVersion();
     }
 }

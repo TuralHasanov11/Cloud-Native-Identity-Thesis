@@ -1,9 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace Basket.Core.BasketAggregate;
 
-namespace Basket.Core.BasketAggregate;
-
-public class BasketItem : IValidatableObject
+public class BasketItem
 {
+
     public Guid Id { get; set; }
 
     public Guid ProductId { get; set; }
@@ -17,16 +16,4 @@ public class BasketItem : IValidatableObject
     public int Quantity { get; set; }
 
     public string PictureUrl { get; set; }
-
-    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-    {
-        var results = new List<ValidationResult>();
-
-        if (Quantity < 1)
-        {
-            results.Add(new ValidationResult("Invalid number of units", ["Quantity"]));
-        }
-
-        return results;
-    }
 }

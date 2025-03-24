@@ -100,19 +100,69 @@ services:
     depends_on:
     - rabbitmq
 
-  # webapp:
-  #   image: ${DOCKER_REGISTRY-}webapp
-  #   build:
-  #     context: .
-  #     dockerfile: src/WebApp/Dockerfile
-  #   ports:
-  #   - "5108:5108"
-  #   - "5109:5109"
-  #   depends_on:
-  #   - basket.api
-  #   - catalog.api
-  #   - ordering.api
-  #   - paymentprocessor
+  webhooks.api:
+    image: ${DOCKER_REGISTRY-}webhooks-api
+    container_name: webhooks.api
+    build:
+      context: .
+      dockerfile: src/Webhooks.Api/Dockerfile
+    ports:
+    - "5108:5108"
+    - "5109:5109"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - rabbitmq
+    - webhooks.postgres
+
+  webhooks.postgres:
+    image: postgres:latest
+    container_name: "webhooks.postgres"
+    environment:
+      - POSTGRES_DB=webhooks
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/webhooks-postgres:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+  webhooks.client:
+    image: ${DOCKER_REGISTRY-}webhooks-client
+    container_name: webhooks.client
+    build:
+      context: .
+      dockerfile: src/Webhooks.Client/Dockerfile
+    ports:
+    - "5110:5110"
+    - "5111:5111"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - webhooks.api
+
+  webapp:
+    image: ${DOCKER_REGISTRY-}webapp
+    container_name: webapp
+    build:
+      context: .
+      dockerfile: src/WebApp/Dockerfile
+    ports:
+    - "5112:5112"
+    - "5113:5113"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - basket.api
+    - catalog.api
+    - ordering.api
+    - paymentprocessor
 
   papercut:
     image: changemakerstudiosus/papercut-smtp:latest

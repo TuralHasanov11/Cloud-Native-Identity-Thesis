@@ -2,10 +2,10 @@
 
 public sealed class Customer : EntityBase<CustomerId>, IAggregateRoot
 {
-    private Customer(IdentityId identity, string name)
+    private Customer(IdentityId identityId, string name)
         : base(new CustomerId(Guid.CreateVersion7()))
     {
-        IdentityId = identity;
+        IdentityId = identityId;
         Name = !string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentNullException(nameof(name));
     }
 
@@ -14,7 +14,6 @@ public sealed class Customer : EntityBase<CustomerId>, IAggregateRoot
     public string Name { get; }
 
     public ICollection<PaymentMethod> PaymentMethods { get; }
-
 
     public PaymentMethod VerifyOrAddPaymentMethod(
         int cardTypeId,
@@ -44,8 +43,8 @@ public sealed class Customer : EntityBase<CustomerId>, IAggregateRoot
         return payment;
     }
 
-    public static Customer Create(IdentityId identity, string name)
+    public static Customer Create(IdentityId identityId, string name)
     {
-        return new Customer(identity, name);
+        return new Customer(identityId, name);
     }
 }

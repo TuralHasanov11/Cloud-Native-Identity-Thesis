@@ -12,8 +12,8 @@ public sealed class GrantUrlTesterService(IHttpClientFactory factory, ILogger<IG
             return false;
         }
 
-        var client = factory.CreateClient();
-        var msg = new HttpRequestMessage(HttpMethod.Options, url);
+        using var client = factory.CreateClient();
+        using var msg = new HttpRequestMessage(HttpMethod.Options, url);
         msg.Headers.Add("X-eshop-whtoken", token);
 
         logger.LogInformation("Sending the OPTIONS message to {Url} with token \"{Token}\"", url, token ?? string.Empty);

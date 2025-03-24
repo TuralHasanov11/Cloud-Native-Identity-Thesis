@@ -7,7 +7,6 @@ using Ordering.Contracts.Abstractions;
 using Ordering.Core.CustomerAggregate;
 using Ordering.Core.OrderAggregate;
 using Ordering.Infrastructure.Data;
-using Ordering.Infrastructure.Idempotency;
 using Ordering.Infrastructure.IntegrationEvents;
 using Ordering.Infrastructure.Repositories;
 using Outbox.Services;
@@ -73,7 +72,6 @@ public static class Extensions
         builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
         builder.Services.AddScoped<ICardTypeRepository, CardTypeRepository>();
-        builder.Services.AddScoped<IRequestManager, RequestManager>();
 
         builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
     }

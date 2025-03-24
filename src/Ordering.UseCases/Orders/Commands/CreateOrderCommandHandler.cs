@@ -49,21 +49,3 @@ public static partial class CreateOrderCommandHandlerLogger
     [LoggerMessage(LogLevel.Information, "Creating Order - Order: {Order}", EventName = "CreatingOrder")]
     public static partial void LogCreatingOrder(this ILogger<CreateOrderCommandHandler> logger, Order order);
 }
-
-
-// Use for Idempotency in Command process
-//public class CreateOrderIdentifiedCommandHandler : IdentifiedCommandHandler<CreateOrderCommand, bool>
-//{
-//    public CreateOrderIdentifiedCommandHandler(
-//        IMediator mediator,
-//        IRequestManager requestManager,
-//        ILogger<IdentifiedCommandHandler<CreateOrderCommand, bool>> logger)
-//        : base(mediator, requestManager, logger)
-//    {
-//    }
-
-//    protected override bool CreateResultForDuplicateRequest()
-//    {
-//        return true; // Ignore duplicate requests for creating order.
-//    }
-//}

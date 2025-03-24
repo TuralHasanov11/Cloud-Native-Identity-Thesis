@@ -24,21 +24,3 @@ public class CancelOrderCommandHandler(IOrderRepository orderRepository, IUnitOf
         return Result<bool>.Success(true);
     }
 }
-
-
-// Use for Idempotency in Command process
-//public class CancelOrderIdentifiedCommandHandler : IdentifiedCommandHandler<CancelOrderCommand, bool>
-//{
-//    public CancelOrderIdentifiedCommandHandler(
-//        IMediator mediator,
-//        IRequestManager requestManager,
-//        ILogger<IdentifiedCommandHandler<CancelOrderCommand, bool>> logger)
-//        : base(mediator, requestManager, logger)
-//    {
-//    }
-
-//    protected override bool CreateResultForDuplicateRequest()
-//    {
-//        return true; // Ignore duplicate requests for processing order.
-//    }
-//}

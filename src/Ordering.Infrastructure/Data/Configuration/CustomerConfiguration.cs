@@ -16,7 +16,13 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .IsRequired();
 
         builder.Property(b => b.IdentityId)
+            .HasConversion(
+                v => v.Value,
+                v => new IdentityId(v))
             .HasMaxLength(255);
+
+        builder.Property(b => b.RowVersion)
+            .IsRowVersion();
 
         builder.HasIndex(b => b.IdentityId)
             .IsUnique(true);

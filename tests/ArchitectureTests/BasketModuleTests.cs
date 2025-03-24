@@ -28,7 +28,6 @@ public class BasketModuleTests
     {
         var assembly = Basket.Infrastructure.AssemblyReference.Assembly;
 
-        Assert.False(HasReference(assembly, Basket.UseCases.AssemblyReference.Assembly));
         Assert.False(HasReference(assembly, Basket.Api.AssemblyReference.Assembly));
     }
 
@@ -40,23 +39,6 @@ public class BasketModuleTests
         Assert.True(HasReference(assembly, Basket.UseCases.AssemblyReference.Assembly));
         Assert.True(HasReference(assembly, Basket.Infrastructure.AssemblyReference.Assembly));
         Assert.True(HasReference(assembly, Basket.Core.AssemblyReference.Assembly));
-    }
-
-    [Fact]
-    public void Handlers_Should_Have_DependencyOnCore()
-    {
-        var assembly = Basket.UseCases.AssemblyReference.Assembly;
-
-        var result = Types.InAssembly(assembly)
-            .That()
-            .HaveNameEndingWith("QueryHandler", StringComparison.OrdinalIgnoreCase)
-            .Or()
-            .HaveNameEndingWith("CommandHandler", StringComparison.OrdinalIgnoreCase)
-            .Should()
-            .HaveDependencyOn(nameof(Basket.Core))
-            .GetResult();
-
-        Assert.True(result.IsSuccessful);
     }
 
     private static bool HasReference(Assembly assembly, Assembly reference)

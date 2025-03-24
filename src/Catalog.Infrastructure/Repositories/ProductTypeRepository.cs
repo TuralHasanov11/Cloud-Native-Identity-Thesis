@@ -4,14 +4,14 @@ namespace Catalog.Infrastructure.Repositories;
 
 public class ProductTypeRepository(CatalogDbContext dbContext) : IProductTypeRepository
 {
-    public async Task CreateAsync(ProductType course, CancellationToken cancellationToken = default)
+    public async Task CreateAsync(ProductType productType, CancellationToken cancellationToken = default)
     {
-        await dbContext.ProductTypes.AddAsync(course, cancellationToken);
+        await dbContext.ProductTypes.AddAsync(productType, cancellationToken);
     }
 
-    public void Delete(ProductType course)
+    public void Delete(ProductType productType)
     {
-        dbContext.ProductTypes.Remove(course);
+        dbContext.ProductTypes.Remove(productType);
     }
 
     public Task<int> DeleteAsync(
@@ -53,8 +53,8 @@ public class ProductTypeRepository(CatalogDbContext dbContext) : IProductTypeRep
         return dbContext.ProductTypes.GetQuery(specification).Select(mapper).SingleOrDefaultAsync(cancellationToken);
     }
 
-    public void Update(ProductType course)
+    public void Update(ProductType productType)
     {
-        dbContext.ProductTypes.Update(course);
+        dbContext.ProductTypes.Update(productType);
     }
 }

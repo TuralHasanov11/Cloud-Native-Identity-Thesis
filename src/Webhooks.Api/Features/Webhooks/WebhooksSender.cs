@@ -10,7 +10,7 @@ public class WebhooksSender(IHttpClientFactory httpClientFactory, ILogger<Webhoo
 {
     public async Task SendAll(IEnumerable<WebhookSubscription> receivers, WebhookData data)
     {
-        var client = httpClientFactory.CreateClient();
+        using var client = httpClientFactory.CreateClient();
         var json = JsonSerializer.Serialize(data);
         var tasks = receivers.Select(r => OnSendData(r, json, client));
         await Task.WhenAll(tasks);
@@ -20,7 +20,7 @@ public class WebhooksSender(IHttpClientFactory httpClientFactory, ILogger<Webhoo
     {
         using var request = new HttpRequestMessage()
         {
-            RequestUri = subs.DestUrl,
+            RequestUri = subs.DestinationUrl,
             Method = HttpMethod.Post,
             Content = new StringContent(jsonData, Encoding.UTF8, "application/json")
         };
@@ -32,7 +32,7 @@ public class WebhooksSender(IHttpClientFactory httpClientFactory, ILogger<Webhoo
 
         if (logger.IsEnabled(LogLevel.Debug))
         {
-            logger.LogDebug("Sending hook to {DestUrl} of type {Type}", subs.DestUrl, subs.Type);
+            logger.LogDebug("Sending hook to {DestUrl} of type {Type}", subs.DestinationUrl, subs.Type);
         }
 
         return client.SendAsync(request);

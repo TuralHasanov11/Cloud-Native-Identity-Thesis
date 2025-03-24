@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
-using Mono.Cecil;
-using Mono.Cecil.Rocks;
+using Xunit.Abstractions;
 
 namespace ArchitectureTests;
 
-public class DomainTests
+public class DomainTests(ITestOutputHelper testOutputHelper)
 {
+    private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
+
     [Fact]
     public void Entities_ShouldNotHave_PublicConstructors()
     {
@@ -15,6 +16,11 @@ public class DomainTests
             .Should()
             .MeetCustomRule(notHavingPublicConstructorRule)
             .GetResult();
+
+        if (result.FailingTypeNames is not null)
+        {
+            _testOutputHelper.WriteLine($"Failing Types: {string.Join(',', result.FailingTypeNames)}");
+        }
 
         Assert.True(result.IsSuccessful);
     }
@@ -29,6 +35,11 @@ public class DomainTests
             .BeSealed()
             .GetResult();
 
+        if (result.FailingTypeNames is not null)
+        {
+            _testOutputHelper.WriteLine($"Failing Types: {string.Join(',', result.FailingTypeNames)}");
+        }
+
         Assert.True(result.IsSuccessful);
     }
 
@@ -39,6 +50,11 @@ public class DomainTests
             .Should()
             .HaveNameEndingWith("DomainEvent", StringComparison.OrdinalIgnoreCase)
             .GetResult();
+
+        if (result.FailingTypeNames is not null)
+        {
+            _testOutputHelper.WriteLine($"Failing Types: {string.Join(',', result.FailingTypeNames)}");
+        }
 
         Assert.True(result.IsSuccessful);
     }
@@ -51,6 +67,11 @@ public class DomainTests
         var entitiesWithoutPrivateParameterlessConstructor = entityTypes
             .Where(e => e.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).Length == 0);
 
+        if (entitiesWithoutPrivateParameterlessConstructor is not null)
+        {
+            _testOutputHelper.WriteLine($"Failing Types: {string.Join(',', entitiesWithoutPrivateParameterlessConstructor)}");
+        }
+
         Assert.Empty(entitiesWithoutPrivateParameterlessConstructor);
     }
 
@@ -61,7 +82,12 @@ public class DomainTests
 
         var failingTypes = entityTypes.Where(
                 e => !typeof(IAggregateRoot).IsAssignableFrom(e)
-                    && e.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Length != 0).ToList();
+                    && e.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Length != 0);
+
+        if (failingTypes is not null)
+        {
+            _testOutputHelper.WriteLine($"Failing Types: {string.Join(',', failingTypes)}");
+        }
 
         Assert.Empty(failingTypes);
     }

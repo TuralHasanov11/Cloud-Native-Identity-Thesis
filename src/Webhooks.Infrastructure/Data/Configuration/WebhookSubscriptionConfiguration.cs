@@ -19,14 +19,20 @@ public sealed class WebhookSubscriptionConfiguration : IEntityTypeConfiguration<
 
         builder.Property(o => o.Date);
 
-        builder.Property(o => o.DestUrl)
+        builder.Property(o => o.DestinationUrl)
             .HasMaxLength(2000);
 
         builder.Property(o => o.Token)
             .HasMaxLength(200);
 
+        builder.Property(o => o.UserId);
+
+        builder.Property(b => b.RowVersion)
+           .IsRowVersion();
+
         builder.HasIndex(s => s.UserId);
 
         builder.HasIndex(s => s.Type);
+
     }
 }

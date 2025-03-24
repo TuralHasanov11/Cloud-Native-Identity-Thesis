@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using Webhooks.Contracts.IntegrationEvents;
+﻿using Webhooks.Infrastructure.Services;
+using Webhooks.UseCases.Webhooks;
 
 namespace Webhooks.Infrastructure.IntegrationEvents.EventHandlers;
 

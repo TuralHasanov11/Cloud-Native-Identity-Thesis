@@ -37,6 +37,8 @@ public static class OutboxMessageExtensions
 
             builder.Property(x => x.TransactionId)
                 .IsRequired();
+
+            builder.Ignore(x => x.IntegrationEvent);
         });
     }
 }

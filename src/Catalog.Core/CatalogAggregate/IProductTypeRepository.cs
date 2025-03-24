@@ -24,11 +24,11 @@ public interface IProductTypeRepository
         CancellationToken cancellationToken = default)
         where TResponse : class;
 
-    Task CreateAsync(ProductType course, CancellationToken cancellationToken = default);
+    Task CreateAsync(ProductType productType, CancellationToken cancellationToken = default);
 
-    void Update(ProductType course);
+    void Update(ProductType productType);
 
-    void Delete(ProductType course);
+    void Delete(ProductType productType);
 
     Task<int> DeleteAsync(Specification<ProductType> specification, CancellationToken cancellationToken = default);
 }

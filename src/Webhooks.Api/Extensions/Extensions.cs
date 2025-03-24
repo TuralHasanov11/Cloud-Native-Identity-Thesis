@@ -17,6 +17,8 @@ internal static class Extensions
     {
         builder.AddDefaultAuthentication();
 
+        builder.AddAudit();
+
         builder.ConfigureEventBus();
 
         var connectionString = builder.Configuration.GetConnectionString("Database")

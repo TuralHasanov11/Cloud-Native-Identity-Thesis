@@ -1,0 +1,14 @@
+﻿//global using MediatR;
+//global using Microsoft.AspNetCore.Mvc;
+//global using Ordering.Api.Application.Commands;
+//global using Ordering.API.Application.Models;
+//global using Ordering.API.Infrastructure.Services;
+//global using Ordering.Domain.AggregatesModel.BuyerAggregate;
+//global using Ordering.Domain.Events;
+//global using Ordering.Domain.Exceptions;
+//global using Ordering.Domain.SeedWork;
+//global using Ordering.Infrastructure.Idempotency;
+//global using Microsoft.Extensions.Logging;
+//global using NSubstitute;
+//global using Ordering.UnitTests;
+global using Ordering.Core.OrderAggregate;

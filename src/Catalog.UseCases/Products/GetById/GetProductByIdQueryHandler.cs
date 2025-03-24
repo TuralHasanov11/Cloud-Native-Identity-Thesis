@@ -1,7 +1,4 @@
-﻿using Catalog.Core.CatalogAggregate;
-using Catalog.Core.CatalogAggregate.Specifications;
-
-namespace Catalog.UseCases.Products.GetById;
+﻿namespace Catalog.UseCases.Products.GetById;
 
 public sealed class GetProductByIdQueryHandler : IQueryHandler<GetProductByIdQuery, ProductDto>
 {

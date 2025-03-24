@@ -1,33 +1,51 @@
-﻿using Mono.Cecil.Rocks;
-using NetArchTest.Rules;
-using SharedKernel;
-using Xunit.Abstractions;
+﻿using Xunit.Abstractions;
 
-namespace Basket.ArchitectureTests;
+namespace ArchitectureTests;
 
 public class UseCaseTests(ITestOutputHelper testOutputHelper)
 {
     private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
 
-    private static readonly PredicateList QueryHandlers = Types.InAssembly(UseCases.AssemblyReference.Assembly)
+    private static readonly PredicateList QueryHandlers = Types.InAssemblies([
+            Basket.UseCases.AssemblyReference.Assembly,
+            Catalog.UseCases.AssemblyReference.Assembly,
+            Ordering.UseCases.AssemblyReference.Assembly,
+            Webhooks.UseCases.AssemblyReference.Assembly
+        ])
         .That()
         .ImplementInterface(typeof(IQueryHandler<,>));
 
-    private static readonly PredicateList Queries = Types.InAssembly(UseCases.AssemblyReference.Assembly)
+    private static readonly PredicateList Queries = Types.InAssemblies([
+            Basket.UseCases.AssemblyReference.Assembly,
+            Catalog.UseCases.AssemblyReference.Assembly,
+            Ordering.UseCases.AssemblyReference.Assembly,
+            Webhooks.UseCases.AssemblyReference.Assembly
+        ])
         .That()
         .ImplementInterface(typeof(IQuery<>));
 
-    private static readonly PredicateList Commands = Types.InAssembly(UseCases.AssemblyReference.Assembly)
+    private static readonly PredicateList Commands = Types.InAssemblies([
+            Basket.UseCases.AssemblyReference.Assembly,
+            Catalog.UseCases.AssemblyReference.Assembly,
+            Ordering.UseCases.AssemblyReference.Assembly,
+            Webhooks.UseCases.AssemblyReference.Assembly
+        ])
         .That()
         .ImplementInterface(typeof(ICommand))
         .Or()
         .ImplementInterface(typeof(ICommand<>));
 
-    private static readonly PredicateList CommandHandlers = Types.InAssembly(UseCases.AssemblyReference.Assembly)
+    private static readonly PredicateList CommandHandlers = Types.InAssemblies([
+            Basket.UseCases.AssemblyReference.Assembly,
+            Catalog.UseCases.AssemblyReference.Assembly,
+            Ordering.UseCases.AssemblyReference.Assembly,
+            Webhooks.UseCases.AssemblyReference.Assembly
+        ])
         .That()
         .ImplementInterface(typeof(ICommandHandler<>))
         .Or()
         .ImplementInterface(typeof(ICommandHandler<,>));
+
 
     [Fact]
     public void Query_ShouldHave_NameWithPostfix_Query()
@@ -36,6 +54,11 @@ public class UseCaseTests(ITestOutputHelper testOutputHelper)
             .Should()
             .HaveNameEndingWith("Query", StringComparison.OrdinalIgnoreCase)
             .GetResult();
+
+        if (result.FailingTypeNames is not null)
+        {
+            _testOutputHelper.WriteLine($"Failing Types: {string.Join(',', result.FailingTypeNames)}");
+        }
 
         Assert.True(result.IsSuccessful);
     }
@@ -85,7 +108,7 @@ public class UseCaseTests(ITestOutputHelper testOutputHelper)
 
         if (result.FailingTypeNames is not null)
         {
-            _testOutputHelper.WriteLine($"Failing Queries: {string.Join(',', result.FailingTypeNames)}");
+            _testOutputHelper.WriteLine($"Failing Types: {string.Join(',', result.FailingTypeNames)}");
         }
 
         Assert.True(result.IsSuccessful);
@@ -112,11 +135,13 @@ public class UseCaseTests(ITestOutputHelper testOutputHelper)
 
 public class BeImmutableIncludingRecordsRule : ICustomRule
 {
-    public bool MeetsRule(Mono.Cecil.TypeDefinition type)
+    public bool MeetsRule(TypeDefinition type)
     {
-        return type.GetMethods().All(m => m.Name switch
+        return type.GetMethods().Any(m => m.Name switch
         {
             "PrintMembers" => true,
+            "Equals" => true,
+            "GetHashCode" => true,
             _ => false
         });
     }

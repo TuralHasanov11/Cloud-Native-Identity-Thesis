@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Ordering.Core.OrderAggregate;
+namespace Ordering.Core.CustomerAggregate;
 
 public interface ICardTypeRepository
 {
