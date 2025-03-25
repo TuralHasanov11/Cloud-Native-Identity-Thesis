@@ -1,4 +1,6 @@
-﻿namespace Catalog.UnitTests.Products;
+﻿using Catalog.UseCases.Products;
+
+namespace Catalog.UnitTests.Products;
 
 public class ProductTests
 {
@@ -137,4 +139,27 @@ public class ProductTests
         Assert.Equal(newRestockThreshold, product.RestockThreshold);
         Assert.Equal(newMaxStockThreshold, product.MaxStockThreshold);
     }
+
+    [Fact]
+    public void ToProductDto_ShouldMapProductToProductDto()
+    {
+        // Arrange
+        var product = Product.Create("Product1", "Description1", 10.0m, new ProductTypeId(Guid.NewGuid()), new BrandId(Guid.NewGuid()), 100, 10, 200);
+
+        // Act
+        var productDto = product.ToProductDto();
+
+        // Assert
+        Assert.Equal(product.Id, productDto.Id);
+        Assert.Equal(product.Name, productDto.Name);
+        Assert.Equal(product.Description, productDto.Description);
+        Assert.Equal(product.Price, productDto.Price);
+        Assert.Equal(product.ProductTypeId, productDto.ProductTypeId);
+        Assert.Equal(product.BrandId, productDto.BrandId);
+        Assert.Equal(product.AvailableStock, productDto.AvailableStock);
+        Assert.Equal(product.RestockThreshold, productDto.RestockThreshold);
+        Assert.Equal(product.MaxStockThreshold, productDto.MaxStockThreshold);
+    }
+
+
 }

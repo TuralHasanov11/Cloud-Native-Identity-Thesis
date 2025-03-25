@@ -2,7 +2,7 @@
 
 namespace Catalog.UseCases.ProductTypes;
 
-public static partial class ProductTypeMapper
+public static partial class ProductTypeExtensions
 {
     public static ProductTypeDto ToProductTypeDto(this ProductType productType)
     {

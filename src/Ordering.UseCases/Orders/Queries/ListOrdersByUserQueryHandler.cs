@@ -7,7 +7,7 @@ public sealed class ListOrdersByUserQueryHandler(
     public async Task<Result<IEnumerable<OrderSummary>>> Handle(ListOrdersByUserQuery request, CancellationToken cancellationToken)
     {
         var orders = await orderRepository.ListAsync(
-            new GetOrdersByCustomerIdSpecification(new CustomerId(request.UserId)),
+            new GetOrdersByCustomerIdSpecification(new IdentityId(request.UserId)),
             cancellationToken);
 
         return Result.Success(orders.Select(o => o.ToOrderSummary()));

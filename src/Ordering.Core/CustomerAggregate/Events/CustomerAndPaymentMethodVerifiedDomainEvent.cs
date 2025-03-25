@@ -2,7 +2,7 @@
 
 public sealed record CustomerAndPaymentMethodVerifiedDomainEvent(
     Customer Customer,
-    PaymentMethod Payment,
+    PaymentMethod PaymentMethod,
     OrderId OrderId,
     DateTime OccurredOnUtc)
     : DomainEventBase(OccurredOnUtc);

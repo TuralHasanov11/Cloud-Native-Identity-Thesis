@@ -7,8 +7,8 @@ public record ProductDto(
     decimal Price,
     Guid ProductTypeId,
     Guid BrandId,
-    int availableStock,
-    int restockThreshold,
-    int maxStockThreshold);
+    int AvailableStock,
+    int RestockThreshold,
+    int MaxStockThreshold);
 
 

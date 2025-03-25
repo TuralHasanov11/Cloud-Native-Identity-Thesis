@@ -1,4 +1,6 @@
-﻿namespace Catalog.UnitTests.Brands;
+﻿using Catalog.UseCases.Brands;
+
+namespace Catalog.UnitTests.Brands;
 
 public class BrandTests
 {
@@ -74,5 +76,29 @@ public class BrandTests
         // Act & Assert
         var exception = Assert.Throws<ArgumentException>(() => brand.UpdateName(newName));
         Assert.Equal("The name cannot be empty. (Parameter 'name')", exception.Message);
+    }
+
+    [Fact]
+    public void ToBrandDto_ShouldMapBrandToBrandDto()
+    {
+        // Arrange
+        var brand = Brand.Create("Brand1");
+
+        // Act
+        var brandDto = brand.ToBrandDto();
+
+        // Assert
+        Assert.Equal(brand.Id, brandDto.Id);
+        Assert.Equal(brand.Name, brandDto.Name);
+    }
+
+    [Fact]
+    public void ToBrandDto_ShouldThrowException_WhenBrandIsNull()
+    {
+        // Arrange
+        Brand brand = null;
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => brand.ToBrandDto());
     }
 }

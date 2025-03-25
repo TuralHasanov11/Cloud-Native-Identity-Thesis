@@ -1,4 +1,6 @@
-﻿global using Microsoft.EntityFrameworkCore;
+﻿global using Ardalis.Result;
+global using MediatR;
+global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.DependencyInjection.Extensions;
 global using Ordering.Core.CustomerAggregate;

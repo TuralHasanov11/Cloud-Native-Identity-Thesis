@@ -1,6 +1,6 @@
 ﻿namespace Catalog.UseCases.Products.DeleteById;
 
-public sealed class DeleteByIdCommandHandler(
+public sealed class DeleteProductByIdCommandHandler(
     IProductRepository productRepository)
     : ICommandHandler<DeleteProductByIdCommand>
 {

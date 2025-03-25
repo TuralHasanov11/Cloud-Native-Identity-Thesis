@@ -5,7 +5,6 @@ namespace Catalog.Infrastructure.IntegrationEvents.EventHandlers;
 
 public class OrderStatusChangedToPaidIntegrationEventHandler(
     IProductRepository productRepository,
-    IUnitOfWork unitOfWork,
     ILogger<OrderStatusChangedToPaidIntegrationEventHandler> logger) :
     IConsumer<OrderStatusChangedToPaidIntegrationEvent>
 {
@@ -27,7 +26,7 @@ public class OrderStatusChangedToPaidIntegrationEventHandler(
             product.RemoveStock(orderStockItem.Units);
         }
 
-        await unitOfWork.SaveChangesAsync();
+        await productRepository.SaveChangesAsync();
     }
 }
 

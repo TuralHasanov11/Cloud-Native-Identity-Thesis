@@ -88,11 +88,11 @@ public class OrderAggregateTests
     {
         var address = new AddressBuilder().Build();
 
-        var orderId = Guid.CreateVersion7();
+        var productId = Guid.CreateVersion7();
 
         var order = new OrderBuilder(address)
-            .AddOne(orderId, "cup", 10.0m, 0, new Uri(string.Empty))
-            .AddOne(orderId, "cup", 10.0m, 0, new Uri(string.Empty))
+            .AddOne(productId, "cup", 10.0m, 0, new Uri(string.Empty))
+            .AddOne(productId, "cup", 10.0m, 0, new Uri(string.Empty))
             .Build();
 
         Assert.Equal(20.0m, order.GetTotal());

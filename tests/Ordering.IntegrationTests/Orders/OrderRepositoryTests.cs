@@ -27,7 +27,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
             cardExpiration: DateTime.UtcNow);
 
         await repository.CreateAsync(order);
-        await repository.SaveChangedAsync();
+        await repository.SaveChangesAsync();
 
         var createdOrder = await dbContext.Orders.FindAsync(order.Id);
         Assert.NotNull(createdOrder);
@@ -52,11 +52,11 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
             cardExpiration: DateTime.UtcNow);
 
         await repository.CreateAsync(order);
-        await repository.SaveChangedAsync();
+        await repository.SaveChangesAsync();
 
         // Act
         repository.Delete(order);
-        await repository.SaveChangedAsync();
+        await repository.SaveChangesAsync();
 
         // Assert
         var deletedOrder = await dbContext.Orders.FindAsync(order.Id);
@@ -94,7 +94,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
 
         await repository.CreateAsync(order1);
         await repository.CreateAsync(order2);
-        await repository.SaveChangedAsync();
+        await repository.SaveChangesAsync();
 
         var specification = new GetOrdersByCustomerIdSpecification(order1.CustomerId);
 
@@ -125,7 +125,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
             cardExpiration: DateTime.UtcNow);
 
         await repository.CreateAsync(order);
-        await repository.SaveChangedAsync();
+        await repository.SaveChangesAsync();
         var specification = new GetOrderByIdSpecification(order.Id);
 
         // Act
@@ -172,12 +172,12 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
             cardExpiration: DateTime.UtcNow);
 
         await repository.CreateAsync(order);
-        await repository.SaveChangedAsync();
+        await repository.SaveChangesAsync();
 
         // Act
         order.SetAwaitingValidationStatus();
         repository.Update(order);
-        await repository.SaveChangedAsync();
+        await repository.SaveChangesAsync();
 
         // Assert
         var updatedOrder = await dbContext.Orders.FindAsync(order.Id);

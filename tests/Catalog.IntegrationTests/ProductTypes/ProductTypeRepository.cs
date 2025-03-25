@@ -1,4 +1,4 @@
-﻿namespace Catalog.IntegrationTests.Products;
+﻿namespace Catalog.IntegrationTests.ProductTypes;
 
 public class ProductTypeRepositoryTests : IClassFixture<CatalogFactory>
 {

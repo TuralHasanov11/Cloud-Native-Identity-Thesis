@@ -90,11 +90,11 @@ public static class Extensions
 
     public static IApplicationBuilder UseBackgroundJobs(this WebApplication app)
     {
-        //app.Services.GetRequiredService<IRecurringJobManager>()
-        //   .AddOrUpdate<IOutboxProcessor>(
-        //        "outbox-processor",
-        //        job => job.ExecuteAsync(CancellationToken.None),
-        //        "0/15 * * * * *");
+        app.Services.GetRequiredService<IRecurringJobManager>()
+           .AddOrUpdate<IOutboxProcessor>(
+                "outbox-processor",
+                job => job.ExecuteAsync(CancellationToken.None),
+                "0/15 * * * * *");
 
         if (app.Environment.IsDevelopment())
         {

@@ -1,7 +1,7 @@
 ﻿using Webhooks.Infrastructure.Services;
 using Webhooks.UseCases.Webhooks;
 
-namespace Webhooks.Infrastructure.IntegrationEvents.EventHandlers;
+namespace Webhooks.Infrastructure.IntegrationEvents;
 
 public class OrderStatusChangedToPaidIntegrationEventHandler(
     IWebhooksRetriever retriever,

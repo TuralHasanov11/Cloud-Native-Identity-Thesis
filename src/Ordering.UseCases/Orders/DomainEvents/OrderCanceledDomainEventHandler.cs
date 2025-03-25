@@ -2,9 +2,9 @@
 
 namespace Ordering.UseCases.Orders.DomainEvents;
 
-public sealed class OrderCancelledDomainEventHandler(
+public sealed class OrderCanceledDomainEventHandler(
     IOrderRepository orderRepository,
-    ILogger<OrderCancelledDomainEventHandler> logger,
+    ILogger<OrderCanceledDomainEventHandler> logger,
     ICustomerRepository customerRepository,
     IOrderingIntegrationEventService orderingIntegrationEventService) : IDomainEventHandler<OrderCanceledDomainEvent>
 {

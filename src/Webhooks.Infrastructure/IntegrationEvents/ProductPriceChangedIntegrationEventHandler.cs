@@ -1,4 +1,4 @@
-﻿namespace Webhooks.Infrastructure.IntegrationEvents.EventHandlers;
+﻿namespace Webhooks.Infrastructure.IntegrationEvents;
 
 public class ProductPriceChangedIntegrationEventHandler : IConsumer<ProductPriceChangedIntegrationEvent>
 {

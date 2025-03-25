@@ -34,13 +34,15 @@ public static class OrderingDbContextExtensions
         }
     }
 
-    private static CardType[] GetCardTypes()
+    public static CardType[] GetCardTypes()
     {
         return [
+            new CardType("Visa"),
+            new CardType("MasterCard")
         ];
     }
 
-    private static List<Order> GetOrders()
+    public static List<Order> GetOrders()
     {
         return
         [
@@ -48,7 +50,7 @@ public static class OrderingDbContextExtensions
         ];
     }
 
-    private static List<Customer> GetCustomers()
+    public static List<Customer> GetCustomers()
     {
         return
         [
@@ -56,7 +58,7 @@ public static class OrderingDbContextExtensions
         ];
     }
 
-    private static List<PaymentMethod> GetPaymentMethods()
+    public static List<PaymentMethod> GetPaymentMethods()
     {
         return
         [

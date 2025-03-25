@@ -1,4 +1,6 @@
-﻿namespace Catalog.UnitTests.Products;
+﻿using Catalog.UseCases.ProductTypes;
+
+namespace Catalog.UnitTests.Products;
 
 public class ProductTypeTests
 {
@@ -20,7 +22,7 @@ public class ProductTypeTests
     public void Create_ShouldThrowException_WhenNameIsNull()
     {
         // Arrange
-        string name = null;
+        const string name = null;
 
         // Act & Assert
         var exception = Assert.Throws<ArgumentNullException>(() => ProductType.Create(name));
@@ -57,7 +59,7 @@ public class ProductTypeTests
     {
         // Arrange
         var productType = ProductType.Create("ProductType1");
-        string newName = null;
+        const string newName = null;
 
         // Act & Assert
         var exception = Assert.Throws<ArgumentNullException>(() => productType.UpdateName(newName));
@@ -74,5 +76,19 @@ public class ProductTypeTests
         // Act & Assert
         var exception = Assert.Throws<ArgumentException>(() => productType.UpdateName(newName));
         Assert.Equal("The name cannot be empty. (Parameter 'name')", exception.Message);
+    }
+
+    [Fact]
+    public void ToProductTypeDto_ShouldReturnProductTypeDto()
+    {
+        // Arrange
+        var productType = ProductType.Create("ProductType1");
+
+        // Act
+        var productTypeDto = productType.ToProductTypeDto();
+
+        // Assert
+        Assert.Equal(productType.Id, productTypeDto.Id);
+        Assert.Equal(productType.Name, productTypeDto.Name);
     }
 }

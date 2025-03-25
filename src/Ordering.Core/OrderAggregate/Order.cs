@@ -33,7 +33,7 @@ public sealed class Order
     }
 
     public Order(
-        Guid userId,
+        IdentityId userId,
         string userName,
         Address address,
         int cardTypeId,

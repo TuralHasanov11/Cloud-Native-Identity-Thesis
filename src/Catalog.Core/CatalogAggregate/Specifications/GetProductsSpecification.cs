@@ -2,18 +2,32 @@
 
 public class GetProductsSpecification : Specification<Product>
 {
-    public GetProductsSpecification(string? name, Guid? productTypeId, Guid? brandId)
+    public GetProductsSpecification()
+    {
+
+    }
+
+    public GetProductsSpecification(IEnumerable<ProductId> Ids)
+        : base(p => Ids.Contains(p.Id))
+    {
+
+    }
+
+    public GetProductsSpecification WithNameCriteria(string? name)
     {
         AddCriteria(p => p.Name == name, name != null);
+        return this;
+    }
 
-        if (productTypeId != null)
-        {
-            //AddCriteria(p => p.ProductTypeId == new ProductTypeId(productTypeId));
-        }
+    public GetProductsSpecification WithProductTypeCriteria(ProductTypeId? productTypeId = null)
+    {
+        AddCriteria(p => p.ProductTypeId == productTypeId, productTypeId != null);
+        return this;
+    }
 
-        if (brandId != null)
-        {
-            //AddCriteria(p => p.BrandId == new BrandId(brandId));
-        }
+    public GetProductsSpecification WithBrandCriteria(BrandId? brandId = null)
+    {
+        AddCriteria(p => p.BrandId == brandId, brandId != null);
+        return this;
     }
 }

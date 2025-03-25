@@ -15,7 +15,7 @@ public class CreateOrderCommandHandler(
 
 
         var order = new Order(
-            request.UserId,
+            new IdentityId(request.UserId),
             request.UserName,
             new Address(request.Street, request.City, request.State, request.Country, request.ZipCode),
             request.CardTypeId,

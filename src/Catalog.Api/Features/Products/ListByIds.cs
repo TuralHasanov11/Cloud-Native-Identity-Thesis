@@ -6,9 +6,9 @@ public static class ListByIds
 {
     public static async Task<Ok<IEnumerable<ProductDto>>> Handle(
         IMediator mediator,
-        int[] ids)
+        Guid[] ids)
     {
-        var result = await mediator.Send(new GetProductByIdQueryHandler(ids));
+        var result = await mediator.Send(new ListProductsByIdsQuery(ids));
         return TypedResults.Ok(result.Value);
     }
 }
