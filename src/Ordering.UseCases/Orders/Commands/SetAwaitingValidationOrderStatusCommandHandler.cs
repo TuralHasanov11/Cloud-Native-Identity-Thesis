@@ -1,20 +1,14 @@
 ﻿namespace Ordering.UseCases.Orders.Commands;
 
-public class SetAwaitingValidationOrderStatusCommandHandler
-    : ICommandHandler<SetAwaitingValidationOrderStatusCommand, bool>
+public class SetAwaitingValidationOrderStatusCommandHandler(
+    IOrderRepository orderRepository)
+        : ICommandHandler<SetAwaitingValidationOrderStatusCommand, bool>
 {
-    private readonly IOrderRepository _orderRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public SetAwaitingValidationOrderStatusCommandHandler(IOrderRepository orderRepository, IUnitOfWork unitOfWork)
+    public async Task<Result<bool>> Handle(
+        SetAwaitingValidationOrderStatusCommand request,
+        CancellationToken cancellationToken)
     {
-        _orderRepository = orderRepository;
-        _unitOfWork = unitOfWork;
-    }
-
-    public async Task<Result<bool>> Handle(SetAwaitingValidationOrderStatusCommand request, CancellationToken cancellationToken)
-    {
-        var order = await _orderRepository.SingleOrDefaultAsync(
+        var order = await orderRepository.SingleOrDefaultAsync(
             new GetOrderByIdSpecification(new OrderId(request.OrderNumber)),
             cancellationToken);
 
@@ -24,7 +18,10 @@ public class SetAwaitingValidationOrderStatusCommandHandler
         }
 
         order.SetAwaitingValidationStatus();
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        orderRepository.Update(order);
+
+        await orderRepository.SaveChangesAsync(cancellationToken);
 
         return Result.Success(true);
     }

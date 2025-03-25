@@ -14,20 +14,21 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
-COPY ["src/WebApp/WebApp.csproj", "src/WebApp/"]
+COPY ["src/WebApp.Bff/WebApp.Bff.csproj", "src/WebApp.Bff/"]
+COPY ["src/ServiceDefaults/ServiceDefaults.csproj", "src/ServiceDefaults/"]
 COPY ["src/SharedKernel/SharedKernel.csproj", "src/SharedKernel/"]
-RUN dotnet restore "./src/WebApp/WebApp.csproj"
+RUN dotnet restore "./src/WebApp.Bff/WebApp.Bff.csproj"
 COPY . .
-WORKDIR "/src/src/WebApp"
-RUN dotnet build "./WebApp.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/src/WebApp.Bff"
+RUN dotnet build "./WebApp.Bff.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./WebApp.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./WebApp.Bff.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "WebApp.dll"]
+ENTRYPOINT ["dotnet", "WebApp.Bff.dll"]

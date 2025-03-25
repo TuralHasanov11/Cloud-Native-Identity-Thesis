@@ -1,14 +1,11 @@
 ﻿namespace Ordering.UseCases.Orders.Commands;
 
-public class CancelOrderCommandHandler(IOrderRepository orderRepository, IUnitOfWork unitOfWork)
+public class CancelOrderCommandHandler(IOrderRepository orderRepository)
     : ICommandHandler<CancelOrderCommand, bool>
 {
-    private readonly IOrderRepository _orderRepository = orderRepository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
     public async Task<Result<bool>> Handle(CancelOrderCommand request, CancellationToken cancellationToken)
     {
-        var order = await _orderRepository.SingleOrDefaultAsync(
+        var order = await orderRepository.SingleOrDefaultAsync(
             new GetOrderByIdSpecification(new OrderId(request.OrderNumber)),
             cancellationToken);
 
@@ -19,7 +16,9 @@ public class CancelOrderCommandHandler(IOrderRepository orderRepository, IUnitOf
 
         order.Cancel();
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        orderRepository.Update(order);
+
+        await orderRepository.SaveChangesAsync(cancellationToken);
 
         return Result<bool>.Success(true);
     }

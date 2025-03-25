@@ -1,19 +1,14 @@
 ﻿namespace Ordering.UseCases.Orders.Commands;
 
-public class SetStockRejectedOrderStatusCommandHandler : ICommandHandler<SetStockRejectedOrderStatusCommand, bool>
+public class SetStockRejectedOrderStatusCommandHandler(
+    IOrderRepository orderRepository)
+    : ICommandHandler<SetStockRejectedOrderStatusCommand, bool>
 {
-    private readonly IOrderRepository _orderRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public SetStockRejectedOrderStatusCommandHandler(IOrderRepository orderRepository, IUnitOfWork unitOfWork)
+    public async Task<Result<bool>> Handle(
+        SetStockRejectedOrderStatusCommand request,
+        CancellationToken cancellationToken)
     {
-        _orderRepository = orderRepository;
-        _unitOfWork = unitOfWork;
-    }
-
-    public async Task<Result<bool>> Handle(SetStockRejectedOrderStatusCommand request, CancellationToken cancellationToken)
-    {
-        var order = await _orderRepository.SingleOrDefaultAsync(
+        var order = await orderRepository.SingleOrDefaultAsync(
             new GetOrderByIdSpecification(new OrderId(request.OrderNumber)),
             cancellationToken);
 
@@ -24,7 +19,9 @@ public class SetStockRejectedOrderStatusCommandHandler : ICommandHandler<SetStoc
 
         order.Cancel(request.OrderStockItems);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        orderRepository.Update(order);
+
+        await orderRepository.SaveChangesAsync(cancellationToken);
 
         return Result.Success(true);
     }

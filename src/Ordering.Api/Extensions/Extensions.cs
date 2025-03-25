@@ -72,8 +72,6 @@ public static class Extensions
         builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
         builder.Services.AddScoped<ICardTypeRepository, CardTypeRepository>();
-
-        builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
     }
 
     private static void ConfigureEventBus(this IHostApplicationBuilder builder)

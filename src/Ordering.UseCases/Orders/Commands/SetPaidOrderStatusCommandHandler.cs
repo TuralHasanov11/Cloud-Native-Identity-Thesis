@@ -1,16 +1,14 @@
 ﻿namespace Ordering.UseCases.Orders.Commands;
 
 public class SetPaidOrderStatusCommandHandler(
-    IOrderRepository orderRepository,
-    IUnitOfWork unitOfWork)
+    IOrderRepository orderRepository)
     : ICommandHandler<SetPaidOrderStatusCommand, bool>
 {
-    private readonly IOrderRepository _orderRepository = orderRepository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
-    public async Task<Result<bool>> Handle(SetPaidOrderStatusCommand request, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Handle(
+        SetPaidOrderStatusCommand request,
+        CancellationToken cancellationToken)
     {
-        var order = await _orderRepository.SingleOrDefaultAsync(
+        var order = await orderRepository.SingleOrDefaultAsync(
             new GetOrderByIdSpecification(new OrderId(request.OrderNumber)),
             cancellationToken);
 
@@ -20,7 +18,10 @@ public class SetPaidOrderStatusCommandHandler(
         }
 
         order.Pay();
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        orderRepository.Update(order);
+
+        await orderRepository.SaveChangesAsync(cancellationToken);
 
         return Result.Success(true);
     }

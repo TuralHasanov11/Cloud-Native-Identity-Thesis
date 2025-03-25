@@ -145,12 +145,12 @@ services:
     depends_on:
     - webhooks.api
 
-  webapp:
-    image: ${DOCKER_REGISTRY-}webapp
-    container_name: webapp
+  webapp.bff:
+    image: ${DOCKER_REGISTRY-}webapp-bff
+    container_name: webapp.bff
     build:
       context: .
-      dockerfile: src/WebApp/Dockerfile
+      dockerfile: src/WebApp.Bff/Dockerfile
     ports:
     - "5112:5112"
     - "5113:5113"
