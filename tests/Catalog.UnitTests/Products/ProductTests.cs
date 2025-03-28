@@ -1,4 +1,4 @@
-﻿using Catalog.UseCases.Products;
+﻿using Catalog.Api.Features.Products;
 
 namespace Catalog.UnitTests.Products;
 

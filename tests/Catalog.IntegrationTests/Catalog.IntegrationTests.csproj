@@ -28,7 +28,6 @@
     <ProjectReference Include="..\..\src\Catalog.Contracts\Catalog.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Catalog.Core\Catalog.Core.csproj" />
     <ProjectReference Include="..\..\src\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\Catalog.UseCases\Catalog.UseCases.csproj" />
   </ItemGroup>
 
   <ItemGroup>

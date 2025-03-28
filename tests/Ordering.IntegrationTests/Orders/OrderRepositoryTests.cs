@@ -17,7 +17,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
 
         var repository = new OrderRepository(dbContext);
         var order = new Order(
-            Guid.CreateVersion7(),
+            new IdentityId(Guid.CreateVersion7()),
             "fakeName",
             new Address("street", "city", "state", "country", "zipcode"),
             cardTypeId: 5,
@@ -42,7 +42,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
 
         var repository = new OrderRepository(dbContext);
         var order = new Order(
-            Guid.CreateVersion7(),
+            new IdentityId(Guid.CreateVersion7()),
             "fakeName",
             new Address("street", "city", "state", "country", "zipcode"),
             cardTypeId: 5,
@@ -71,9 +71,10 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
         await dbContext.SeedDatabase();
 
         var repository = new OrderRepository(dbContext);
+        var identityId = new IdentityId(Guid.CreateVersion7());
 
         var order1 = new Order(
-            Guid.CreateVersion7(),
+            identityId,
             "fakeName",
             new Address("street", "city", "state", "country", "zipcode"),
             cardTypeId: 5,
@@ -83,7 +84,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
             cardExpiration: DateTime.UtcNow);
 
         var order2 = new Order(
-            Guid.CreateVersion7(),
+            identityId,
             "fakeName",
             new Address("street", "city", "state", "country", "zipcode"),
             cardTypeId: 5,
@@ -96,7 +97,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
         await repository.CreateAsync(order2);
         await repository.SaveChangesAsync();
 
-        var specification = new GetOrdersByCustomerIdSpecification(order1.CustomerId);
+        var specification = new GetOrdersByCustomerIdSpecification(identityId);
 
         // Act
         var orders = await repository.ListAsync(specification);
@@ -115,7 +116,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
 
         var repository = new OrderRepository(dbContext);
         var order = new Order(
-            Guid.CreateVersion7(),
+            new IdentityId(Guid.CreateVersion7()),
             "fakeName",
             new Address("street", "city", "state", "country", "zipcode"),
             cardTypeId: 5,
@@ -162,7 +163,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
 
         var repository = new OrderRepository(dbContext);
         var order = new Order(
-            Guid.CreateVersion7(),
+            new IdentityId(Guid.CreateVersion7()),
             "fakeName",
             new Address("street", "city", "state", "country", "zipcode"),
             cardTypeId: 5,

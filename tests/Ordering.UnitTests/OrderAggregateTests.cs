@@ -113,7 +113,7 @@ public class OrderAggregateTests
         DateTime cardExpiration = DateTime.UtcNow.AddYears(1);
 
         var fakeOrder = new Order(
-            Guid.CreateVersion7(),
+            new Core.CustomerAggregate.IdentityId(Guid.CreateVersion7()),
             "fakeName",
             new Address(street, city, state, country, zipcode),
             cardTypeId,

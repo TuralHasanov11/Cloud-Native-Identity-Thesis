@@ -1,21 +1,18 @@
-﻿using Catalog.UseCases.Products.GetById;
-using Microsoft.AspNetCore.Http.HttpResults;
-
-namespace Catalog.Api.Features.Products;
+﻿namespace Catalog.Api.Features.Products;
 
 public static class GetById
 {
     public static async Task<Results<Ok<ProductDto>, NotFound>> Handle(
-        IMediator mediator,
-        Guid id)
+        IProductRepository productRepository,
+        Guid id,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetProductByIdQuery(id));
+        var product = await productRepository.SingleOrDefaultAsync(
+            new GetProductByIdSpecification(new ProductId(id)).WithBrand(),
+            cancellationToken);
 
-        if (result.IsNotFound())
-        {
-            return TypedResults.NotFound();
-        }
-
-        return TypedResults.Ok(result.Value);
+        return product == null
+            ? (Results<Ok<ProductDto>, NotFound>)TypedResults.NotFound()
+            : (Results<Ok<ProductDto>, NotFound>)TypedResults.Ok(product.ToProductDto());
     }
 }

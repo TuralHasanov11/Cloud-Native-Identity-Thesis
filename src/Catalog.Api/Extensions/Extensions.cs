@@ -1,6 +1,5 @@
 ﻿using Audit;
 using Catalog.Contracts.Abstractions;
-using Catalog.Core.CatalogAggregate;
 using Catalog.Infrastructure.IntegrationEvents;
 using Catalog.Infrastructure.Repositories;
 using EventBus.Extensions;
@@ -69,9 +68,6 @@ public static class Extensions
         //}
 
         //builder.Services.AddScoped<ICatalogAI, CatalogAI>();
-
-        builder.Services.AddMediatR(config
-            => config.RegisterServicesFromAssemblies(UseCases.AssemblyReference.Assembly));
 
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddScoped<IBrandRepository, BrandRepository>();

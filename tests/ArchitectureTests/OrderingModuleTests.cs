@@ -9,16 +9,6 @@ public class OrderingModuleTests
     {
         var assembly = Ordering.Core.AssemblyReference.Assembly;
 
-        Assert.False(HasReference(assembly, Ordering.UseCases.AssemblyReference.Assembly));
-        Assert.False(HasReference(assembly, Ordering.Infrastructure.AssemblyReference.Assembly));
-        Assert.False(HasReference(assembly, Ordering.Api.AssemblyReference.Assembly));
-    }
-
-    [Fact]
-    public void UseCases_Should_Not_HaveDependencyOnOtherProjects()
-    {
-        var assembly = Ordering.UseCases.AssemblyReference.Assembly;
-
         Assert.False(HasReference(assembly, Ordering.Infrastructure.AssemblyReference.Assembly));
         Assert.False(HasReference(assembly, Ordering.Api.AssemblyReference.Assembly));
     }
@@ -36,7 +26,6 @@ public class OrderingModuleTests
     {
         var assembly = Ordering.Api.AssemblyReference.Assembly;
 
-        Assert.True(HasReference(assembly, Ordering.UseCases.AssemblyReference.Assembly));
         Assert.True(HasReference(assembly, Ordering.Infrastructure.AssemblyReference.Assembly));
         Assert.True(HasReference(assembly, Ordering.Core.AssemblyReference.Assembly));
     }

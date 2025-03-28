@@ -1,6 +1,4 @@
-﻿using Webhooks.UseCases.Webhooks;
-
-namespace Webhooks.Infrastructure.Services;
+﻿namespace Webhooks.Infrastructure.Services;
 
 public interface IWebhooksSender
 {

@@ -2,5 +2,16 @@
 
 namespace Webhooks.Core.WebhookAggregate.Specifications;
 
-public class GetWebhookSubscriptionSpecification(IdentityId UserId, WebhookId Id)
-    : Specification<WebhookSubscription>(ws => ws.UserId == UserId && ws.Id == Id);
+public class GetWebhookSubscriptionSpecification
+    : Specification<WebhookSubscription>
+{
+    public GetWebhookSubscriptionSpecification(WebhookType type)
+        : base(subscription => subscription.Type == type)
+    {
+    }
+
+    public GetWebhookSubscriptionSpecification(IdentityId userId, WebhookId id)
+        : base(subscription => subscription.UserId == userId && subscription.Id == id)
+    {
+    }
+}

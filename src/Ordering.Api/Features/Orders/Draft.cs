@@ -1,28 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Ordering.Api.Features.Orders;
+﻿namespace Ordering.Api.Features.Orders;
 
 public static class Draft
 {
     public static async Task<Results<Ok<OrderDraftDto>, ProblemHttpResult>> Handle(
-        IMediator mediator,
+        IOrderRepository orderRepository,
         DraftOrderRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(
-            new CreateOrderDraftCommand(request.CustomerId, request.Items),
-            cancellationToken);
+        var order = Order.NewDraft();
+        var orderItems = request.Items.Select(i => i.ToOrderItemDto());
 
-        if (result.IsSuccess)
+        foreach (var item in orderItems)
         {
-            return TypedResults.Ok(result.Value);
+            order.AddOrderItem(
+                item.ProductId,
+                item.ProductName,
+                item.UnitPrice,
+                item.Discount,
+                item.PictureUrl,
+                item.Units);
         }
 
-        return TypedResults.Problem(
-            new ProblemDetails()
-            {
-                Title = "Order creation failed",
-                Detail = result.Errors.First()
-            });
+        await orderRepository.CreateAsync(order, cancellationToken);
+        await orderRepository.SaveChangesAsync(cancellationToken);
+
+        return TypedResults.Ok(order.ToOrderDraftDto());
     }
 }

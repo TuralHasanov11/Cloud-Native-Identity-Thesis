@@ -1,26 +1,29 @@
-﻿using Catalog.UseCases.Products.Create;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.Api.Features.Products;
 
 public static class Create
 {
     public static async Task<Results<Created, BadRequest<ProblemDetails>>> Handle(
-        IMediator mediator,
-        CreateProductRequest request)
+        IProductRepository productRepository,
+        CreateProductRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(
-            new CreateProductCommand(
-                request.Name,
-                request.Description,
-                request.Price,
-                request.ProductTypeId,
-                request.BrandId,
-                request.AvailableStock,
-                request.RestockThreshold,
-                request.MaxStockThreshold));
+        var product = Product.Create(
+            request.Name,
+            request.Description,
+            request.Price,
+            new ProductTypeId(request.ProductTypeId),
+            new BrandId(request.BrandId),
+            request.AvailableStock,
+            request.RestockThreshold,
+            request.MaxStockThreshold);
 
-        return TypedResults.Created(new Uri($"/api/catalog/products/{result.Value.Id}", UriKind.Relative));
+        //product.Embedding = await services.CatalogAI.GetEmbeddingAsync(item);
+
+        await productRepository.CreateAsync(product, cancellationToken);
+        await productRepository.SaveChangesAsync(cancellationToken);
+
+        return TypedResults.Created(new Uri($"/api/catalog/products/{product.Id}", UriKind.Relative));
     }
 }

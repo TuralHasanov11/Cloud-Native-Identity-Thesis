@@ -2,6 +2,9 @@
 import * as locales from '@nuxt/ui/locale'
 
 const { locale } = useI18n()
+const colorMode = useColorMode()
+
+const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
 
 const lang = computed(() => locales[locale.value].code)
 const dir = computed(() => locales[locale.value].dir)

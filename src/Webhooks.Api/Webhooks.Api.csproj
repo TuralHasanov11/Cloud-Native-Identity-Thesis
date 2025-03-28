@@ -25,7 +25,6 @@
     <ProjectReference Include="..\ServiceDefaults\ServiceDefaults.csproj" />
     <ProjectReference Include="..\Webhooks.Core\Webhooks.Core.csproj" />
     <ProjectReference Include="..\Webhooks.Infrastructure\Webhooks.Infrastructure.csproj" />
-    <ProjectReference Include="..\Webhooks.UseCases\Webhooks.UseCases.csproj" />
   </ItemGroup>
 
 </Project>

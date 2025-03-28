@@ -1,8 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
-using Webhooks.Core.WebhookAggregate;
 using Webhooks.Infrastructure.Services;
-using Webhooks.UseCases.Webhooks;
 
 namespace Webhooks.Api.Features.Webhooks;
 

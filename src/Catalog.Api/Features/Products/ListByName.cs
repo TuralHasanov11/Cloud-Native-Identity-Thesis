@@ -3,11 +3,19 @@
 public static class ListByName
 {
     public static async Task<Ok<PaginatedItems<ProductDto, Guid>>> Handle(
-        IMediator mediator,
+        IProductRepository productRepository,
         string? name,
         int pageSize = 10,
-        Guid? pageCursor = default)
+        Guid? pageCursor = default,
+        CancellationToken cancellationToken = default)
     {
-        return await List.Handle(mediator, name, null, null, pageSize, pageCursor);
+        return await List.Handle(
+            productRepository,
+            name,
+            null,
+            null,
+            pageSize,
+            pageCursor,
+            cancellationToken);
     }
 }

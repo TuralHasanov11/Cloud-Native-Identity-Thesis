@@ -1,17 +1,51 @@
 <script setup lang="ts">
-const route = useRoute()
+import type { NavigationMenuItem } from "@nuxt/ui";
 
-const items = computed(() => [{
-  label: 'Docs',
-  to: '/docs',
-  active: route.path.startsWith('/docs')
-}, {
-  label: 'Pricing',
-  to: '/pricing'
-}, {
-  label: 'Blog',
-  to: '/blog'
-}])
+const route = useRoute();
+
+const items = computed<NavigationMenuItem[]>(() => [
+  {
+    label: "Home",
+    to: "/",
+  },
+  {
+    label: "Products",
+    to: "/products",
+    active: route.path.startsWith("/products"),
+  },
+]);
+
+const rightMenuItems = computed<NavigationMenuItem[]>(() => [
+  {
+    label: "Benjamin",
+    avatar: {
+      src: "https://github.com/benjamincanac.png",
+    },
+    type: "label",
+    children:[
+    {
+      label: 'Profile',
+      icon: 'i-lucide-user',
+      to: "/identity/profile",
+    },
+    {
+      label: 'Logout',
+      icon: 'i-lucide-log-out',
+      to: "/identity/logout",
+    }
+    ]
+  },
+]);
+
+const search = ref<string>("");
+
+function signUp() {}
+
+function login() {}
+
+function onSubmitSearch() {
+  console.log(search);
+}
 </script>
 
 <template>
@@ -23,51 +57,37 @@ const items = computed(() => [{
       <TemplateMenu />
     </template>
 
-    <UNavigationMenu
-      :items="items"
-      variant="link"
-    />
+    <UNavigationMenu :items="items" variant="link" />
 
     <template #right>
+      <form @submit.prevent="onSubmitSearch">
+        <UFormField name="search" size="lg">
+          <UInput
+            v-model="search"
+            type="search"
+            class="w-full"
+            placeholder="Search Products"
+          >
+            <template #trailing>
+              <UButton type="submit" size="xs" color="neutral" label="Search" />
+            </template>
+          </UInput>
+        </UFormField>
+      </form>
       <UColorModeButton />
-      <UButton
-        label="Sign in"
-        color="neutral"
-        variant="ghost"
-        to="/login"
-      />
+      <UButton label="Sign in" color="neutral" variant="ghost" @click="login" />
       <UButton
         label="Sign up"
         color="neutral"
         trailing-icon="i-lucide-arrow-right"
         class="hidden lg:flex"
-        to="/signup"
+        @click="signUp"
       />
+      <UNavigationMenu :items="rightMenuItems" orientation="vertical" />
     </template>
 
     <template #body>
-      <UNavigationMenu
-        :items="items"
-        orientation="vertical"
-        class="-mx-2.5"
-      />
-
-      <USeparator class="my-6" />
-
-      <UButton
-        label="Sign in"
-        color="neutral"
-        variant="subtle"
-        to="/login"
-        block
-        class="mb-3"
-      />
-      <UButton
-        label="Sign up"
-        color="neutral"
-        to="/signup"
-        block
-      />
+      <UNavigationMenu :items="items" orientation="vertical" />
     </template>
   </UHeader>
 </template>

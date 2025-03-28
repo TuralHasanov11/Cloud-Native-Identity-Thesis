@@ -1,27 +1,31 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Ordering.Api.Features.Orders;
+﻿namespace Ordering.Api.Features.Orders;
 
 public static class Cancel
 {
     public static async Task<Results<Ok, ProblemHttpResult>> Handle(
-        IMediator mediator,
+        IOrderRepository orderRepository,
         CancelOrderRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new CancelOrderCommand(request.OrderNumber), cancellationToken);
+        var order = await orderRepository.SingleOrDefaultAsync(
+            new GetOrderByIdSpecification(new OrderId(request.OrderNumber)),
+            cancellationToken);
 
-        if (result.IsSuccess)
+        if (order is not null)
         {
+            order.Cancel();
+
+            orderRepository.Update(order);
+
+            await orderRepository.SaveChangesAsync(cancellationToken);
+
             return TypedResults.Ok();
         }
 
         return TypedResults.Problem(
             new ProblemDetails()
             {
-                Title = "Order cancellation failed",
-                Detail = result.Errors.First()
+                Title = "Order cancellation failed"
             });
     }
 }

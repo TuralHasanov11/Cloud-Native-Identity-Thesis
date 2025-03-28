@@ -3,17 +3,21 @@
 public static class GetById
 {
     public static async Task<Results<Ok<OrderDto>, NotFound>> Handle(
-        IMediator mediator,
+        IOrderRepository orderRepository,
         Guid id,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetOrderByIdQuery(id), cancellationToken);
+        var orderId = new OrderId(id);
 
-        if (result.IsSuccess)
+        var order = await orderRepository.SingleOrDefaultAsync(
+            new GetOrderByIdSpecification(orderId),
+            cancellationToken);
+
+        if (order is null)
         {
-            return TypedResults.Ok(result.Value);
+            return TypedResults.NotFound();
         }
 
-        return TypedResults.NotFound();
+        return TypedResults.Ok(order.ToOrderDto());
     }
 }

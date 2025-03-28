@@ -9,16 +9,6 @@ public class WebhooksModuleTests
     {
         var assembly = Webhooks.Core.AssemblyReference.Assembly;
 
-        Assert.False(HasReference(assembly, Webhooks.UseCases.AssemblyReference.Assembly));
-        Assert.False(HasReference(assembly, Webhooks.Infrastructure.AssemblyReference.Assembly));
-        Assert.False(HasReference(assembly, Webhooks.Api.AssemblyReference.Assembly));
-    }
-
-    [Fact]
-    public void UseCases_Should_Not_HaveDependencyOnOtherProjects()
-    {
-        var assembly = Webhooks.UseCases.AssemblyReference.Assembly;
-
         Assert.False(HasReference(assembly, Webhooks.Infrastructure.AssemblyReference.Assembly));
         Assert.False(HasReference(assembly, Webhooks.Api.AssemblyReference.Assembly));
     }
@@ -36,7 +26,6 @@ public class WebhooksModuleTests
     {
         var assembly = Webhooks.Api.AssemblyReference.Assembly;
 
-        Assert.True(HasReference(assembly, Webhooks.UseCases.AssemblyReference.Assembly));
         Assert.True(HasReference(assembly, Webhooks.Infrastructure.AssemblyReference.Assembly));
         Assert.True(HasReference(assembly, Webhooks.Core.AssemblyReference.Assembly));
     }

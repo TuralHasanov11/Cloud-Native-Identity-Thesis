@@ -12,7 +12,7 @@ public class WebhookSubscriptionTests
         var date = DateTime.UtcNow;
         var destinationUrl = new Uri("http://example.com/webhook");
         var token = "sample-token";
-        var userId = Guid.NewGuid();
+        var userId = new IdentityId(Guid.CreateVersion7());
 
         // Act
         var webhookSubscription = new WebhookSubscription(type, date, destinationUrl, token, userId);
@@ -33,7 +33,7 @@ public class WebhookSubscriptionTests
         var date = DateTime.UtcNow;
         Uri destinationUrl = null;
         var token = "sample-token";
-        var userId = Guid.NewGuid();
+        var userId = new IdentityId(Guid.CreateVersion7());
 
         // Act & Assert
         var exception = Assert.Throws<ArgumentNullException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));
@@ -48,7 +48,7 @@ public class WebhookSubscriptionTests
         var date = DateTime.UtcNow;
         var destinationUrl = new Uri("http://example.com/webhook");
         string token = null;
-        var userId = Guid.NewGuid();
+        var userId = new IdentityId(Guid.CreateVersion7());
 
         // Act & Assert
         var exception = Assert.Throws<ArgumentNullException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));
@@ -63,7 +63,7 @@ public class WebhookSubscriptionTests
         var date = DateTime.UtcNow;
         var destinationUrl = new Uri("http://example.com/webhook");
         var token = string.Empty;
-        var userId = Guid.NewGuid();
+        var userId = new IdentityId(Guid.CreateVersion7());
 
         // Act & Assert
         var exception = Assert.Throws<ArgumentException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));
@@ -78,7 +78,7 @@ public class WebhookSubscriptionTests
         var date = DateTime.UtcNow;
         var destinationUrl = new Uri("http://example.com/webhook");
         var token = "sample-token";
-        var userId = Guid.Empty;
+        var userId = new IdentityId(Guid.Empty);
 
         // Act & Assert
         var exception = Assert.Throws<ArgumentException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));

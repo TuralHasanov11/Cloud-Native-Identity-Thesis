@@ -20,7 +20,6 @@
     <ProjectReference Include="..\..\src\Webhooks.Contracts\Webhooks.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Webhooks.Core\Webhooks.Core.csproj" />
     <ProjectReference Include="..\..\src\Webhooks.Infrastructure\Webhooks.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\Webhooks.UseCases\Webhooks.UseCases.csproj" />
   </ItemGroup>
 
   <ItemGroup>

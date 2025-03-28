@@ -1,14 +1,16 @@
-﻿using Catalog.UseCases.ProductTypes.List;
-
-namespace Catalog.Api.Features.ProductTypes;
+﻿namespace Catalog.Api.Features.ProductTypes;
 
 public static class List
 {
     public static async Task<Ok<IEnumerable<ProductTypeDto>>> Handle(
-        IMediator mediator)
+        IProductTypeRepository productTypeRepository,
+        CancellationToken cancellationToken = default)
     {
-        var result = await mediator.Send(new ListProductTypesQuery());
+        var productTypes = await productTypeRepository.ListAsync(
+            new GetProductTypesSpecification(),
+            p => p.ToProductTypeDto(),
+            cancellationToken);
 
-        return TypedResults.Ok(result.Value);
+        return TypedResults.Ok(productTypes);
     }
 }

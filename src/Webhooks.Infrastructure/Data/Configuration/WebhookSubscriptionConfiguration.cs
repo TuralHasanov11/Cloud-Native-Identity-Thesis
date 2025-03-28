@@ -25,7 +25,10 @@ public sealed class WebhookSubscriptionConfiguration : IEntityTypeConfiguration<
         builder.Property(o => o.Token)
             .HasMaxLength(200);
 
-        builder.Property(o => o.UserId);
+        builder.Property(o => o.UserId)
+            .HasConversion(
+                v => v.Value,
+                v => new IdentityId(v));
 
         builder.Property(b => b.RowVersion)
            .IsRowVersion();

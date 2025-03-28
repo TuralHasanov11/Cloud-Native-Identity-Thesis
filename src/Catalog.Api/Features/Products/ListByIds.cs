@@ -1,14 +1,19 @@
-﻿using Catalog.UseCases.Products.ListByIds;
-
-namespace Catalog.Api.Features.Products;
+﻿namespace Catalog.Api.Features.Products;
 
 public static class ListByIds
 {
     public static async Task<Ok<IEnumerable<ProductDto>>> Handle(
-        IMediator mediator,
-        Guid[] ids)
+        IProductRepository productRepository,
+        Guid[] ids,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new ListProductsByIdsQuery(ids));
-        return TypedResults.Ok(result.Value);
+        var specification = new GetProductsSpecification(ids.Select(i => new ProductId(i)));
+
+        var products = await productRepository.ListAsync(
+            specification,
+            p => p.ToProductDto(),
+            cancellationToken);
+
+        return TypedResults.Ok(products);
     }
 }

@@ -3,9 +3,6 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Options;
-using Ordering.Contracts.Abstractions;
-using Ordering.Core.CustomerAggregate;
-using Ordering.Core.OrderAggregate;
 using Ordering.Infrastructure.Data;
 using Ordering.Infrastructure.IntegrationEvents;
 using Ordering.Infrastructure.Repositories;
@@ -58,10 +55,6 @@ public static class Extensions
         // Configure mediatR
         builder.Services.AddMediatR(cfg =>
         {
-            cfg.RegisterServicesFromAssemblies(
-                UseCases.AssemblyReference.Assembly,
-                Api.AssemblyReference.Assembly);
-
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             //cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
             //cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));

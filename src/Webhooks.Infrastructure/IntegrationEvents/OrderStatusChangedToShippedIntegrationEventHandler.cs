@@ -1,17 +1,18 @@
-﻿using Webhooks.Infrastructure.Services;
-using Webhooks.UseCases.Webhooks;
+﻿using Webhooks.Core.WebhookAggregate.Specifications;
+using Webhooks.Infrastructure.Services;
 
 namespace Webhooks.Infrastructure.IntegrationEvents;
 
 public class OrderStatusChangedToShippedIntegrationEventHandler(
-    IWebhooksRetriever retriever,
+    IWebhookSubscriptionRepository webhookSubscriptionRepository,
     IWebhooksSender sender,
     ILogger<OrderStatusChangedToShippedIntegrationEventHandler> logger)
     : IConsumer<OrderStatusChangedToShippedIntegrationEvent>
 {
     public async Task Consume(ConsumeContext<OrderStatusChangedToShippedIntegrationEvent> context)
     {
-        var subscriptions = await retriever.GetSubscriptionsOfType(WebhookType.OrderShipped);
+        var subscriptions = await webhookSubscriptionRepository.ListAsync(
+            new GetWebhookSubscriptionsSpecification(WebhookType.OrderShipped));
 
         logger.LogInformation("Received OrderStatusChangedToShippedIntegrationEvent and got {SubscriptionCount} subscriptions to process", subscriptions.Count());
 

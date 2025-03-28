@@ -20,7 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Basket.Core\Basket.Core.csproj" />
     <ProjectReference Include="..\Basket.Infrastructure\Basket.Infrastructure.csproj" />
-    <ProjectReference Include="..\Basket.UseCases\Basket.UseCases.csproj" />
     <ProjectReference Include="..\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\ServiceDefaults\ServiceDefaults.csproj" />
     <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />

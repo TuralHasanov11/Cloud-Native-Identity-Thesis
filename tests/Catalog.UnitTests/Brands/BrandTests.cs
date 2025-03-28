@@ -1,4 +1,4 @@
-﻿using Catalog.UseCases.Brands;
+﻿using Catalog.Api.Features.Brands;
 
 namespace Catalog.UnitTests.Brands;
 

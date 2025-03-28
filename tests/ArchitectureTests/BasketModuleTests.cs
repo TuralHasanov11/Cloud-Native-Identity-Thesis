@@ -9,16 +9,6 @@ public class BasketModuleTests
     {
         var assembly = Basket.Core.AssemblyReference.Assembly;
 
-        Assert.False(HasReference(assembly, Basket.UseCases.AssemblyReference.Assembly));
-        Assert.False(HasReference(assembly, Basket.Infrastructure.AssemblyReference.Assembly));
-        Assert.False(HasReference(assembly, Basket.Api.AssemblyReference.Assembly));
-    }
-
-    [Fact]
-    public void UseCases_Should_Not_HaveDependencyOnOtherProjects()
-    {
-        var assembly = Basket.UseCases.AssemblyReference.Assembly;
-
         Assert.False(HasReference(assembly, Basket.Infrastructure.AssemblyReference.Assembly));
         Assert.False(HasReference(assembly, Basket.Api.AssemblyReference.Assembly));
     }
@@ -36,7 +26,6 @@ public class BasketModuleTests
     {
         var assembly = Basket.Api.AssemblyReference.Assembly;
 
-        Assert.True(HasReference(assembly, Basket.UseCases.AssemblyReference.Assembly));
         Assert.True(HasReference(assembly, Basket.Infrastructure.AssemblyReference.Assembly));
         Assert.True(HasReference(assembly, Basket.Core.AssemblyReference.Assembly));
     }

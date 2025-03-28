@@ -5,15 +5,18 @@ namespace Ordering.Api.Features.Orders;
 public static class ListByUser
 {
     public static async Task<Ok<IEnumerable<OrderSummary>>> Handle(
-        IMediator mediator,
+        IOrderRepository orderRepository,
         IIdentityService identityService,
         CancellationToken cancellationToken)
     {
         var user = identityService.GetUser();
         var userId = user.GetUserId();
 
-        var result = await mediator.Send(new ListOrdersByUserQuery(userId), cancellationToken);
+        var orders = await orderRepository.ListAsync(
+            new GetOrdersByCustomerIdSpecification(new IdentityId(userId)),
+            o => o.ToOrderSummary(),
+            cancellationToken);
 
-        return TypedResults.Ok(result.Value);
+        return TypedResults.Ok(orders);
     }
 }

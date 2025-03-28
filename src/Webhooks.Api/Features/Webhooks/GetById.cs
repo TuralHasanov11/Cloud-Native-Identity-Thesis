@@ -1,23 +1,25 @@
 ﻿using System.Security.Claims;
-using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Webhooks.UseCases.Webhooks;
-using Webhooks.UseCases.Webhooks.Queries;
 
 namespace Webhooks.Api.Features.Webhooks;
 
 public static class GetById
 {
     public static async Task<Results<Ok<WebhookSubscriptionDto>, NotFound<string>>> Handle(
-        IMediator mediator, ClaimsPrincipal user, Guid id)
+        IWebhookSubscriptionRepository webhookSubscriptionRepository,
+        ClaimsPrincipal user,
+        Guid id,
+        CancellationToken cancellationToken)
     {
         var userId = user.GetUserId();
-        var result = await mediator.Send(new GetWebhookSubscriptionQuery(userId, id));
+        var subscription = await webhookSubscriptionRepository.SingleOrDefaultAsync(
+            new GetWebhookSubscriptionSpecification(new IdentityId(userId), new WebhookId(id)),
+            cancellationToken);
 
-        if (result.IsSuccess)
+        if (subscription is null)
         {
-            return TypedResults.Ok(result.Value);
+            return TypedResults.NotFound($"Subscriptions {id} not found");
         }
-        return TypedResults.NotFound($"Subscriptions {id} not found");
+
+        return TypedResults.Ok(subscription.ToWebhookSubscriptionDto());
     }
 }

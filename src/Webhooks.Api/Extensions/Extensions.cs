@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Options;
 using Webhooks.Api.Features.Webhooks;
-using Webhooks.Core.WebhookAggregate;
 using Webhooks.Infrastructure.Data;
 using Webhooks.Infrastructure.Services;
 
@@ -44,7 +43,6 @@ internal static class Extensions
         //builder.Services.AddMigration<WebhooksDbContext>();
 
         builder.Services.AddTransient<IGrantUrlTesterService, GrantUrlTesterService>();
-        builder.Services.AddTransient<IWebhooksRetriever, WebhooksRetriever>();
         builder.Services.AddTransient<IWebhooksSender, WebhooksSender>();
     }
 

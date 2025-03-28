@@ -1,16 +1,11 @@
-﻿using Ordering.UseCases.CardTypes;
-using Ordering.UseCases.CardTypes.Queries;
-
-namespace Ordering.Api.Features.CardTypes;
+﻿namespace Ordering.Api.Features.CardTypes;
 
 public static class List
 {
     public static async Task<Ok<IEnumerable<CardTypeDto>>> Handle(
-        IMediator mediator,
+        ICardTypeRepository cardTypeRepository,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new ListCardTypesQuery(), cancellationToken);
-
-        return TypedResults.Ok(result.Value);
+        return TypedResults.Ok(await cardTypeRepository.ListAsync(ct => ct.ToCardTypeDto(), cancellationToken));
     }
 }

@@ -25,7 +25,6 @@
     <ProjectReference Include="..\..\src\Basket.Api\Basket.Api.csproj" />
     <ProjectReference Include="..\..\src\Basket.Core\Basket.Core.csproj" />
     <ProjectReference Include="..\..\src\Basket.Infrastructure\Basket.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\Basket.UseCases\Basket.UseCases.csproj" />
   </ItemGroup>
 
   <ItemGroup>

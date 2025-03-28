@@ -1,31 +1,36 @@
 ﻿using System.Security.Claims;
-using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Webhooks.UseCases.Webhooks.Commands;
 
 namespace Webhooks.Api.Features.Webhooks;
 
 public static class Create
 {
     public static async Task<Results<Created, BadRequest<string>>> Handle(
-        IMediator mediator,
+        IWebhookSubscriptionRepository webhookSubscriptionRepository,
+        IGrantUrlTesterService grantUrlTesterService,
         ClaimsPrincipal user,
-        CreateWebhookSubscriptionRequest request)
+        CreateWebhookSubscriptionRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new CreateWebhookSubscriptionCommand(
-            request.Url,
-            request.Token,
-            request.Event,
-            request.GrantUrl,
-            user.GetUserId()));
+        var grantOk = await grantUrlTesterService.TestGrantUrl(
+            new Uri(request.Url, UriKind.Absolute),
+            new Uri(request.GrantUrl, UriKind.Absolute),
+            request.Token ?? string.Empty);
 
-        if (result.IsSuccess)
+        if (grantOk)
         {
-            return TypedResults.Created(new Uri($"/api/webhooks/{result.Value.Id}", UriKind.Relative));
+            var subscription = new WebhookSubscription(
+                Enum.Parse<WebhookType>(request.Event, ignoreCase: true),
+                DateTime.UtcNow,
+                new Uri(request.Url, UriKind.Absolute),
+                request.Token,
+                new IdentityId(user.GetUserId()));
+
+            await webhookSubscriptionRepository.CreateAsync(subscription, cancellationToken);
+            await webhookSubscriptionRepository.SaveChangesAsync(cancellationToken);
+
+            return TypedResults.Created(new Uri($"/api/webhooks/{subscription.Id}", UriKind.Relative));
         }
-        else
-        {
-            return TypedResults.BadRequest($"Invalid grant URL: {request.GrantUrl}");
-        }
+
+        return TypedResults.BadRequest($"Invalid grant URL: {request.GrantUrl}");
     }
 }

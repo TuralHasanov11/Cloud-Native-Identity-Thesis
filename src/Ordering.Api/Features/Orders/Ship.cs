@@ -1,27 +1,29 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Ordering.Core.OrderAggregate.Specifications;
 
 namespace Ordering.Api.Features.Orders;
 
 public static class Ship
 {
     public static async Task<Results<Ok, ProblemHttpResult>> Handle(
-        IMediator mediator,
+        IOrderRepository orderRepository,
         ShipOrderRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new ShipOrderCommand(request.OrderNumber), cancellationToken);
+        var order = await orderRepository.SingleOrDefaultAsync(
+            new GetOrderByIdSpecification(new OrderId(request.OrderNumber)),
+            cancellationToken);
 
-        if (result.IsSuccess)
+        if (order == null)
         {
-            return TypedResults.Ok();
+            return TypedResults.Problem();
         }
 
-        return TypedResults.Problem(
-            new ProblemDetails()
-            {
-                Title = "Ship order failed to process",
-                Detail = result.Errors.First()
-            });
+        order.Ship();
+
+        orderRepository.Update(order);
+
+        await orderRepository.SaveChangesAsync(cancellationToken);
+
+        return TypedResults.Ok();
     }
 }

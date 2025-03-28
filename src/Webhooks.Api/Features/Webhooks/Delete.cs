@@ -1,28 +1,28 @@
 ﻿using System.Security.Claims;
-using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Webhooks.UseCases.Webhooks.Commands;
 
 namespace Webhooks.Api.Features.Webhooks;
 
 public static class Delete
 {
     public static async Task<Results<Accepted, NotFound<string>>> Handle(
-        IMediator mediator,
+        IWebhookSubscriptionRepository webhookSubscriptionRepository,
         ClaimsPrincipal user,
-        Guid id)
+        Guid id,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new DeleteWebhookSubscriptionCommand(
-            user.GetUserId(),
-            id));
+        var subscription = await webhookSubscriptionRepository.SingleOrDefaultAsync(
+            new GetWebhookSubscriptionSpecification(new IdentityId(user.GetUserId()), new WebhookId(id)),
+            cancellationToken);
 
-        if (result.IsSuccess)
+        if (subscription is null)
         {
-            return TypedResults.Accepted(new Uri($"/api/webhooks/{result.Value}", UriKind.Relative));
+            return TypedResults.NotFound($"Subscriptions {id} not found");
         }
-        else
-        {
-            return TypedResults.NotFound(result.Errors.First());
-        }
+
+        webhookSubscriptionRepository.Delete(subscription);
+
+        await webhookSubscriptionRepository.SaveChangesAsync(cancellationToken);
+
+        return TypedResults.Accepted(new Uri($"/api/webhooks/{subscription.Id}", UriKind.Relative));
     }
 }

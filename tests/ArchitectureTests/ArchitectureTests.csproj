@@ -19,16 +19,13 @@
     <ProjectReference Include="..\..\src\Basket.Api\Basket.Api.csproj" />
     <ProjectReference Include="..\..\src\Basket.Core\Basket.Core.csproj" />
     <ProjectReference Include="..\..\src\Basket.Infrastructure\Basket.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\Basket.UseCases\Basket.UseCases.csproj" />
     <ProjectReference Include="..\..\src\Catalog.Api\Catalog.Api.csproj" />
     <ProjectReference Include="..\..\src\Catalog.Core\Catalog.Core.csproj" />
     <ProjectReference Include="..\..\src\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\Catalog.UseCases\Catalog.UseCases.csproj" />
     <ProjectReference Include="..\..\src\Ordering.Api\Ordering.Api.csproj" />
     <ProjectReference Include="..\..\src\Ordering.Contracts\Ordering.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Ordering.Core\Ordering.Core.csproj" />
     <ProjectReference Include="..\..\src\Ordering.Infrastructure\Ordering.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\Ordering.UseCases\Ordering.UseCases.csproj" />
     <ProjectReference Include="..\..\src\OrderProcessor\OrderProcessor.csproj" />
     <ProjectReference Include="..\..\src\PaymentProcessor\PaymentProcessor.csproj" />
     <ProjectReference Include="..\..\src\SharedKernel\SharedKernel.csproj" />
@@ -36,7 +33,6 @@
     <ProjectReference Include="..\..\src\Webhooks.Contracts\Webhooks.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Webhooks.Core\Webhooks.Core.csproj" />
     <ProjectReference Include="..\..\src\Webhooks.Infrastructure\Webhooks.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\Webhooks.UseCases\Webhooks.UseCases.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,4 @@
-﻿using MassTransit;
-using Ordering.Contracts.IntegrationEvents;
-using Ordering.UseCases.Orders.Commands;
+﻿using Ordering.Infrastructure.IntegrationEvents.Commands;
 
 namespace Ordering.Infrastructure.IntegrationEvents.EventHandlers;
 

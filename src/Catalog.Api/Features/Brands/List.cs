@@ -1,14 +1,16 @@
-﻿using Catalog.UseCases.Brands.List;
-
-namespace Catalog.Api.Features.Brands;
+﻿namespace Catalog.Api.Features.Brands;
 
 public static class List
 {
     public static async Task<Ok<IEnumerable<BrandDto>>> Handle(
-        IMediator mediator)
+        IBrandRepository brandRepository,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new ListBrandsQuery());
+        var brands = await brandRepository.ListAsync(
+            new GetBrandsSpecification(),
+            p => p.ToBrandDto(),
+            cancellationToken);
 
-        return TypedResults.Ok(result.Value);
+        return TypedResults.Ok(brands);
     }
 }

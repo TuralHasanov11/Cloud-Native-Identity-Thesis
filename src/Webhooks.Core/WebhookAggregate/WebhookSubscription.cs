@@ -4,7 +4,7 @@ namespace Webhooks.Core.WebhookAggregate;
 
 public class WebhookSubscription : EntityBase<WebhookId>
 {
-    public WebhookSubscription(WebhookType type, DateTime date, Uri destinationUrl, string token, Guid userId)
+    public WebhookSubscription(WebhookType type, DateTime date, Uri destinationUrl, string token, IdentityId userId)
         : base(new WebhookId(Guid.CreateVersion7()))
     {
         Type = type;
@@ -22,5 +22,5 @@ public class WebhookSubscription : EntityBase<WebhookId>
 
     public string Token { get; private set; }
 
-    public Guid UserId { get; private set; }
+    public IdentityId UserId { get; private set; }
 }

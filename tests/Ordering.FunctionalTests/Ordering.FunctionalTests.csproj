@@ -28,7 +28,6 @@
     <ProjectReference Include="..\..\src\Ordering.Contracts\Ordering.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Ordering.Core\Ordering.Core.csproj" />
     <ProjectReference Include="..\..\src\Ordering.Infrastructure\Ordering.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\Ordering.UseCases\Ordering.UseCases.csproj" />
   </ItemGroup>
 
   <ItemGroup>

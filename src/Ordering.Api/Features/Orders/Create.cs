@@ -1,43 +1,54 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Ordering.Api.Features.Orders;
+﻿namespace Ordering.Api.Features.Orders;
 
 public static class Create
 {
     public static async Task<Results<Ok, ProblemHttpResult>> Handle(
-        IMediator mediator,
+        IOrderRepository orderRepository,
+        IOrderingIntegrationEventService orderingIntegrationEventService,
         CreateOrderRequest request,
+        ILogger<CreateOrderRequest> logger,
         CancellationToken cancellationToken)
     {
-        var maskedCCNumber = request.CardNumber.Substring(request.CardNumber.Length - 4).PadLeft(request.CardNumber.Length, 'X');
-        var createOrderCommand = new CreateOrderCommand(
-            request.Items.ToOrderItemsDto(),
-            request.UserId,
+        var _ = request.CardNumber[^4..]
+            .PadLeft(request.CardNumber.Length, 'X'); // TODO: Unused variable
+
+        var orderStartedIntegrationEvent = new OrderStartedIntegrationEvent(request.UserId);
+        await orderingIntegrationEventService.AddAndSaveEventAsync(orderStartedIntegrationEvent);
+
+
+        var order = new Order(
+            new IdentityId(request.UserId),
             request.UserName,
-            request.City,
-            request.Street,
-            request.State,
-            request.Country,
-            request.ZipCode,
-            maskedCCNumber,
-            request.CardHolderName,
-            request.CardExpiration,
+            new Address(request.Street, request.City, request.State, request.Country, request.ZipCode),
+            request.CardTypeId,
+            request.CardNumber,
             request.CardSecurityNumber,
-            request.CardTypeId);
+            request.CardHolderName,
+            request.CardExpiration);
 
-        var result = await mediator.Send(createOrderCommand, cancellationToken);
-
-        if (result.IsSuccess)
+        foreach (var item in request.Items.ToOrderItemsDto())
         {
-            return TypedResults.Ok();
+            order.AddOrderItem(
+                item.ProductId,
+                item.ProductName,
+                item.UnitPrice,
+                item.Discount,
+                item.PictureUrl,
+                item.Units);
         }
 
-        return TypedResults.Problem(
-            new ProblemDetails()
-            {
-                Title = "Order creation failed",
-                Detail = result.Errors.First()
-            });
+        logger.LogCreatingOrder(order);
+
+        await orderRepository.CreateAsync(order, cancellationToken);
+
+        await orderRepository.SaveChangesAsync(cancellationToken);
+
+        return TypedResults.Ok();
     }
+}
+
+public static partial class CreateOrderRequestLogger
+{
+    [LoggerMessage(LogLevel.Information, "Creating Order - Order: {Order}", EventName = "CreatingOrder")]
+    public static partial void LogCreatingOrder(this ILogger<CreateOrderRequest> logger, Order order);
 }
