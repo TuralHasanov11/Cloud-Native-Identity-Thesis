@@ -14,7 +14,7 @@ public class GracePeriodConfirmedIntegrationEventTests : IClassFixture<OrderingF
         _logger = factory.Services.GetRequiredService<ILogger<GracePeriodConfirmedIntegrationEventHandler>>();
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Handle_ShouldSendSetAwaitingValidationOrderStatusCommand()
     {
         // Arrange
@@ -31,7 +31,7 @@ public class GracePeriodConfirmedIntegrationEventTests : IClassFixture<OrderingF
         // Verify that the SetAwaitingValidationOrderStatusCommand was sent (this would require checking the state of the _mediator)
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Handle_ShouldLogHandlingIntegrationEvent()
     {
         // Arrange

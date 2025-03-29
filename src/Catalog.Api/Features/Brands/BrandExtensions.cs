@@ -2,10 +2,12 @@
 
 public static class BrandExtensions
 {
-    public static BrandDto ToBrandDto(this Brand product)
+    public static BrandDto ToBrandDto(this Brand brand)
     {
+        ArgumentNullException.ThrowIfNull(brand);
+
         return new BrandDto(
-            product.Id,
-            product.Name);
+            brand.Id,
+            brand.Name);
     }
 }

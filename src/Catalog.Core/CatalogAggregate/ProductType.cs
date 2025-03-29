@@ -4,6 +4,11 @@ public sealed class ProductType : EntityBase<ProductTypeId>
 {
     private ProductType(string name)
     {
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         Name = name;
     }
 
@@ -11,6 +16,11 @@ public sealed class ProductType : EntityBase<ProductTypeId>
 
     public void UpdateName(string name)
     {
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         Name = name;
     }
 

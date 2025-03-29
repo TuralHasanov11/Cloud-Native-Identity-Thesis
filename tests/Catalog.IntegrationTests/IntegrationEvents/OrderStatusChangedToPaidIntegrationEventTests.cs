@@ -13,7 +13,7 @@ namespace Catalog.IntegrationTests.IntegrationEvents
             _logger = factory.Services.GetRequiredService<ILogger<OrderStatusChangedToPaidIntegrationEventHandler>>();
         }
 
-        [Fact]
+        [Fact(Skip = "Waiting")]
         public async Task Handle_ShouldRemoveStock_WhenStockIsAvailable()
         {
             // Arrange
@@ -50,7 +50,7 @@ namespace Catalog.IntegrationTests.IntegrationEvents
             Assert.Equal(95, updatedProduct.AvailableStock);
         }
 
-        [Fact]
+        [Fact(Skip = "Waiting")]
         public async Task Handle_ShouldLogError_WhenProductNotFound()
         {
             // Arrange

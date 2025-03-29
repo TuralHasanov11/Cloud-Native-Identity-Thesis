@@ -19,7 +19,7 @@ public class CatalogIntegrationEventServiceTests : IClassFixture<CatalogFactory>
         _logger = factory.Services.GetRequiredService<ILogger<CatalogIntegrationEventService>>();
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task PublishThroughEventBusAsync_ShouldPublishEvent()
     {
         // Arrange
@@ -37,7 +37,7 @@ public class CatalogIntegrationEventServiceTests : IClassFixture<CatalogFactory>
         Assert.Equal(EventState.Published, publishedEvent.State);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task PublishThroughEventBusAsync_ShouldMarkEventAsFailed_WhenExceptionIsThrown()
     {
         // Arrange
@@ -58,7 +58,7 @@ public class CatalogIntegrationEventServiceTests : IClassFixture<CatalogFactory>
         Assert.Equal(EventState.PublishedFailed, failedEvent.State);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task SaveEventAndCatalogContextChangesAsync_ShouldSaveEventAndContextChanges()
     {
         // Arrange

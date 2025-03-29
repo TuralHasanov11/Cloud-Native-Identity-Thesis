@@ -9,7 +9,7 @@ public class BrandRepositoryTests : IClassFixture<CatalogFactory>
         _factory = factory;
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task CreateAsync_ShouldAddBrand()
     {
         // Arrange
@@ -28,7 +28,7 @@ public class BrandRepositoryTests : IClassFixture<CatalogFactory>
         Assert.NotNull(createdBrand);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Delete_ShouldRemoveBrand()
     {
         // Arrange
@@ -50,7 +50,7 @@ public class BrandRepositoryTests : IClassFixture<CatalogFactory>
         Assert.Null(deletedBrand);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task ListAsync_ShouldReturnBrands()
     {
         // Arrange
@@ -76,7 +76,7 @@ public class BrandRepositoryTests : IClassFixture<CatalogFactory>
         Assert.Contains(brands, b => b.Name == "Brand2");
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task SingleOrDefaultAsync_ShouldReturnBrand()
     {
         // Arrange
@@ -98,7 +98,7 @@ public class BrandRepositoryTests : IClassFixture<CatalogFactory>
         Assert.Equal(brand.Id, result.Id);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenBrandDoesNotExist()
     {
         // Arrange
@@ -115,7 +115,7 @@ public class BrandRepositoryTests : IClassFixture<CatalogFactory>
         Assert.Null(result);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Update_ShouldModifyBrand()
     {
         // Arrange

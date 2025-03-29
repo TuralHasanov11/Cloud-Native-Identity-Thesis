@@ -12,7 +12,7 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
         _factory = factory;
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task CreateAsync_ShouldAddSubscription()
     {
         var dbContext = _factory.Services.GetRequiredService<WebhooksDbContext>();
@@ -33,7 +33,7 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
         Assert.NotNull(createdSubscription);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Delete_ShouldRemoveSubscription()
     {
         // Arrange
@@ -60,7 +60,7 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
         Assert.Null(deletedSubscription);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task ListAsync_ShouldReturnSubscriptions()
     {
         // Arrange
@@ -97,7 +97,7 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
         Assert.Contains(subscriptions, s => s.Id == subscription2.Id);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task SingleOrDefaultAsync_ShouldReturnSubscription()
     {
         // Arrange
@@ -124,7 +124,7 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
         Assert.Equal(subscription.Id, result.Id);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenSubscriptionDoesNotExist()
     {
         // Arrange

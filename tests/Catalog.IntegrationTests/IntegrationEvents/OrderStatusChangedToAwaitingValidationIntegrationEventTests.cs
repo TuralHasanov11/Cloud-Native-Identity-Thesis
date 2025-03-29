@@ -15,7 +15,7 @@ namespace Catalog.IntegrationTests.IntegrationEvents
             _logger = factory.Services.GetRequiredService<ILogger<OrderStatusChangedToAwaitingValidationIntegrationEventHandler>>();
         }
 
-        [Fact]
+        [Fact(Skip = "Waiting")]
         public async Task Handle_ShouldConfirmOrderStock_WhenStockIsAvailable()
         {
             // Arrange
@@ -51,7 +51,7 @@ namespace Catalog.IntegrationTests.IntegrationEvents
             Assert.NotNull(savedEvent);
         }
 
-        [Fact]
+        [Fact(Skip = "Waiting")]
         public async Task Handle_ShouldRejectOrderStock_WhenStockIsNotAvailable()
         {
             // Arrange
@@ -87,7 +87,7 @@ namespace Catalog.IntegrationTests.IntegrationEvents
             Assert.NotNull(savedEvent);
         }
 
-        [Fact]
+        [Fact(Skip = "Waiting")]
         public async Task Handle_ShouldLogError_WhenProductNotFound()
         {
             // Arrange

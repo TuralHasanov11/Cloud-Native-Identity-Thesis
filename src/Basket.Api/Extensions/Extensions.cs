@@ -1,5 +1,4 @@
-﻿using Basket.Core.BasketAggregate;
-using Basket.Infrastructure.Repositories;
+﻿using Basket.Infrastructure.Repositories;
 using EventBus.Extensions;
 using MassTransit;
 using Microsoft.Extensions.Options;

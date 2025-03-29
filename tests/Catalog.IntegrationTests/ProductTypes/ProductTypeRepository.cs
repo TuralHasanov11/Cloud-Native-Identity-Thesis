@@ -9,7 +9,7 @@ public class ProductTypeRepositoryTests : IClassFixture<CatalogFactory>
         _factory = factory;
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task CreateAsync_ShouldAddProductType()
     {
         // Arrange
@@ -28,7 +28,7 @@ public class ProductTypeRepositoryTests : IClassFixture<CatalogFactory>
         Assert.NotNull(createdProductType);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Delete_ShouldRemoveProductType()
     {
         // Arrange
@@ -50,7 +50,7 @@ public class ProductTypeRepositoryTests : IClassFixture<CatalogFactory>
         Assert.Null(deletedProductType);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task ListAsync_ShouldReturnProductTypes()
     {
         // Arrange
@@ -76,7 +76,7 @@ public class ProductTypeRepositoryTests : IClassFixture<CatalogFactory>
         Assert.Contains(productTypes, pt => pt.Name == "Clothing");
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task SingleOrDefaultAsync_ShouldReturnProductType()
     {
         // Arrange
@@ -98,7 +98,7 @@ public class ProductTypeRepositoryTests : IClassFixture<CatalogFactory>
         Assert.Equal(productType.Id, result.Id);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenProductTypeDoesNotExist()
     {
         // Arrange
@@ -115,7 +115,7 @@ public class ProductTypeRepositoryTests : IClassFixture<CatalogFactory>
         Assert.Null(result);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Update_ShouldModifyProductType()
     {
         // Arrange

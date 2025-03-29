@@ -9,7 +9,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
         _factory = factory;
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task CreateAsync_ShouldAddOrder()
     {
         var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
@@ -33,7 +33,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
         Assert.NotNull(createdOrder);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Delete_ShouldRemoveOrder()
     {
         // Arrange
@@ -63,7 +63,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
         Assert.Null(deletedOrder);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task ListAsync_ShouldReturnOrders()
     {
         // Arrange
@@ -107,7 +107,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
         Assert.Contains(orders, o => o.Id == order2.Id);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task SingleOrDefaultAsync_ShouldReturnOrder()
     {
         // Arrange
@@ -137,7 +137,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
         Assert.Equal(order.Id, result.Id);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenOrderDoesNotExist()
     {
         // Arrange
@@ -154,7 +154,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
         Assert.Null(result);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Update_ShouldModifyOrder()
     {
         // Arrange

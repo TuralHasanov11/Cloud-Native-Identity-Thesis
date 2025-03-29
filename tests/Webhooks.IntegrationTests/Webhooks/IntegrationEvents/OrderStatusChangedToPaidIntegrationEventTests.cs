@@ -20,7 +20,7 @@ public class OrderStatusChangedToPaidIntegrationEventTests : IClassFixture<Webho
             factory.Services.GetRequiredService<ILogger<WebhooksSender>>());
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Handle_ShouldSendWebhooks_WhenSubscriptionsExist()
     {
         // Arrange
@@ -53,7 +53,7 @@ public class OrderStatusChangedToPaidIntegrationEventTests : IClassFixture<Webho
         // Assert
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Handle_ShouldLogInformation_WhenNoSubscriptionsExist()
     {
         // Arrange

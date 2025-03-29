@@ -9,8 +9,10 @@ public class WebhookSubscription : EntityBase<WebhookId>
     {
         Type = type;
         Date = date;
-        DestinationUrl = destinationUrl;
-        Token = token;
+        DestinationUrl = destinationUrl
+            ?? throw new ArgumentNullException(nameof(destinationUrl), "The destination URL cannot be null.");
+        Token = token
+            ?? throw new ArgumentNullException(nameof(token), "The token cannot be null.");
         UserId = userId;
     }
 

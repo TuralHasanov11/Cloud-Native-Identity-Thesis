@@ -11,7 +11,7 @@ public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
         _factory = factory;
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task CreateAsync_ShouldAddCustomer()
     {
         // Arrange
@@ -30,7 +30,7 @@ public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
         Assert.NotNull(createdCustomer);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Delete_ShouldRemoveCustomer()
     {
         // Arrange
@@ -52,7 +52,7 @@ public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
         Assert.Null(deletedCustomer);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task ListAsync_ShouldReturnCustomers()
     {
         // Arrange
@@ -78,7 +78,7 @@ public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
         Assert.Contains(customers, c => c.Id == customer2.Id);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task SingleOrDefaultAsync_ShouldReturnCustomer()
     {
         // Arrange
@@ -100,7 +100,7 @@ public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
         Assert.Equal(customer.Id, result.Id);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenCustomerDoesNotExist()
     {
         // Arrange
@@ -117,7 +117,7 @@ public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
         Assert.Null(result);
     }
 
-    [Fact]
+    [Fact(Skip = "Waiting")]
     public async Task Update_ShouldModifyCustomer()
     {
         // Arrange

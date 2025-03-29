@@ -32,8 +32,10 @@ public class BasketServiceTests
         mockRepository.GetBasketAsync(basketItem.Id).Returns(Task.FromResult(new CustomerBasket { CustomerId = customerId, Items = items }));
         var service = new BasketService(mockRepository, NullLogger<BasketService>.Instance);
         var serverCallContext = TestServerCallContext.Create();
-        var httpContext = new DefaultHttpContext();
-        httpContext.User = new ClaimsPrincipal(new ClaimsIdentity([new Claim("sub", customerId.ToString())]));
+        var httpContext = new DefaultHttpContext
+        {
+            User = new ClaimsPrincipal(new ClaimsIdentity([new Claim("sub", customerId.ToString())]))
+        };
         serverCallContext.SetUserState("__HttpContext", httpContext);
 
         var response = await service.GetBasket(new GetBasketRequest(), serverCallContext);

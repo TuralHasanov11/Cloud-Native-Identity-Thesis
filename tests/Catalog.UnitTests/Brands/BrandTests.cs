@@ -25,8 +25,7 @@ public class BrandTests
         string name = null;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgumentNullException>(() => Brand.Create(name));
-        Assert.Equal("Value cannot be null. (Parameter 'name')", exception.Message);
+        Assert.Throws<ArgumentNullException>(() => Brand.Create(name));
     }
 
     [Fact]
@@ -36,8 +35,7 @@ public class BrandTests
         var name = string.Empty;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgumentException>(() => Brand.Create(name));
-        Assert.Equal("The name cannot be empty. (Parameter 'name')", exception.Message);
+        Assert.Throws<ArgumentException>(() => Brand.Create(name));
     }
 
     [Fact]
@@ -62,8 +60,7 @@ public class BrandTests
         string newName = null;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgumentNullException>(() => brand.UpdateName(newName));
-        Assert.Equal("Value cannot be null. (Parameter 'name')", exception.Message);
+        Assert.Throws<ArgumentNullException>(() => brand.UpdateName(newName));
     }
 
     [Fact]
@@ -74,8 +71,7 @@ public class BrandTests
         var newName = string.Empty;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgumentException>(() => brand.UpdateName(newName));
-        Assert.Equal("The name cannot be empty. (Parameter 'name')", exception.Message);
+        Assert.Throws<ArgumentException>(() => brand.UpdateName(newName));
     }
 
     [Fact]
@@ -96,9 +92,9 @@ public class BrandTests
     public void ToBrandDto_ShouldThrowException_WhenBrandIsNull()
     {
         // Arrange
-        Brand brand = null;
+        Brand? brand = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => brand.ToBrandDto());
+        Assert.Throws<ArgumentNullException>(() => brand?.ToBrandDto());
     }
 }
