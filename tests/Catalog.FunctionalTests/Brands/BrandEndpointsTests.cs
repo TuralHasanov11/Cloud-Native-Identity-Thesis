@@ -1,22 +1,16 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using Catalog.Api.Features.Brands;
-using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Catalog.FunctionalTests.Brands;
 
-[Collection(nameof(EndpointTestCollection))]
 public class BrandEndpointsTests : BaseEndpointTest
 {
     protected const string ApiBaseUrl = "https://localhost:5103";
 
-    protected BrandEndpointsTests(CatalogFactory factory)
+    public BrandEndpointsTests(CatalogFactory factory)
         : base(factory)
     {
-        Client = factory.CreateClient(new WebApplicationFactoryClientOptions
-        {
-            AllowAutoRedirect = false,
-        });
+        Client = factory.HttpClient;
     }
 
     protected HttpClient Client { get; }
@@ -25,7 +19,6 @@ public class BrandEndpointsTests : BaseEndpointTest
     public async Task ListBrands_ShouldReturnBrands()
     {
         // Arrange
-        await SeedDatabase();
 
         // Act
         var response = await Client.GetAsync(new Uri($"{ApiBaseUrl}/api/catalog/brands"));
@@ -40,9 +33,6 @@ public class BrandEndpointsTests : BaseEndpointTest
     [Fact]
     public async Task ListBrands_ShouldReturnEmptyList_WhenNoBrandsExist()
     {
-        // Arrange
-        await DbContext.Database.EnsureDeletedAsync();
-
         // Act
         var response = await Client.GetAsync(new Uri($"{ApiBaseUrl}/api/catalog/brands"));
 
@@ -57,7 +47,8 @@ public class BrandEndpointsTests : BaseEndpointTest
     public async Task CreateBrand_ShouldCreateBrand()
     {
         // Arrange
-        await SeedDatabase();
+
+        // Arrange
         var newBrand = new { Name = "New Brand" };
 
         // Act
@@ -74,7 +65,6 @@ public class BrandEndpointsTests : BaseEndpointTest
     public async Task CreateBrand_ShouldReturnBadRequest_WhenNameIsEmpty()
     {
         // Arrange
-        await SeedDatabase();
         var newBrand = new { Name = "" };
 
         // Act
@@ -88,15 +78,17 @@ public class BrandEndpointsTests : BaseEndpointTest
     public async Task DeleteBrand_ShouldDeleteBrand()
     {
         // Arrange
-        await SeedDatabase();
-        var brand = await DbContext.Brands.FirstAsync();
+        await using var scope = Factory.Services.CreateAsyncScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+
+        var brand = await dbContext.Brands.FirstAsync();
 
         // Act
         var response = await Client.DeleteAsync(new Uri($"{ApiBaseUrl}/api/catalog/brands/{brand.Id}"));
 
         // Assert
         response.EnsureSuccessStatusCode();
-        var deletedBrand = await DbContext.Brands.FindAsync(brand.Id);
+        var deletedBrand = await dbContext.Brands.FindAsync(brand.Id);
         Assert.Null(deletedBrand);
     }
 
@@ -104,7 +96,6 @@ public class BrandEndpointsTests : BaseEndpointTest
     public async Task DeleteBrand_ShouldReturnNotFound_WhenBrandDoesNotExist()
     {
         // Arrange
-        await SeedDatabase();
         var nonExistentBrandId = Guid.NewGuid();
 
         // Act

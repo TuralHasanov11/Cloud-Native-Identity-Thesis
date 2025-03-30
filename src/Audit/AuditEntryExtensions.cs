@@ -7,27 +7,29 @@ public static class AuditEntryExtensions
 {
     public static void UseAudit(this ModelBuilder builder)
     {
-        builder.Entity<AuditEntry>(builder =>
+        builder.Entity<AuditEntry>(b =>
         {
-            builder.HasKey(x => x.Id);
+            b.ToTable("audit_entries");
 
-            builder.Property(x => x.Metadata)
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.Metadata)
                 .IsRequired();
 
-            builder.Property(x => x.StartTimeUtc)
+            b.Property(x => x.StartTimeUtc)
                 .IsRequired();
 
-            builder.Property(x => x.EndTimeUtc)
+            b.Property(x => x.EndTimeUtc)
                 .IsRequired();
 
-            builder.Property(x => x.Succeeded)
+            b.Property(x => x.Succeeded)
                 .IsRequired();
 
-            builder.Property(x => x.ErrorMessage)
+            b.Property(x => x.ErrorMessage)
                 .HasMaxLength(255)
                 .IsRequired(false);
 
-            builder.HasIndex(x => x.StartTimeUtc);
+            b.HasIndex(x => x.StartTimeUtc);
         });
     }
 

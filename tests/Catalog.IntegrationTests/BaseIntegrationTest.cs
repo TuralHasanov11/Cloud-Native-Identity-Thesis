@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Catalog.FunctionalTests;
+namespace Catalog.IntegrationTests;
 
-[Collection(nameof(EndpointTestCollection))]
-public class BaseEndpointTest : IAsyncLifetime
+[Collection(nameof(IntegrationTestCollection))]
+public class BaseIntegrationTest : IAsyncLifetime
 {
     protected const string ApiBaseUrl = "https://localhost:5103";
 
@@ -11,7 +11,7 @@ public class BaseEndpointTest : IAsyncLifetime
 
     protected WebApplicationFactory<Program> Factory { get; }
 
-    protected BaseEndpointTest(CatalogFactory factory)
+    protected BaseIntegrationTest(CatalogFactory factory)
     {
         Factory = factory;
         _resetDatabase = factory.ResetDatabaseAsync;
@@ -32,19 +32,6 @@ public class BaseEndpointTest : IAsyncLifetime
         }
     }
 
-    public async Task SeedDatabase()
-    {
-        using var scope = Factory.Services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
-
-        if (!dbContext.Products.Any())
-        {
-            var brands = GetBrands();
-            dbContext.Brands.AddRange(brands);
-            dbContext.SaveChanges();
-        }
-    }
-
     private static IEnumerable<Brand> GetBrands()
     {
         yield return Brand.Create("Brand 1");
@@ -55,8 +42,6 @@ public class BaseEndpointTest : IAsyncLifetime
 
     public Task InitializeAsync()
     {
-        SeedDatabase();
-
         return Task.CompletedTask;
     }
 

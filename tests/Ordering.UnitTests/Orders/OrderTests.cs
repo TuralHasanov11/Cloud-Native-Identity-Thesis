@@ -49,7 +49,40 @@ public class OrderTests
     public void AddOrderItem_ShouldAddNewItem()
     {
         // Arrange
-        var order = Order.NewDraft();
+        var userId = new IdentityId(Guid.CreateVersion7());
+        const string userName = "John Doe";
+        var address = new Address("Street", "City", "State", "Country", "ZipCode");
+        const int cardTypeId = 1;
+        const string cardNumber = "1234567890123456";
+        const string cardSecurityNumber = "123";
+        const string cardHolderName = "John Doe";
+        var cardExpiration = DateTime.UtcNow.AddYears(1);
+        var customerId = new CustomerId(Guid.CreateVersion7());
+        const string alias = "Visa";
+        const string securityNumber = "123";
+
+        var expirationDate = DateTime.UtcNow.AddYears(1);
+
+        var paymentMethod = new PaymentMethod(
+            cardTypeId,
+            alias,
+            cardNumber,
+            securityNumber,
+            cardHolderName,
+            expirationDate);
+
+        var order = new Order(
+            userId,
+            userName,
+            address,
+            cardTypeId,
+            cardNumber,
+            cardSecurityNumber,
+            cardHolderName,
+            cardExpiration,
+            customerId,
+            paymentMethod.Id);
+
         var productId = Guid.CreateVersion7();
         var productName = "Product1";
         var unitPrice = 10.0m;
@@ -75,7 +108,40 @@ public class OrderTests
     public void AddOrderItem_ShouldUpdateExistingItem()
     {
         // Arrange
-        var order = Order.NewDraft();
+        var userId = new IdentityId(Guid.CreateVersion7());
+        const string userName = "John Doe";
+        var address = new Address("Street", "City", "State", "Country", "ZipCode");
+        const int cardTypeId = 1;
+        const string cardNumber = "1234567890123456";
+        const string cardSecurityNumber = "123";
+        const string cardHolderName = "John Doe";
+        var cardExpiration = DateTime.UtcNow.AddYears(1);
+        var customerId = new CustomerId(Guid.CreateVersion7());
+        const string alias = "Visa";
+        const string securityNumber = "123";
+
+        var expirationDate = DateTime.UtcNow.AddYears(1);
+
+        var paymentMethod = new PaymentMethod(
+            cardTypeId,
+            alias,
+            cardNumber,
+            securityNumber,
+            cardHolderName,
+            expirationDate);
+
+        var order = new Order(
+            userId,
+            userName,
+            address,
+            cardTypeId,
+            cardNumber,
+            cardSecurityNumber,
+            cardHolderName,
+            cardExpiration,
+            customerId,
+            paymentMethod.Id);
+
         var productId = Guid.CreateVersion7();
         var productName = "Product1";
         var unitPrice = 10.0m;
@@ -98,7 +164,39 @@ public class OrderTests
     public void VerifyPayment_ShouldSetCustomerIdAndPaymentMethodId()
     {
         // Arrange
-        var order = Order.NewDraft();
+        var userId = new IdentityId(Guid.CreateVersion7());
+        const string userName = "John Doe";
+        var address = new Address("Street", "City", "State", "Country", "ZipCode");
+        const int cardTypeId = 1;
+        const string cardNumber = "1234567890123456";
+        const string cardSecurityNumber = "123";
+        const string cardHolderName = "John Doe";
+        var cardExpiration = DateTime.UtcNow.AddYears(1);
+        const string alias = "Visa";
+        const string securityNumber = "123";
+
+        var expirationDate = DateTime.UtcNow.AddYears(1);
+
+        var paymentMethod = new PaymentMethod(
+            cardTypeId,
+            alias,
+            cardNumber,
+            securityNumber,
+            cardHolderName,
+            expirationDate);
+
+        var order = new Order(
+            userId,
+            userName,
+            address,
+            cardTypeId,
+            cardNumber,
+            cardSecurityNumber,
+            cardHolderName,
+            cardExpiration,
+            new CustomerId(Guid.CreateVersion7()),
+            paymentMethod.Id);
+
         var customerId = new CustomerId(Guid.CreateVersion7());
         var paymentMethodId = new PaymentMethodId(Guid.CreateVersion7());
 
@@ -114,7 +212,39 @@ public class OrderTests
     public void SetAwaitingValidationStatus_ShouldChangeStatusToAwaitingValidation()
     {
         // Arrange
-        var order = Order.NewDraft();
+        var userId = new IdentityId(Guid.CreateVersion7());
+        const string userName = "John Doe";
+        var address = new Address("Street", "City", "State", "Country", "ZipCode");
+        const int cardTypeId = 1;
+        const string cardNumber = "1234567890123456";
+        const string cardSecurityNumber = "123";
+        const string cardHolderName = "John Doe";
+        var cardExpiration = DateTime.UtcNow.AddYears(1);
+        const string alias = "Visa";
+        const string securityNumber = "123";
+
+        var expirationDate = DateTime.UtcNow.AddYears(1);
+
+        var paymentMethod = new PaymentMethod(
+            cardTypeId,
+            alias,
+            cardNumber,
+            securityNumber,
+            cardHolderName,
+            expirationDate);
+
+        var order = new Order(
+            userId,
+            userName,
+            address,
+            cardTypeId,
+            cardNumber,
+            cardSecurityNumber,
+            cardHolderName,
+            cardExpiration,
+            new CustomerId(Guid.CreateVersion7()),
+            paymentMethod.Id);
+
         order.SetAwaitingValidationStatus();
 
         // Act
@@ -128,7 +258,41 @@ public class OrderTests
     public void ConfirmStock_ShouldChangeStatusToStockConfirmed()
     {
         // Arrange
-        var order = Order.NewDraft();
+        // Arrange
+        var userId = new IdentityId(Guid.CreateVersion7());
+        const string userName = "John Doe";
+        var address = new Address("Street", "City", "State", "Country", "ZipCode");
+        const int cardTypeId = 1;
+        const string cardNumber = "1234567890123456";
+        const string cardSecurityNumber = "123";
+        const string cardHolderName = "John Doe";
+        var cardExpiration = DateTime.UtcNow.AddYears(1);
+        var customerId = new CustomerId(Guid.CreateVersion7());
+        const string alias = "Visa";
+        const string securityNumber = "123";
+
+        var expirationDate = DateTime.UtcNow.AddYears(1);
+
+        var paymentMethod = new PaymentMethod(
+            cardTypeId,
+            alias,
+            cardNumber,
+            securityNumber,
+            cardHolderName,
+            expirationDate);
+
+        var order = new Order(
+            userId,
+            userName,
+            address,
+            cardTypeId,
+            cardNumber,
+            cardSecurityNumber,
+            cardHolderName,
+            cardExpiration,
+            customerId,
+            paymentMethod.Id);
+
         order.SetAwaitingValidationStatus();
 
         // Act
@@ -143,7 +307,41 @@ public class OrderTests
     public void Pay_ShouldChangeStatusToPaid()
     {
         // Arrange
-        var order = Order.NewDraft();
+        // Arrange
+        var userId = new IdentityId(Guid.CreateVersion7());
+        const string userName = "John Doe";
+        var address = new Address("Street", "City", "State", "Country", "ZipCode");
+        const int cardTypeId = 1;
+        const string cardNumber = "1234567890123456";
+        const string cardSecurityNumber = "123";
+        const string cardHolderName = "John Doe";
+        var cardExpiration = DateTime.UtcNow.AddYears(1);
+        var customerId = new CustomerId(Guid.CreateVersion7());
+        const string alias = "Visa";
+        const string securityNumber = "123";
+
+        var expirationDate = DateTime.UtcNow.AddYears(1);
+
+        var paymentMethod = new PaymentMethod(
+            cardTypeId,
+            alias,
+            cardNumber,
+            securityNumber,
+            cardHolderName,
+            expirationDate);
+
+        var order = new Order(
+            userId,
+            userName,
+            address,
+            cardTypeId,
+            cardNumber,
+            cardSecurityNumber,
+            cardHolderName,
+            cardExpiration,
+            customerId,
+            paymentMethod.Id);
+
         order.SetAwaitingValidationStatus();
         order.ConfirmStock();
 
@@ -159,7 +357,41 @@ public class OrderTests
     public void Ship_ShouldChangeStatusToShipped()
     {
         // Arrange
-        var order = Order.NewDraft();
+        // Arrange
+        var userId = new IdentityId(Guid.CreateVersion7());
+        const string userName = "John Doe";
+        var address = new Address("Street", "City", "State", "Country", "ZipCode");
+        const int cardTypeId = 1;
+        const string cardNumber = "1234567890123456";
+        const string cardSecurityNumber = "123";
+        const string cardHolderName = "John Doe";
+        var cardExpiration = DateTime.UtcNow.AddYears(1);
+        var customerId = new CustomerId(Guid.CreateVersion7());
+        const string alias = "Visa";
+        const string securityNumber = "123";
+
+        var expirationDate = DateTime.UtcNow.AddYears(1);
+
+        var paymentMethod = new PaymentMethod(
+            cardTypeId,
+            alias,
+            cardNumber,
+            securityNumber,
+            cardHolderName,
+            expirationDate);
+
+        var order = new Order(
+            userId,
+            userName,
+            address,
+            cardTypeId,
+            cardNumber,
+            cardSecurityNumber,
+            cardHolderName,
+            cardExpiration,
+            customerId,
+            paymentMethod.Id);
+
         order.SetAwaitingValidationStatus();
         order.ConfirmStock();
         order.Pay();
@@ -176,7 +408,40 @@ public class OrderTests
     public void Cancel_ShouldChangeStatusToCancelled()
     {
         // Arrange
-        var order = Order.NewDraft();
+        // Arrange
+        var userId = new IdentityId(Guid.CreateVersion7());
+        const string userName = "John Doe";
+        var address = new Address("Street", "City", "State", "Country", "ZipCode");
+        const int cardTypeId = 1;
+        const string cardNumber = "1234567890123456";
+        const string cardSecurityNumber = "123";
+        const string cardHolderName = "John Doe";
+        var cardExpiration = DateTime.UtcNow.AddYears(1);
+        var customerId = new CustomerId(Guid.CreateVersion7());
+        const string alias = "Visa";
+        const string securityNumber = "123";
+
+        var expirationDate = DateTime.UtcNow.AddYears(1);
+
+        var paymentMethod = new PaymentMethod(
+            cardTypeId,
+            alias,
+            cardNumber,
+            securityNumber,
+            cardHolderName,
+            expirationDate);
+
+        var order = new Order(
+            userId,
+            userName,
+            address,
+            cardTypeId,
+            cardNumber,
+            cardSecurityNumber,
+            cardHolderName,
+            cardExpiration,
+            customerId,
+            paymentMethod.Id);
 
         // Act
         order.Cancel();
@@ -190,7 +455,41 @@ public class OrderTests
     public void Cancel_ShouldChangeStatusToCancelled_WhenStockRejected()
     {
         // Arrange
-        var order = Order.NewDraft();
+        // Arrange
+        var userId = new IdentityId(Guid.CreateVersion7());
+        const string userName = "John Doe";
+        var address = new Address("Street", "City", "State", "Country", "ZipCode");
+        const int cardTypeId = 1;
+        const string cardNumber = "1234567890123456";
+        const string cardSecurityNumber = "123";
+        const string cardHolderName = "John Doe";
+        var cardExpiration = DateTime.UtcNow.AddYears(1);
+        var customerId = new CustomerId(Guid.CreateVersion7());
+        const string alias = "Visa";
+        const string securityNumber = "123";
+
+        var expirationDate = DateTime.UtcNow.AddYears(1);
+
+        var paymentMethod = new PaymentMethod(
+            cardTypeId,
+            alias,
+            cardNumber,
+            securityNumber,
+            cardHolderName,
+            expirationDate);
+
+        var order = new Order(
+            userId,
+            userName,
+            address,
+            cardTypeId,
+            cardNumber,
+            cardSecurityNumber,
+            cardHolderName,
+            cardExpiration,
+            customerId,
+            paymentMethod.Id);
+
         order.SetAwaitingValidationStatus();
         var productId = Guid.CreateVersion7();
         order.AddOrderItem(productId, "Product1", 10.0m, 1.0m, new Uri("http://example.com/picture.jpg"), 1);
@@ -207,7 +506,41 @@ public class OrderTests
     public void GetTotal_ShouldReturnTotalAmount()
     {
         // Arrange
-        var order = Order.NewDraft();
+        // Arrange
+        var userId = new IdentityId(Guid.CreateVersion7());
+        const string userName = "John Doe";
+        var address = new Address("Street", "City", "State", "Country", "ZipCode");
+        const int cardTypeId = 1;
+        const string cardNumber = "1234567890123456";
+        const string cardSecurityNumber = "123";
+        const string cardHolderName = "John Doe";
+        var cardExpiration = DateTime.UtcNow.AddYears(1);
+        var customerId = new CustomerId(Guid.CreateVersion7());
+        const string alias = "Visa";
+        const string securityNumber = "123";
+
+        var expirationDate = DateTime.UtcNow.AddYears(1);
+
+        var paymentMethod = new PaymentMethod(
+            cardTypeId,
+            alias,
+            cardNumber,
+            securityNumber,
+            cardHolderName,
+            expirationDate);
+
+        var order = new Order(
+            userId,
+            userName,
+            address,
+            cardTypeId,
+            cardNumber,
+            cardSecurityNumber,
+            cardHolderName,
+            cardExpiration,
+            customerId,
+            paymentMethod.Id);
+
         order.AddOrderItem(Guid.CreateVersion7(), "Product1", 10.0m, 1.0m, new Uri("http://example.com/picture.jpg"), 2);
         order.AddOrderItem(Guid.CreateVersion7(), "Product2", 20.0m, 2.0m, new Uri("http://example.com/picture.jpg"), 1);
 
@@ -215,7 +548,7 @@ public class OrderTests
         var total = order.GetTotal();
 
         // Assert
-        Assert.Equal(39.0m, total);
+        Assert.Equal(36.0m, total);
     }
 }
 

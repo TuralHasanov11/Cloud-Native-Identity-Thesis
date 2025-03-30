@@ -37,8 +37,8 @@ public static class OrderingDbContextExtensions
     public static CardType[] GetCardTypes()
     {
         return [
-            new CardType("Visa"),
-            new CardType("MasterCard")
+            CardType.Create("Visa"),
+            CardType.Create("MasterCard")
         ];
     }
 

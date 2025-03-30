@@ -25,7 +25,7 @@ public class BrandTests
         string name = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => Brand.Create(name));
+        Assert.Throws<ArgumentException>(() => Brand.Create(name));
     }
 
     [Fact]
@@ -60,7 +60,7 @@ public class BrandTests
         string newName = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => brand.UpdateName(newName));
+        Assert.Throws<ArgumentException>(() => brand.UpdateName(newName));
     }
 
     [Fact]
@@ -86,15 +86,5 @@ public class BrandTests
         // Assert
         Assert.Equal(brand.Id, brandDto.Id);
         Assert.Equal(brand.Name, brandDto.Name);
-    }
-
-    [Fact]
-    public void ToBrandDto_ShouldThrowException_WhenBrandIsNull()
-    {
-        // Arrange
-        Brand? brand = null;
-
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => brand?.ToBrandDto());
     }
 }

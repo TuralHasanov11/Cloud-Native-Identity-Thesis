@@ -91,8 +91,8 @@ public class OrderAggregateTests
         var productId = Guid.CreateVersion7();
 
         var order = new OrderBuilder(address)
-            .AddOne(productId, "cup", 10.0m, 0, new Uri(string.Empty))
-            .AddOne(productId, "cup", 10.0m, 0, new Uri(string.Empty))
+            .AddOne(productId, "cup", 10.0m, 0, new Uri("https://www.google.de"))
+            .AddOne(productId, "cup", 10.0m, 0, new Uri("https://www.google.de"))
             .Build();
 
         Assert.Equal(20.0m, order.GetTotal());

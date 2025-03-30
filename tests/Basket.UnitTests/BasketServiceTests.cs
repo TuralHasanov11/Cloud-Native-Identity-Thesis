@@ -29,7 +29,7 @@ public class BasketServiceTests
         List<Core.BasketAggregate.BasketItem> items = [basketItem];
         var customerId = Guid.CreateVersion7();
 
-        mockRepository.GetBasketAsync(basketItem.Id).Returns(Task.FromResult(new CustomerBasket { CustomerId = customerId, Items = items }));
+        mockRepository.GetBasketAsync(customerId).Returns(Task.FromResult(new CustomerBasket { CustomerId = customerId, Items = items }));
         var service = new BasketService(mockRepository, NullLogger<BasketService>.Instance);
         var serverCallContext = TestServerCallContext.Create();
         var httpContext = new DefaultHttpContext

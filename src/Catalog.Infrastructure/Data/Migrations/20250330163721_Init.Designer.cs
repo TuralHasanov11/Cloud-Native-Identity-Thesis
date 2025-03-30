@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Catalog.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20250324131630_Init")]
+    [Migration("20250330163721_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -52,7 +52,7 @@ namespace Catalog.Infrastructure.Data.Migrations
 
                     b.HasIndex("StartTimeUtc");
 
-                    b.ToTable("AuditEntry");
+                    b.ToTable("audit_entries", (string)null);
                 });
 
             modelBuilder.Entity("Catalog.Core.CatalogAggregate.Brand", b =>

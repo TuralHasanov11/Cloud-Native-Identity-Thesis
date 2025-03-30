@@ -49,7 +49,7 @@ namespace Catalog.Infrastructure.Data.Migrations
 
                     b.HasIndex("StartTimeUtc");
 
-                    b.ToTable("AuditEntry");
+                    b.ToTable("audit_entries", (string)null);
                 });
 
             modelBuilder.Entity("Catalog.Core.CatalogAggregate.Brand", b =>

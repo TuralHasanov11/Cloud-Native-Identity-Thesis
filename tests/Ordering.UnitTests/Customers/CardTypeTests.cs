@@ -1,5 +1,4 @@
 ﻿using Ordering.Core.CustomerAggregate;
-using Ordering.Core.Exceptions;
 
 namespace Ordering.UnitTests.Customers;
 
@@ -12,7 +11,7 @@ public class CardTypeTests
         var name = "Visa";
 
         // Act
-        var cardType = new CardType(name);
+        var cardType = CardType.Create(name);
 
         // Assert
         Assert.Equal(name, cardType.Name);
@@ -22,23 +21,20 @@ public class CardTypeTests
     public void Constructor_ShouldThrowException_WhenNameIsNull()
     {
         // Act & Assert
-        var exception = Assert.Throws<OrderingDomainException>(() => new CardType(null));
-        Assert.Equal("name", exception.Message);
+        Assert.Throws<ArgumentException>(() => CardType.Create(null));
     }
 
     [Fact]
     public void Constructor_ShouldThrowException_WhenNameIsEmpty()
     {
         // Act & Assert
-        var exception = Assert.Throws<OrderingDomainException>(() => new CardType(string.Empty));
-        Assert.Equal("name", exception.Message);
+        Assert.Throws<ArgumentException>(() => CardType.Create(string.Empty));
     }
 
     [Fact]
     public void Constructor_ShouldThrowException_WhenNameIsWhitespace()
     {
         // Act & Assert
-        var exception = Assert.Throws<OrderingDomainException>(() => new CardType(" "));
-        Assert.Equal("name", exception.Message);
+        Assert.Throws<ArgumentException>(() => CardType.Create(" "));
     }
 }

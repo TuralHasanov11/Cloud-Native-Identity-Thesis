@@ -1,92 +1,82 @@
-﻿using Catalog.Infrastructure.IntegrationEvents;
-using EventBus.Events;
-using Outbox.Services;
+﻿namespace Catalog.IntegrationTests.IntegrationEvents;
 
-namespace Catalog.IntegrationTests.IntegrationEvents;
+//public class CatalogIntegrationEventServiceTests : BaseIntegrationTest
+//{
+//    private readonly IPublishEndpoint _eventBus;
+//    private readonly IOutboxService _outboxService;
+//    private readonly ILogger<CatalogIntegrationEventService> _logger;
 
-public class CatalogIntegrationEventServiceTests : IClassFixture<CatalogFactory>
-{
-    private readonly CatalogDbContext _dbContext;
-    private readonly IPublishEndpoint _eventBus;
-    private readonly IOutboxService _outboxService;
-    private readonly ILogger<CatalogIntegrationEventService> _logger;
+//    public CatalogIntegrationEventServiceTests(CatalogFactory factory) : base(factory)
+//    {
+//        _eventBus = factory.Services.GetRequiredService<IPublishEndpoint>();
+//        _outboxService = factory.Services.GetRequiredService<IOutboxService>();
+//        _logger = factory.Services.GetRequiredService<ILogger<CatalogIntegrationEventService>>();
+//    }
 
-    public CatalogIntegrationEventServiceTests(CatalogFactory factory)
-    {
-        _dbContext = factory.Services.GetRequiredService<CatalogDbContext>();
-        _eventBus = factory.Services.GetRequiredService<IPublishEndpoint>();
-        _outboxService = factory.Services.GetRequiredService<IOutboxService>();
-        _logger = factory.Services.GetRequiredService<ILogger<CatalogIntegrationEventService>>();
-    }
+//    [Fact(Skip = "Waiting")]
+//    public async Task PublishThroughEventBusAsync_ShouldPublishEvent()
+//    {
+//        // Arrange
+//        var integrationEvent = new IntegrationEvent();
+//        using var service = new CatalogIntegrationEventService(_logger, _eventBus, DbContext, _outboxService);
 
-    [Fact(Skip = "Waiting")]
-    public async Task PublishThroughEventBusAsync_ShouldPublishEvent()
-    {
-        // Arrange
-        await _dbContext.SeedDatabase();
+//        // Act
+//        await service.PublishThroughEventBusAsync(integrationEvent);
 
-        var integrationEvent = new IntegrationEvent();
-        using var service = new CatalogIntegrationEventService(_logger, _eventBus, _dbContext, _outboxService);
+//        // Assert
+//        var publishedEvent = await DbContext.Set<OutboxMessage>().FindAsync(integrationEvent.Id);
+//        Assert.NotNull(publishedEvent);
+//        Assert.Equal(EventState.Published, publishedEvent.State);
+//    }
 
-        // Act
-        await service.PublishThroughEventBusAsync(integrationEvent);
+//    [Fact(Skip = "Waiting")]
+//    public async Task PublishThroughEventBusAsync_ShouldMarkEventAsFailed_WhenExceptionIsThrown()
+//    {
+//        // Arrange
 
-        // Assert
-        var publishedEvent = await _dbContext.Set<OutboxMessage>().FindAsync(integrationEvent.Id);
-        Assert.NotNull(publishedEvent);
-        Assert.Equal(EventState.Published, publishedEvent.State);
-    }
+//        var integrationEvent = new IntegrationEvent();
+//        using var service = new CatalogIntegrationEventService(_logger, _eventBus, DbContext, _outboxService);
 
-    [Fact(Skip = "Waiting")]
-    public async Task PublishThroughEventBusAsync_ShouldMarkEventAsFailed_WhenExceptionIsThrown()
-    {
-        // Arrange
-        await _dbContext.SeedDatabase();
+//        // Simulate an exception by disposing the event bus
+//        (_eventBus as IDisposable)?.Dispose();
 
-        var integrationEvent = new IntegrationEvent();
-        using var service = new CatalogIntegrationEventService(_logger, _eventBus, _dbContext, _outboxService);
+//        // Act
+//        await service.PublishThroughEventBusAsync(integrationEvent);
 
-        // Simulate an exception by disposing the event bus
-        (_eventBus as IDisposable)?.Dispose();
+//        // Assert
+//        var failedEvent = await DbContext.Set<OutboxMessage>().FindAsync(integrationEvent.Id);
+//        Assert.NotNull(failedEvent);
+//        Assert.Equal(EventState.PublishedFailed, failedEvent.State);
+//    }
 
-        // Act
-        await service.PublishThroughEventBusAsync(integrationEvent);
+//    [Fact(Skip = "Waiting")]
+//    public async Task SaveEventAndCatalogContextChangesAsync_ShouldSaveEventAndContextChanges()
+//    {
+//        // Arrange
 
-        // Assert
-        var failedEvent = await _dbContext.Set<OutboxMessage>().FindAsync(integrationEvent.Id);
-        Assert.NotNull(failedEvent);
-        Assert.Equal(EventState.PublishedFailed, failedEvent.State);
-    }
+//        var product = Product.Create(
+//            "Product1",
+//            "Description1",
+//            10.0m,
+//            new ProductTypeId(Guid.NewGuid()),
+//            new BrandId(Guid.NewGuid()),
+//            100,
+//            10,
+//            200);
 
-    [Fact(Skip = "Waiting")]
-    public async Task SaveEventAndCatalogContextChangesAsync_ShouldSaveEventAndContextChanges()
-    {
-        // Arrange
-        await _dbContext.SeedDatabase();
+//        DbContext.Products.Add(product);
 
-        var product = Product.Create(
-            "Product1",
-            "Description1",
-            10.0m,
-            new ProductTypeId(Guid.NewGuid()),
-            new BrandId(Guid.NewGuid()),
-            100,
-            10,
-            200);
+//        var integrationEvent = new IntegrationEvent();
+//        using var service = new CatalogIntegrationEventService(_logger, _eventBus, DbContext, _outboxService);
 
-        _dbContext.Products.Add(product);
+//        // Act
+//        await service.SaveEventAndCatalogContextChangesAsync(integrationEvent);
 
-        var integrationEvent = new IntegrationEvent();
-        using var service = new CatalogIntegrationEventService(_logger, _eventBus, _dbContext, _outboxService);
+//        // Assert
+//        var savedProduct = await DbContext.Products.FindAsync(product.Id);
+//        Assert.NotNull(savedProduct);
 
-        // Act
-        await service.SaveEventAndCatalogContextChangesAsync(integrationEvent);
-
-        // Assert
-        var savedProduct = await _dbContext.Products.FindAsync(product.Id);
-        Assert.NotNull(savedProduct);
-
-        var savedEvent = await _dbContext.Set<OutboxMessage>().FindAsync(integrationEvent.Id);
-        Assert.NotNull(savedEvent);
-    }
-}
+//        var savedEvent = await DbContext.Set<OutboxMessage>().FindAsync(integrationEvent.Id);
+//        Assert.NotNull(savedEvent);
+//    }
+//}

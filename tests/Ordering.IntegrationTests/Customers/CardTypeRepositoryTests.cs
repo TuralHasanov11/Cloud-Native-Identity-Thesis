@@ -17,7 +17,7 @@ public class CardTypeRepositoryTests : IClassFixture<OrderingFactory>
         await dbContext.SeedDatabase();
 
         var repository = new CardTypeRepository(dbContext);
-        var cardType = new CardType("Visa");
+        var cardType = CardType.Create("Visa");
 
         // Act
         await repository.CreateAsync(cardType);
@@ -36,7 +36,7 @@ public class CardTypeRepositoryTests : IClassFixture<OrderingFactory>
         await dbContext.SeedDatabase();
 
         var repository = new CardTypeRepository(dbContext);
-        var cardType = new CardType("MasterCard");
+        var cardType = CardType.Create("MasterCard");
 
         await repository.CreateAsync(cardType);
         await repository.SaveChangesAsync();
@@ -59,8 +59,8 @@ public class CardTypeRepositoryTests : IClassFixture<OrderingFactory>
 
         var repository = new CardTypeRepository(dbContext);
 
-        var cardType1 = new CardType("Visa");
-        var cardType2 = new CardType("MasterCard");
+        var cardType1 = CardType.Create("Visa");
+        var cardType2 = CardType.Create("MasterCard");
 
         await repository.CreateAsync(cardType1);
         await repository.CreateAsync(cardType2);
@@ -82,7 +82,7 @@ public class CardTypeRepositoryTests : IClassFixture<OrderingFactory>
     //    await dbContext.SeedDatabase();
 
     //    var repository = new CardTypeRepository(dbContext);
-    //    var cardType = new CardType("Visa");
+    //    var cardType = CardType.Create("Visa");
 
     //    await repository.CreateAsync(cardType);
     //    await repository.SaveChangesAsync();
@@ -121,13 +121,13 @@ public class CardTypeRepositoryTests : IClassFixture<OrderingFactory>
         await dbContext.SeedDatabase();
 
         var repository = new CardTypeRepository(dbContext);
-        var cardType = new CardType("Visa");
+        var cardType = CardType.Create("Visa");
 
         await repository.CreateAsync(cardType);
         await repository.SaveChangesAsync();
 
         // Act
-        cardType = new CardType("MasterCard");
+        cardType = CardType.Create("MasterCard");
         repository.Update(cardType);
         await repository.SaveChangesAsync();
 

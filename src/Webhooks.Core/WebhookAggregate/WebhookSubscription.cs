@@ -11,8 +11,9 @@ public class WebhookSubscription : EntityBase<WebhookId>
         Date = date;
         DestinationUrl = destinationUrl
             ?? throw new ArgumentNullException(nameof(destinationUrl), "The destination URL cannot be null.");
-        Token = token
-            ?? throw new ArgumentNullException(nameof(token), "The token cannot be null.");
+        Token = string.IsNullOrWhiteSpace(token)
+            ? throw new ArgumentException("The token cannot be null or empty.", nameof(token))
+            : token;
         UserId = userId;
     }
 

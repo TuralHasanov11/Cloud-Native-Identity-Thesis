@@ -16,6 +16,10 @@ public class OrderItem : EntityBase<OrderItemId>
 
     public OrderId OrderId { get; }
 
+    public decimal FinalUnitPrice => UnitPrice - Discount;
+
+    public decimal TotalPrice => FinalUnitPrice * Units;
+
     public OrderItem(
         OrderId orderId,
         Guid productId,

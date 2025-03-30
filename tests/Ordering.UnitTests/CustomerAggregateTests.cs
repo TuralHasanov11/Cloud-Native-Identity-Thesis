@@ -22,7 +22,7 @@ public class CustomerAggregateTests
         var identity = new IdentityId(Guid.Empty);
         var name = string.Empty;
 
-        Assert.Throws<OrderingDomainException>(() => Customer.Create(identity, name));
+        Assert.Throws<ArgumentNullException>(() => Customer.Create(identity, name));
     }
 
     [Fact]

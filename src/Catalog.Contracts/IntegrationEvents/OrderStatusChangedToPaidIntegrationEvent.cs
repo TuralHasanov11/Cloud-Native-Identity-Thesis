@@ -1,6 +1,6 @@
 ﻿namespace Catalog.Contracts.IntegrationEvents;
 
-public record OrderStatusChangedToPaidIntegrationEvent(
+public sealed record OrderStatusChangedToPaidIntegrationEvent(
     Guid OrderId,
     IEnumerable<OrderStockItem> OrderStockItems)
     : IntegrationEvent;

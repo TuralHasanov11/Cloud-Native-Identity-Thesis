@@ -25,8 +25,8 @@ public class ProductTypeTests
         const string name = null;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgumentNullException>(() => ProductType.Create(name));
-        Assert.Equal("Value cannot be null. (Parameter 'name')", exception.Message);
+        var exception = Assert.Throws<ArgumentException>(() => ProductType.Create(name));
+        Assert.Equal("The name cannot be empty. (Parameter 'name')", exception.Message);
     }
 
     [Fact]
@@ -36,8 +36,7 @@ public class ProductTypeTests
         var name = string.Empty;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgumentException>(() => ProductType.Create(name));
-        Assert.Equal("The name cannot be empty. (Parameter 'name')", exception.Message);
+        Assert.Throws<ArgumentException>(() => ProductType.Create(name));
     }
 
     [Fact]
@@ -62,8 +61,7 @@ public class ProductTypeTests
         const string newName = null;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgumentNullException>(() => productType.UpdateName(newName));
-        Assert.Equal("Value cannot be null. (Parameter 'name')", exception.Message);
+        Assert.Throws<ArgumentException>(() => productType.UpdateName(newName));
     }
 
     [Fact]

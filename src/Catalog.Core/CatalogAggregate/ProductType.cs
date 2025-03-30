@@ -3,10 +3,11 @@
 public sealed class ProductType : EntityBase<ProductTypeId>
 {
     private ProductType(string name)
+        : base(new ProductTypeId(Guid.CreateVersion7()))
     {
-        if (string.IsNullOrEmpty(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
-            throw new ArgumentNullException(nameof(name));
+            throw new ArgumentException("The name cannot be empty.", nameof(name));
         }
 
         Name = name;
@@ -16,9 +17,9 @@ public sealed class ProductType : EntityBase<ProductTypeId>
 
     public void UpdateName(string name)
     {
-        if (string.IsNullOrEmpty(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
-            throw new ArgumentNullException(nameof(name));
+            throw new ArgumentException("The name cannot be empty.", nameof(name));
         }
 
         Name = name;

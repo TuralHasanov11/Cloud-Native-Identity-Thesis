@@ -17,7 +17,7 @@ public sealed class Order
 
     public bool IsDraft { get; private set; }
 
-    public ICollection<OrderItem> OrderItems { get; }
+    public ICollection<OrderItem> OrderItems { get; } = [];
 
     public PaymentMethodId? PaymentMethodId { get; private set; }
 
@@ -63,7 +63,7 @@ public sealed class Order
 
     public void AddOrderItem(Guid productId, string productName, decimal unitPrice, decimal discount, Uri pictureUrl, int units = 1)
     {
-        var existingOrderForProduct = OrderItems.SingleOrDefault(o => o.ProductId == productId);
+        var existingOrderForProduct = OrderItems.FirstOrDefault(o => o.ProductId == productId);
 
         if (existingOrderForProduct != null)
         {
@@ -158,13 +158,24 @@ public sealed class Order
     }
 
     private void AddOrderStartedDomainEvent(
-            Guid userId, string userName, int cardTypeId, string cardNumber,
-            string cardSecurityNumber, string cardHolderName, DateTime cardExpiration)
+        Guid userId,
+        string userName,
+        int cardTypeId,
+        string cardNumber,
+        string cardSecurityNumber,
+        string cardHolderName,
+        DateTime cardExpiration)
     {
-        var orderStartedDomainEvent = new OrderStartedDomainEvent(this, userId, userName, cardTypeId,
-                                                                    cardNumber, cardSecurityNumber,
-                                                                    cardHolderName, cardExpiration,
-                                                                    DateTime.UtcNow);
+        var orderStartedDomainEvent = new OrderStartedDomainEvent(
+            this,
+            userId,
+            userName,
+            cardTypeId,
+            cardNumber,
+            cardSecurityNumber,
+            cardHolderName,
+            cardExpiration,
+            DateTime.UtcNow);
 
         AddDomainEvent(orderStartedDomainEvent);
     }
@@ -174,5 +185,5 @@ public sealed class Order
         throw new OrderingDomainException($"Is not possible to change the order status from {OrderStatus} to {orderStatusToChange}.");
     }
 
-    public decimal GetTotal() => OrderItems.Sum(o => o.Units * o.UnitPrice);
+    public decimal GetTotal() => OrderItems.Sum(o => o.TotalPrice);
 }

@@ -1,6 +1,6 @@
 ﻿namespace Catalog.Contracts.IntegrationEvents;
 
-public record OrderStockRejectedIntegrationEvent(
+public sealed record OrderStockRejectedIntegrationEvent(
     Guid OrderId,
-    List<ConfirmedOrderStockItem> OrderStockItems)
+    List<ConfirmedOrderStockItemIntegrationEvent> OrderStockItems)
     : IntegrationEvent;

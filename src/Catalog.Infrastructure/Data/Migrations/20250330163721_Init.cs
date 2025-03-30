@@ -12,7 +12,7 @@ namespace Catalog.Infrastructure.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AuditEntry",
+                name: "audit_entries",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -24,7 +24,7 @@ namespace Catalog.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AuditEntry", x => x.Id);
+                    table.PrimaryKey("PK_audit_entries", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,8 +107,8 @@ namespace Catalog.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuditEntry_StartTimeUtc",
-                table: "AuditEntry",
+                name: "IX_audit_entries_StartTimeUtc",
+                table: "audit_entries",
                 column: "StartTimeUtc");
 
             migrationBuilder.CreateIndex(
@@ -144,7 +144,7 @@ namespace Catalog.Infrastructure.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AuditEntry");
+                name: "audit_entries");
 
             migrationBuilder.DropTable(
                 name: "outbox_messages");

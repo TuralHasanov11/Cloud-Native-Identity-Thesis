@@ -1,6 +1,6 @@
 ﻿namespace Catalog.Contracts.IntegrationEvents;
 
-public record OrderStatusChangedToAwaitingValidationIntegrationEvent(
+public sealed record OrderStatusChangedToAwaitingValidationIntegrationEvent(
     Guid OrderId,
     IEnumerable<OrderStockItem> OrderStockItems)
     : IntegrationEvent;

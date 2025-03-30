@@ -1,6 +1,6 @@
 ﻿namespace Catalog.Contracts.IntegrationEvents;
 
-public record ProductPriceChangedIntegrationEvent(
+public sealed record ProductPriceChangedIntegrationEvent(
     Guid ProductId,
     decimal NewPrice,
     decimal OldPrice)

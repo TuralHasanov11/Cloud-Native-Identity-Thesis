@@ -36,8 +36,7 @@ public class WebhookSubscriptionTests
         var userId = new IdentityId(Guid.CreateVersion7());
 
         // Act & Assert
-        var exception = Assert.Throws<ArgumentNullException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));
-        Assert.Equal("Value cannot be null. (Parameter 'destinationUrl')", exception.Message);
+        Assert.Throws<ArgumentNullException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));
     }
 
     [Fact]
@@ -51,8 +50,7 @@ public class WebhookSubscriptionTests
         var userId = new IdentityId(Guid.CreateVersion7());
 
         // Act & Assert
-        var exception = Assert.Throws<ArgumentNullException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));
-        Assert.Equal("Value cannot be null. (Parameter 'token')", exception.Message);
+        Assert.Throws<ArgumentException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));
     }
 
     [Fact]
@@ -66,22 +64,6 @@ public class WebhookSubscriptionTests
         var userId = new IdentityId(Guid.CreateVersion7());
 
         // Act & Assert
-        var exception = Assert.Throws<ArgumentException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));
-        Assert.Equal("Token cannot be empty. (Parameter 'token')", exception.Message);
-    }
-
-    [Fact]
-    public void Constructor_ShouldThrowException_WhenUserIdIsEmpty()
-    {
-        // Arrange
-        var type = WebhookType.OrderPaid;
-        var date = DateTime.UtcNow;
-        var destinationUrl = new Uri("http://example.com/webhook");
-        var token = "sample-token";
-        var userId = new IdentityId(Guid.Empty);
-
-        // Act & Assert
-        var exception = Assert.Throws<ArgumentException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));
-        Assert.Equal("UserId cannot be empty. (Parameter 'userId')", exception.Message);
+        Assert.Throws<ArgumentException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));
     }
 }

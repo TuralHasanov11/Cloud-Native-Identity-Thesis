@@ -1,11 +1,22 @@
 ﻿namespace Ordering.Core.CustomerAggregate;
 
-public sealed class CardType : EntityBase
+public sealed class CardType : EntityBase, IAggregateRoot
 {
     public string Name { get; }
 
-    public CardType(string name)
+    private CardType(string name)
+        : base()
     {
-        Name = !string.IsNullOrWhiteSpace(name) ? name : throw new OrderingDomainException(nameof(name));
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("The name cannot be empty.", nameof(name));
+        }
+
+        Name = name;
+    }
+
+    public static CardType Create(string name)
+    {
+        return new CardType(name);
     }
 }

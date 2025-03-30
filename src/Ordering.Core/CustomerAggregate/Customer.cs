@@ -13,7 +13,7 @@ public sealed class Customer : EntityBase<CustomerId>, IAggregateRoot
 
     public string Name { get; }
 
-    public ICollection<PaymentMethod> PaymentMethods { get; }
+    public ICollection<PaymentMethod> PaymentMethods { get; } = [];
 
     public PaymentMethod VerifyOrAddPaymentMethod(
         int cardTypeId,
@@ -25,7 +25,7 @@ public sealed class Customer : EntityBase<CustomerId>, IAggregateRoot
         OrderId orderId)
     {
         var existingPayment = PaymentMethods
-            .SingleOrDefault(p => p.IsEqualTo(cardTypeId, cardNumber, expiration));
+            .FirstOrDefault(p => p.IsEqualTo(cardTypeId, cardNumber, expiration));
 
         if (existingPayment != null)
         {

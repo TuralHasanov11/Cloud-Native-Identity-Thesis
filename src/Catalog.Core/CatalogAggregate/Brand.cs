@@ -5,9 +5,9 @@ public sealed class Brand : EntityBase<BrandId>
     private Brand(string name)
         : base(new BrandId(Guid.CreateVersion7()))
     {
-        if (string.IsNullOrEmpty(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
-            throw new ArgumentException("The name cannot be empty.", nameof(name));
+            throw new ArgumentException("The brand name cannot be null or empty.", nameof(name));
         }
 
         Name = name;
@@ -17,9 +17,9 @@ public sealed class Brand : EntityBase<BrandId>
 
     public void UpdateName(string name)
     {
-        if (string.IsNullOrEmpty(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
-            throw new ArgumentException("The name cannot be empty.", nameof(name));
+            throw new ArgumentException("The brand name cannot be null or empty.", nameof(name));
         }
 
         Name = name;

@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Outbox\Outbox.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+  </ItemGroup>
+
 </Project>

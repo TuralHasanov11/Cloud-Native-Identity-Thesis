@@ -12,7 +12,7 @@ public class OrderStatusChangedToAwaitingValidationIntegrationEventHandler(
     public async Task Consume(ConsumeContext<OrderStatusChangedToAwaitingValidationIntegrationEvent> context)
     {
         logger.LogHandlingIntegrationEvent(context.Message.Id, context.Message);
-        var confirmedOrderStockItems = new List<ConfirmedOrderStockItem>();
+        var confirmedOrderStockItems = new List<ConfirmedOrderStockItemIntegrationEvent>();
 
         foreach (var orderStockItem in context.Message.OrderStockItems)
         {
@@ -26,7 +26,7 @@ public class OrderStatusChangedToAwaitingValidationIntegrationEventHandler(
             }
 
             var hasStock = product.AvailableStock >= orderStockItem.Units;
-            var confirmedOrderStockItem = new ConfirmedOrderStockItem(product.Id, hasStock);
+            var confirmedOrderStockItem = new ConfirmedOrderStockItemIntegrationEvent(product.Id, hasStock);
 
             confirmedOrderStockItems.Add(confirmedOrderStockItem);
         }
