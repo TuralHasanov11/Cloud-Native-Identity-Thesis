@@ -2,15 +2,15 @@
 
 public sealed record IdentityId
 {
-    public Guid Value { get; init; }
+    public string Value { get; init; }
 
-    public IdentityId(Guid value)
+    public IdentityId(string value)
     {
-        Value = value == Guid.Empty
+        Value = value == string.Empty
             ? throw new ArgumentException("The identity ID cannot be empty.", nameof(value))
             : value;
     }
 
 
-    public static implicit operator Guid(IdentityId self) => self.Value;
+    public static implicit operator string(IdentityId self) => self.Value;
 }

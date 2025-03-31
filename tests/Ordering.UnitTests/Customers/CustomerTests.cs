@@ -9,7 +9,7 @@ public class CustomerTests
     public void Create_ShouldInitializeCustomer()
     {
         // Arrange
-        var identityId = new IdentityId(Guid.NewGuid());
+        var identityId = new IdentityId("id");
         var name = "John Doe";
 
         // Act
@@ -25,7 +25,7 @@ public class CustomerTests
     public void Create_ShouldThrowException_WhenNameIsNull()
     {
         // Arrange
-        var identityId = new IdentityId(Guid.NewGuid());
+        var identityId = new IdentityId("id");
 
         // Act & Assert
         var exception = Assert.Throws<ArgumentNullException>(() => Customer.Create(identityId, null));
@@ -36,7 +36,7 @@ public class CustomerTests
     public void Create_ShouldThrowException_WhenNameIsEmpty()
     {
         // Arrange
-        var identityId = new IdentityId(Guid.NewGuid());
+        var identityId = new IdentityId("id");
 
         // Act & Assert
         var exception = Assert.Throws<ArgumentNullException>(() => Customer.Create(identityId, string.Empty));
@@ -47,14 +47,14 @@ public class CustomerTests
     public void VerifyOrAddPaymentMethod_ShouldAddNewPaymentMethod()
     {
         // Arrange
-        var customer = Customer.Create(new IdentityId(Guid.NewGuid()), "John Doe");
+        var customer = Customer.Create(new IdentityId("id"), "John Doe");
         var cardTypeId = 1;
         var alias = "Visa";
         var cardNumber = "1234567890123456";
         var securityNumber = "123";
         var cardHolderName = "John Doe";
         var expiration = DateTime.UtcNow.AddYears(1);
-        var orderId = new OrderId(Guid.NewGuid());
+        var orderId = new OrderId(Guid.CreateVersion7());
 
         // Act
         var paymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias, cardNumber, securityNumber, cardHolderName, expiration, orderId);
@@ -68,14 +68,14 @@ public class CustomerTests
     public void VerifyOrAddPaymentMethod_ShouldReturnExistingPaymentMethod()
     {
         // Arrange
-        var customer = Customer.Create(new IdentityId(Guid.NewGuid()), "John Doe");
+        var customer = Customer.Create(new IdentityId("id"), "John Doe");
         var cardTypeId = 1;
         var alias = "Visa";
         var cardNumber = "1234567890123456";
         var securityNumber = "123";
         var cardHolderName = "John Doe";
         var expiration = DateTime.UtcNow.AddYears(1);
-        var orderId = new OrderId(Guid.NewGuid());
+        var orderId = new OrderId(Guid.CreateVersion7());
 
         var existingPaymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias, cardNumber, securityNumber, cardHolderName, expiration, orderId);
 
@@ -91,14 +91,14 @@ public class CustomerTests
     public void VerifyOrAddPaymentMethod_ShouldAddDomainEvent()
     {
         // Arrange
-        var customer = Customer.Create(new IdentityId(Guid.NewGuid()), "John Doe");
+        var customer = Customer.Create(new IdentityId("id"), "John Doe");
         var cardTypeId = 1;
         var alias = "Visa";
         var cardNumber = "1234567890123456";
         var securityNumber = "123";
         var cardHolderName = "John Doe";
         var expiration = DateTime.UtcNow.AddYears(1);
-        var orderId = new OrderId(Guid.NewGuid());
+        var orderId = new OrderId(Guid.CreateVersion7());
 
         // Act
         var paymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias, cardNumber, securityNumber, cardHolderName, expiration, orderId);

@@ -8,7 +8,7 @@ public class CustomerAggregateTests
     [Fact]
     public void CreateMethod_CreatesCustomer()
     {
-        var identity = new IdentityId(Guid.CreateVersion7());
+        var identity = new IdentityId(IdentityExtensions.GenerateId());
         const string name = "fakeUser";
 
         var fakeCustomerItem = Customer.Create(identity, name);
@@ -19,7 +19,7 @@ public class CustomerAggregateTests
     [Fact]
     public void CreateCustomer_WithEmptyValues_ThrowsException()
     {
-        var identity = new IdentityId(Guid.Empty);
+        var identity = new IdentityId(string.Empty);
         var name = string.Empty;
 
         Assert.Throws<ArgumentNullException>(() => Customer.Create(identity, name));
@@ -36,7 +36,7 @@ public class CustomerAggregateTests
         var expiration = DateTime.UtcNow.AddYears(1);
         var orderId = new OrderId(Guid.CreateVersion7());
         const string name = "fakeUser";
-        var identity = new IdentityId(Guid.Empty);
+        var identity = new IdentityId(string.Empty);
         var fakeCustomerItem = Customer.Create(identity, name);
 
         var result = fakeCustomerItem.VerifyOrAddPaymentMethod(
@@ -114,7 +114,7 @@ public class CustomerAggregateTests
         DateTime cardExpiration = DateTime.UtcNow.AddYears(1);
         const string name = "fakeUser";
 
-        var fakeCustomer = Customer.Create(new IdentityId(Guid.CreateVersion7()), name);
+        var fakeCustomer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), name);
         fakeCustomer.VerifyOrAddPaymentMethod(
             cardTypeId,
             alias,

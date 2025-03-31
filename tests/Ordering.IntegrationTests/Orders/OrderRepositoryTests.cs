@@ -17,7 +17,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
 
         var repository = new OrderRepository(dbContext);
         var order = new Order(
-            new IdentityId(Guid.CreateVersion7()),
+            new IdentityId(IdentityExtensions.GenerateId()),
             "fakeName",
             new Address("street", "city", "state", "country", "zipcode"),
             cardTypeId: 5,
@@ -42,7 +42,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
 
         var repository = new OrderRepository(dbContext);
         var order = new Order(
-            new IdentityId(Guid.CreateVersion7()),
+            new IdentityId(IdentityExtensions.GenerateId()),
             "fakeName",
             new Address("street", "city", "state", "country", "zipcode"),
             cardTypeId: 5,
@@ -71,7 +71,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
         await dbContext.SeedDatabase();
 
         var repository = new OrderRepository(dbContext);
-        var identityId = new IdentityId(Guid.CreateVersion7());
+        var identityId = new IdentityId(IdentityExtensions.GenerateId());
 
         var order1 = new Order(
             identityId,
@@ -116,7 +116,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
 
         var repository = new OrderRepository(dbContext);
         var order = new Order(
-            new IdentityId(Guid.CreateVersion7()),
+            new IdentityId(IdentityExtensions.GenerateId()),
             "fakeName",
             new Address("street", "city", "state", "country", "zipcode"),
             cardTypeId: 5,
@@ -163,7 +163,7 @@ public class OrderRepositoryTests : IClassFixture<OrderingFactory>
 
         var repository = new OrderRepository(dbContext);
         var order = new Order(
-            new IdentityId(Guid.CreateVersion7()),
+            new IdentityId(IdentityExtensions.GenerateId()),
             "fakeName",
             new Address("street", "city", "state", "country", "zipcode"),
             cardTypeId: 5,

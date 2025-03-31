@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Basket.Api.Extensions;
-using Basket.Core.BasketAggregate;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 
@@ -15,7 +14,7 @@ public class BasketService(
     {
         var userId = context.GetUserId();
 
-        if (userId == Guid.Empty)
+        if (string.IsNullOrEmpty(userId))
         {
             return new();
         }
@@ -34,7 +33,7 @@ public class BasketService(
     {
         var userId = context.GetUserId();
 
-        if (userId == Guid.Empty)
+        if (string.IsNullOrEmpty(userId))
         {
             ThrowNotAuthenticated();
         }
@@ -57,7 +56,7 @@ public class BasketService(
     public override async Task<DeleteBasketResponse> DeleteBasket(DeleteBasketRequest request, ServerCallContext context)
     {
         var userId = context.GetUserId();
-        if (userId == Guid.Empty)
+        if (string.IsNullOrEmpty(userId))
         {
             ThrowNotAuthenticated();
         }
@@ -70,7 +69,7 @@ public class BasketService(
     private static void ThrowNotAuthenticated() => throw new RpcException(new Status(StatusCode.Unauthenticated, "The caller is not authenticated."));
 
     [DoesNotReturn]
-    private static void ThrowBasketDoesNotExist(Guid userId) => throw new RpcException(new Status(StatusCode.NotFound, $"Basket with buyer id {userId} does not exist"));
+    private static void ThrowBasketDoesNotExist(string userId) => throw new RpcException(new Status(StatusCode.NotFound, $"Basket with buyer id {userId} does not exist"));
 
     private static CustomerBasketResponse MapToCustomerBasketResponse(CustomerBasket customerBasket)
     {
@@ -88,7 +87,7 @@ public class BasketService(
         return response;
     }
 
-    private static CustomerBasket MapToCustomerBasket(Guid userId, UpdateBasketRequest customerBasketRequest)
+    private static CustomerBasket MapToCustomerBasket(string userId, UpdateBasketRequest customerBasketRequest)
     {
         var response = new CustomerBasket
         {

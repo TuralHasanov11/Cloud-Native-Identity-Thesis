@@ -1,3 +1,3 @@
 ﻿namespace Ordering.Contracts.IntegrationEvents;
 
-public sealed record OrderStartedIntegrationEvent(Guid UserId) : IntegrationEvent;
+public sealed record OrderStartedIntegrationEvent(string UserId) : IntegrationEvent;

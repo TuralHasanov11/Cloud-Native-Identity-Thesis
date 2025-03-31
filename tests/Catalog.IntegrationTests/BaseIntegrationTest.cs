@@ -1,30 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿namespace Catalog.IntegrationTests;
 
-namespace Catalog.IntegrationTests;
-
-[Collection(nameof(IntegrationTestCollection))]
-public class BaseIntegrationTest : IAsyncLifetime
+public class BaseIntegrationTest : IClassFixture<CatalogFactory>, IAsyncLifetime
 {
     protected const string ApiBaseUrl = "https://localhost:5103";
 
     private readonly Func<Task> _resetDatabase;
 
-    protected WebApplicationFactory<Program> Factory { get; }
+#pragma warning disable CA1051 // Do not declare visible instance fields
+    protected readonly CatalogDbContext DbContext;
+#pragma warning restore CA1051 // Do not declare visible instance fields
+
+    private readonly IServiceScope _scope;
 
     protected BaseIntegrationTest(CatalogFactory factory)
     {
-        Factory = factory;
+        _scope = factory.Services.CreateScope();
         _resetDatabase = factory.ResetDatabaseAsync;
+        DbContext = _scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
 
-        using var scope = factory.Services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
-
-        var pendingMigrations = dbContext.Database.GetPendingMigrations();
+        var pendingMigrations = DbContext.Database.GetPendingMigrations();
 
         if (pendingMigrations.Any())
         {
             Console.WriteLine("Applying pending migrations...");
-            dbContext.Database.Migrate();
+            DbContext.Database.Migrate();
         }
         else
         {
@@ -40,9 +39,18 @@ public class BaseIntegrationTest : IAsyncLifetime
         yield return Brand.Create("Brand 4");
     }
 
-    public Task InitializeAsync()
+    private async Task SeedDatabase()
     {
-        return Task.CompletedTask;
+        if (!await DbContext.Products.AnyAsync())
+        {
+            //await DbContext.Brands.AddRangeAsync(GetBrands());
+            //await DbContext.SaveChangesAsync();
+        }
+    }
+
+    public async Task InitializeAsync()
+    {
+        await SeedDatabase();
     }
 
     public async Task DisposeAsync() => await _resetDatabase();

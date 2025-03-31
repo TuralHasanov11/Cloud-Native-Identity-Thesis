@@ -3,7 +3,7 @@
 public class BasketItem
 {
 
-    public Guid Id { get; set; }
+    public string Id { get; set; }
 
     public Guid ProductId { get; set; }
 

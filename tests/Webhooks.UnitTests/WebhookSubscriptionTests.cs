@@ -12,7 +12,7 @@ public class WebhookSubscriptionTests
         var date = DateTime.UtcNow;
         var destinationUrl = new Uri("http://example.com/webhook");
         var token = "sample-token";
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId("id");
 
         // Act
         var webhookSubscription = new WebhookSubscription(type, date, destinationUrl, token, userId);
@@ -33,7 +33,7 @@ public class WebhookSubscriptionTests
         var date = DateTime.UtcNow;
         Uri destinationUrl = null;
         var token = "sample-token";
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId("id");
 
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));
@@ -47,7 +47,7 @@ public class WebhookSubscriptionTests
         var date = DateTime.UtcNow;
         var destinationUrl = new Uri("http://example.com/webhook");
         string token = null;
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId("id");
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));
@@ -61,7 +61,7 @@ public class WebhookSubscriptionTests
         var date = DateTime.UtcNow;
         var destinationUrl = new Uri("http://example.com/webhook");
         var token = string.Empty;
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId("id");
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => new WebhookSubscription(type, date, destinationUrl, token, userId));

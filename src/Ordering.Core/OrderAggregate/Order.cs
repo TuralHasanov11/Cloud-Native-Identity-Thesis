@@ -158,7 +158,7 @@ public sealed class Order
     }
 
     private void AddOrderStartedDomainEvent(
-        Guid userId,
+        string userId,
         string userName,
         int cardTypeId,
         string cardNumber,

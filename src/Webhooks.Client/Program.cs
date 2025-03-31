@@ -1,36 +1,57 @@
-var builder = WebApplication.CreateBuilder(args);
+using Serilog;
 
-builder.AddServiceDefaults();
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .CreateLogger();
 
-builder.AddApplicationServices();
-
-builder.Services.AddRazorPages();
-
-var app = builder.Build();
-
-if (!app.Environment.IsDevelopment())
+try
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    Log.Information("Starting web host");
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.AddServiceDefaults();
+
+    builder.AddApplicationServices();
+
+    builder.Services.AddRazorPages();
+
+    var app = builder.Build();
+
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/Error");
+        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+        app.UseHsts();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseAntiforgery();
+
+    app.UseRouting();
+
+    app.UseAuthorization();
+
+    app.MapStaticAssets();
+    app.MapRazorPages()
+       .WithStaticAssets();
+
+    app.MapDefaultEndpoints();
+
+    app.MapAuthenticationEndpoints();
+
+    app.MapWebhookEndpoints();
+
+    await app.RunAsync();
+}
+catch (Exception ex)
+{
+    Log.Error(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    await Log.CloseAndFlushAsync();
 }
 
-app.UseHttpsRedirection();
-
-app.UseAntiforgery();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapStaticAssets();
-app.MapRazorPages()
-   .WithStaticAssets();
-
-app.MapDefaultEndpoints();
-
-app.MapAuthenticationEndpoints();
-
-app.MapWebhookEndpoints();
-
-await app.RunAsync();
+public partial class Program;

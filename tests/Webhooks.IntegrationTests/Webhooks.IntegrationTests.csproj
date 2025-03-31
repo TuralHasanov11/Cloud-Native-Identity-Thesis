@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Webhooks.Api\Webhooks.Api.csproj" />
-    <ProjectReference Include="..\..\src\Webhooks.Client\Webhooks.Client.csproj" />
     <ProjectReference Include="..\..\src\Webhooks.Contracts\Webhooks.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Webhooks.Core\Webhooks.Core.csproj" />
     <ProjectReference Include="..\..\src\Webhooks.Infrastructure\Webhooks.Infrastructure.csproj" />

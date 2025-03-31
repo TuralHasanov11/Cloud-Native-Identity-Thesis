@@ -4,4 +4,4 @@ public sealed record OrderStatusChangedToSubmittedIntegrationEvent(
     Guid OrderId,
     string OrderStatus,
     string CustomerName,
-    Guid CustomerIdentityId) : IntegrationEvent;
+    string CustomerIdentityId) : IntegrationEvent;

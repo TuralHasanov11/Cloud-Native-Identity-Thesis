@@ -4,5 +4,5 @@ public sealed record OrderStatusChangedToPaidIntegrationEvent(
     Guid OrderId,
     string OrderStatus,
     string CustomerName,
-    Guid CustomerIdentityId,
+    string CustomerIdentityId,
     IEnumerable<OrderStockItem> OrderStockItems) : IntegrationEvent;

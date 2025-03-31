@@ -31,7 +31,7 @@ public class OrderStatusChangedToPaidIntegrationEventTests : IClassFixture<Webho
             DateTime.UtcNow,
             new Uri("http://example.com/webhook"),
             "sample-token",
-            new IdentityId(Guid.NewGuid()));
+            new IdentityId(IdentityExtensions.GenerateId()));
 
         _dbContext.Subscriptions.Add(subscription);
         await _dbContext.SaveChangesAsync();

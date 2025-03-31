@@ -3,7 +3,7 @@
 public interface IBasketRepository
 {
     Task<CustomerBasket> GetBasketAsync(
-        Guid customerId,
+        string customerId,
         CancellationToken cancellationToken = default);
 
     Task<CustomerBasket> UpdateBasketAsync(
@@ -11,6 +11,6 @@ public interface IBasketRepository
         CancellationToken cancellationToken = default);
 
     Task DeleteBasketAsync(
-        Guid id,
+        string customerId,
         CancellationToken cancellationToken = default);
 }

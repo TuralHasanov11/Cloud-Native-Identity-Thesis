@@ -12,14 +12,14 @@ public class BasketRepository(ILogger<BasketRepository> logger, HybridCache cach
 
     private readonly HybridCache _cache = cache;
 
-    private static string GetBasketKey(Guid userId) => $"{BasketKeyPrefix}{userId}";
+    private static string GetBasketKey(string userId) => $"{BasketKeyPrefix}{userId}";
 
-    public async Task DeleteBasketAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task DeleteBasketAsync(string customerId, CancellationToken cancellationToken = default)
     {
-        await _cache.RemoveAsync(GetBasketKey(id), cancellationToken);
+        await _cache.RemoveAsync(GetBasketKey(customerId), cancellationToken);
     }
 
-    public async Task<CustomerBasket> GetBasketAsync(Guid customerId, CancellationToken cancellationToken = default)
+    public async Task<CustomerBasket> GetBasketAsync(string customerId, CancellationToken cancellationToken = default)
     {
         var basket = await _cache.GetOrCreateAsync(
             GetBasketKey(customerId),

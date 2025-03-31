@@ -27,7 +27,7 @@ try
 
     if (!app.Environment.IsDevelopment())
     {
-        app.UseExceptionHandler("/Error");
+        app.UseExceptionHandler();
         app.UseHsts();
     }
 
@@ -47,9 +47,9 @@ try
     app.UseAuthorization();
     //app.UseResponseCompression();
 
-    app.MapDefaultEndpoints();
-
     app.UseStatusCodePages();
+
+    app.MapDefaultEndpoints();
 
     app.MapWebhooksApi();
 

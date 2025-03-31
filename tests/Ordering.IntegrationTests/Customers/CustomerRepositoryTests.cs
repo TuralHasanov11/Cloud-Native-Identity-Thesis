@@ -19,7 +19,7 @@ public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
         await dbContext.SeedDatabase();
 
         var repository = new CustomerRepository(dbContext);
-        var customer = Customer.Create(new IdentityId(Guid.NewGuid()), "John Doe");
+        var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
         // Act
         await repository.CreateAsync(customer);
@@ -38,7 +38,7 @@ public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
         await dbContext.SeedDatabase();
 
         var repository = new CustomerRepository(dbContext);
-        var customer = Customer.Create(new IdentityId(Guid.NewGuid()), "John Doe");
+        var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
         await repository.CreateAsync(customer);
         await repository.SaveChangesAsync();
@@ -61,8 +61,8 @@ public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
 
         var repository = new CustomerRepository(dbContext);
 
-        var customer1 = Customer.Create(new IdentityId(Guid.NewGuid()), "John Doe");
-        var customer2 = Customer.Create(new IdentityId(Guid.NewGuid()), "Jane Doe");
+        var customer1 = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
+        var customer2 = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "Jane Doe");
 
         await repository.CreateAsync(customer1);
         await repository.CreateAsync(customer2);
@@ -86,7 +86,7 @@ public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
         await dbContext.SeedDatabase();
 
         var repository = new CustomerRepository(dbContext);
-        var customer = Customer.Create(new IdentityId(Guid.NewGuid()), "John Doe");
+        var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
         await repository.CreateAsync(customer);
         await repository.SaveChangesAsync();
@@ -108,7 +108,7 @@ public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
         await dbContext.SeedDatabase();
 
         var repository = new CustomerRepository(dbContext);
-        var specification = new GetCustomerByIdSpecification(new CustomerId(Guid.NewGuid()));
+        var specification = new GetCustomerByIdSpecification(new CustomerId(Guid.CreateVersion7()));
 
         // Act
         var result = await repository.SingleOrDefaultAsync(specification);
@@ -125,13 +125,13 @@ public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
         await dbContext.SeedDatabase();
 
         var repository = new CustomerRepository(dbContext);
-        var customer = Customer.Create(new IdentityId(Guid.NewGuid()), "John Doe");
+        var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
         await repository.CreateAsync(customer);
         await repository.SaveChangesAsync();
 
         // Act
-        customer = Customer.Create(new IdentityId(Guid.NewGuid()), "Jane Doe");
+        customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "Jane Doe");
         repository.Update(customer);
         await repository.SaveChangesAsync();
 

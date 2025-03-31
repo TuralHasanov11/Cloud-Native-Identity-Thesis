@@ -1,6 +1,6 @@
 ﻿namespace Ordering.Core.CustomerAggregate;
 
-public sealed record IdentityId(Guid Value)
+public sealed record IdentityId(string Value)
 {
-    public static implicit operator Guid(IdentityId self) => self.Value;
+    public static implicit operator string(IdentityId self) => self.Value;
 }

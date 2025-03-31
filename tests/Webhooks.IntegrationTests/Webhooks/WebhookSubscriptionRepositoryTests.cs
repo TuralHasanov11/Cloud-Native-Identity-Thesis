@@ -24,7 +24,7 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
             DateTime.UtcNow,
             new Uri("http://example.com/webhook"),
             "sample-token",
-            new IdentityId(Guid.CreateVersion7()));
+            new IdentityId(IdentityExtensions.GenerateId()));
 
         await repository.CreateAsync(subscription);
         await repository.SaveChangesAsync();
@@ -46,7 +46,7 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
             DateTime.UtcNow,
             new Uri("http://example.com/webhook"),
             "sample-token",
-            new IdentityId(Guid.CreateVersion7()));
+            new IdentityId(IdentityExtensions.GenerateId()));
 
         await repository.CreateAsync(subscription);
         await repository.SaveChangesAsync();
@@ -74,14 +74,14 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
             DateTime.UtcNow,
             new Uri("http://example.com/webhook1"),
             "sample-token1",
-            new IdentityId(Guid.CreateVersion7()));
+            new IdentityId(IdentityExtensions.GenerateId()));
 
         var subscription2 = new WebhookSubscription(
             WebhookType.OrderPaid,
             DateTime.UtcNow,
             new Uri("http://example.com/webhook2"),
             "sample-token2",
-            new IdentityId(Guid.CreateVersion7()));
+            new IdentityId(IdentityExtensions.GenerateId()));
 
         await repository.CreateAsync(subscription1);
         await repository.CreateAsync(subscription2);
@@ -110,7 +110,7 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
             DateTime.UtcNow,
             new Uri("http://example.com/webhook"),
             "sample-token",
-            new IdentityId(Guid.CreateVersion7()));
+            new IdentityId(IdentityExtensions.GenerateId()));
 
         await repository.CreateAsync(subscription);
         await repository.SaveChangesAsync();
@@ -133,7 +133,7 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
 
         var repository = new WebhookSubscriptionRepository(dbContext);
         var specification = new GetWebhookSubscriptionSpecification(
-            new IdentityId(Guid.CreateVersion7()),
+            new IdentityId(IdentityExtensions.GenerateId()),
             new WebhookId(Guid.CreateVersion7()));
 
         // Act

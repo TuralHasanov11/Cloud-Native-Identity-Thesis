@@ -6,4 +6,4 @@ public record WebhookSubscriptionDto(
     DateTime Date,
     Uri DestinationUrl,
     string Token,
-    Guid UserId);
+    string UserId);

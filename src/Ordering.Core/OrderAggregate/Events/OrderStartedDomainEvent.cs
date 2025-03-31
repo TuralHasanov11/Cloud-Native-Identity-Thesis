@@ -2,7 +2,7 @@
 
 public sealed record OrderStartedDomainEvent(
     Order Order,
-    Guid UserId,
+    string UserId,
     string UserName,
     int CardTypeId,
     string CardNumber,

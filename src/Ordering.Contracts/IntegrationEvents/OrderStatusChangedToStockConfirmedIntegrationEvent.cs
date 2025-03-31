@@ -4,4 +4,4 @@ public sealed record OrderStatusChangedToStockConfirmedIntegrationEvent(
     Guid OrderId,
     string OrderStatus,
     string CustomerName,
-    Guid CustomerIdentityId) : IntegrationEvent;
+    string CustomerIdentityId) : IntegrationEvent;

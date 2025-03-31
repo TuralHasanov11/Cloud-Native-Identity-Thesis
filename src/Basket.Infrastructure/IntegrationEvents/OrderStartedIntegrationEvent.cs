@@ -2,4 +2,4 @@
 
 namespace Basket.Infrastructure.IntegrationEvents;
 
-public record OrderStartedIntegrationEvent(Guid UserId) : IntegrationEvent;
+public sealed record OrderStartedIntegrationEvent(string UserId) : IntegrationEvent;

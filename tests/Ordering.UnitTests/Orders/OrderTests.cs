@@ -20,7 +20,7 @@ public class OrderTests
     public void Constructor_ShouldInitializeOrder()
     {
         // Arrange
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId(IdentityExtensions.GenerateId());
         var userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         var cardTypeId = 1;
@@ -49,7 +49,7 @@ public class OrderTests
     public void AddOrderItem_ShouldAddNewItem()
     {
         // Arrange
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId(IdentityExtensions.GenerateId());
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
@@ -108,7 +108,7 @@ public class OrderTests
     public void AddOrderItem_ShouldUpdateExistingItem()
     {
         // Arrange
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId(IdentityExtensions.GenerateId());
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
@@ -164,7 +164,7 @@ public class OrderTests
     public void VerifyPayment_ShouldSetCustomerIdAndPaymentMethodId()
     {
         // Arrange
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId(IdentityExtensions.GenerateId());
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
@@ -212,7 +212,7 @@ public class OrderTests
     public void SetAwaitingValidationStatus_ShouldChangeStatusToAwaitingValidation()
     {
         // Arrange
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId(IdentityExtensions.GenerateId());
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
@@ -259,7 +259,7 @@ public class OrderTests
     {
         // Arrange
         // Arrange
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId(IdentityExtensions.GenerateId());
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
@@ -308,7 +308,7 @@ public class OrderTests
     {
         // Arrange
         // Arrange
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId(IdentityExtensions.GenerateId());
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
@@ -358,7 +358,7 @@ public class OrderTests
     {
         // Arrange
         // Arrange
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId(IdentityExtensions.GenerateId());
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
@@ -409,7 +409,7 @@ public class OrderTests
     {
         // Arrange
         // Arrange
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId(IdentityExtensions.GenerateId());
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
@@ -456,7 +456,7 @@ public class OrderTests
     {
         // Arrange
         // Arrange
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId(IdentityExtensions.GenerateId());
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
@@ -507,7 +507,7 @@ public class OrderTests
     {
         // Arrange
         // Arrange
-        var userId = new IdentityId(Guid.CreateVersion7());
+        var userId = new IdentityId(IdentityExtensions.GenerateId());
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;

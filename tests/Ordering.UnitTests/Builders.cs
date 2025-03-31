@@ -15,7 +15,7 @@ public class OrderBuilder
     public OrderBuilder(Address address)
     {
         order = new Order(
-            new Core.CustomerAggregate.IdentityId(Guid.CreateVersion7()),
+            new Core.CustomerAggregate.IdentityId(IdentityExtensions.GenerateId()),
             "fakeName",
             address,
             cardTypeId: 5,

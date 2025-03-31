@@ -45,7 +45,10 @@ public static class Extensions
                 sp.GetRequiredService<CatalogDbContext>(),
                 Contracts.AssemblyReference.Assembly));
 
-        //builder.Services.AddMigration<CatalogDbContext, CatalogDbContextSeed>();
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddMigration<CatalogDbContext, CatalogDbContextSeed>();
+        }
 
         builder.Services.AddTransient<ICatalogIntegrationEventService, CatalogIntegrationEventService>();
 

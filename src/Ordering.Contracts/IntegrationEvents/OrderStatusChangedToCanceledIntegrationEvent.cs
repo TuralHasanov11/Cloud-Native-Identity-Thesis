@@ -4,4 +4,4 @@ public sealed record OrderStatusChangedToCanceledIntegrationEvent(
     Guid OrderId,
     int OrderStatus,
     string CustomerName,
-    Guid CustomerIdentityId) : IntegrationEvent;
+    string CustomerIdentityId) : IntegrationEvent;

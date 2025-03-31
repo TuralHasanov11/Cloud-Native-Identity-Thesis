@@ -1,7 +1,7 @@
 ﻿namespace Ordering.Api.Features.Orders;
 
 public sealed record CreateOrderRequest(
-    Guid UserId,
+    string UserId,
     string UserName,
     string City,
     string Street,

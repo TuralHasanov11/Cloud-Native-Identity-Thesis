@@ -6,11 +6,11 @@ namespace Basket.Api.Extensions;
 
 internal static class ServerCallContextIdentityExtensions
 {
-    public static Guid GetUserId(this ServerCallContext context)
+    public static string? GetUserId(this ServerCallContext context)
     {
         var claim = context.GetHttpContext().User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
-        return Guid.TryParse(claim, out var userId) ? userId : Guid.Empty;
+        return claim;
     }
 
     public static string? GetUserName(this ServerCallContext context)
