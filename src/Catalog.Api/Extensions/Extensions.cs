@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Options;
 using Outbox.Services;
+using ServiceDefaults.Identity;
 
 namespace Catalog.Api.Extensions;
 
@@ -87,6 +88,9 @@ public static class Extensions
         {
             options.SchedulePollingInterval = TimeSpan.FromSeconds(10);
         });
+
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddTransient<IIdentityService, IdentityService>();
     }
 
     public static IApplicationBuilder UseBackgroundJobs(this WebApplication app)

@@ -1,6 +1,7 @@
 ﻿namespace Catalog.IntegrationTests;
 
-public class BaseIntegrationTest : IClassFixture<CatalogFactory>, IAsyncLifetime
+[Collection(nameof(IntegrationTestCollection))]
+public class BaseIntegrationTest : IAsyncLifetime
 {
     protected const string ApiBaseUrl = "https://localhost:5103";
 
@@ -17,18 +18,6 @@ public class BaseIntegrationTest : IClassFixture<CatalogFactory>, IAsyncLifetime
         _scope = factory.Services.CreateScope();
         _resetDatabase = factory.ResetDatabaseAsync;
         DbContext = _scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
-
-        var pendingMigrations = DbContext.Database.GetPendingMigrations();
-
-        if (pendingMigrations.Any())
-        {
-            Console.WriteLine("Applying pending migrations...");
-            DbContext.Database.Migrate();
-        }
-        else
-        {
-            Console.WriteLine("No pending migrations.");
-        }
     }
 
     private static IEnumerable<Brand> GetBrands()
@@ -50,6 +39,18 @@ public class BaseIntegrationTest : IClassFixture<CatalogFactory>, IAsyncLifetime
 
     public async Task InitializeAsync()
     {
+        var pendingMigrations = await DbContext.Database.GetPendingMigrationsAsync();
+
+        if (pendingMigrations.Any())
+        {
+            Console.WriteLine("Applying pending migrations...");
+            await DbContext.Database.MigrateAsync();
+        }
+        else
+        {
+            Console.WriteLine("No pending migrations.");
+        }
+
         await SeedDatabase();
     }
 

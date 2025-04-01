@@ -1,5 +1,6 @@
 ﻿namespace Catalog.IntegrationTests.Brands;
 
+[Collection(nameof(IntegrationTestCollection))]
 public class BrandRepositoryTests : BaseIntegrationTest
 {
     private readonly IBrandRepository _repository;

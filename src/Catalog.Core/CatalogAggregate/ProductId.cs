@@ -8,4 +8,24 @@ public sealed record ProductId(Guid Value) : IComparable<ProductId>
     }
 
     public static implicit operator Guid(ProductId self) => self.Value;
+
+    public static bool operator >(ProductId operand1, ProductId operand2)
+    {
+        return operand1.CompareTo(operand2) > 0;
+    }
+
+    public static bool operator <(ProductId operand1, ProductId operand2)
+    {
+        return operand1.CompareTo(operand2) < 0;
+    }
+
+    public static bool operator >=(ProductId operand1, ProductId operand2)
+    {
+        return operand1.CompareTo(operand2) >= 0;
+    }
+
+    public static bool operator <=(ProductId operand1, ProductId operand2)
+    {
+        return operand1.CompareTo(operand2) <= 0;
+    }
 }

@@ -1,5 +1,10 @@
-﻿global using Microsoft.AspNetCore.Http.HttpResults;
+﻿global using MassTransit;
+global using Microsoft.AspNetCore.Http.HttpResults;
+global using Microsoft.EntityFrameworkCore;
 global using Serilog;
 global using ServiceDefaults;
 global using Webhooks.Core.WebhookAggregate;
 global using Webhooks.Core.WebhookAggregate.Specifications;
+global using Webhooks.Infrastructure.Data;
+global using Webhooks.Infrastructure.Repositories;
+global using Webhooks.Infrastructure.Services;

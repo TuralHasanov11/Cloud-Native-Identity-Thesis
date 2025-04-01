@@ -6,17 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Webhooks.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class WebhooksApi : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "webhooks");
-
             migrationBuilder.CreateTable(
-                name: "AuditEntry",
-                schema: "webhooks",
+                name: "audit_entries",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -28,12 +24,11 @@ namespace Webhooks.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AuditEntry", x => x.Id);
+                    table.PrimaryKey("PK_audit_entries", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "outbox_messages",
-                schema: "webhooks",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -53,7 +48,6 @@ namespace Webhooks.Infrastructure.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "webhooks",
-                schema: "webhooks",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -61,7 +55,7 @@ namespace Webhooks.Infrastructure.Data.Migrations
                     Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DestinationUrl = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
                     Token = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
                     RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
@@ -70,20 +64,17 @@ namespace Webhooks.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuditEntry_StartTimeUtc",
-                schema: "webhooks",
-                table: "AuditEntry",
+                name: "IX_audit_entries_StartTimeUtc",
+                table: "audit_entries",
                 column: "StartTimeUtc");
 
             migrationBuilder.CreateIndex(
                 name: "IX_webhooks_Type",
-                schema: "webhooks",
                 table: "webhooks",
                 column: "Type");
 
             migrationBuilder.CreateIndex(
                 name: "IX_webhooks_UserId",
-                schema: "webhooks",
                 table: "webhooks",
                 column: "UserId");
         }
@@ -92,16 +83,13 @@ namespace Webhooks.Infrastructure.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AuditEntry",
-                schema: "webhooks");
+                name: "audit_entries");
 
             migrationBuilder.DropTable(
-                name: "outbox_messages",
-                schema: "webhooks");
+                name: "outbox_messages");
 
             migrationBuilder.DropTable(
-                name: "webhooks",
-                schema: "webhooks");
+                name: "webhooks");
         }
     }
 }

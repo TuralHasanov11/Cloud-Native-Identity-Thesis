@@ -102,8 +102,6 @@ public class OrderingDbContext(DbContextOptions<OrderingDbContext> options) : Db
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.HasDefaultSchema("ordering");
-
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderingDbContext).Assembly);
 
         modelBuilder.UseOutbox();

@@ -56,7 +56,7 @@ try
 
     app.UseDefaultOpenApi();
 
-    app.UseBackgroundJobs();
+    //app.UseBackgroundJobs();
 
     await app.RunAsync();
 }

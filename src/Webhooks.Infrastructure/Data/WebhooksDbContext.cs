@@ -11,8 +11,6 @@ public sealed class WebhooksDbContext(DbContextOptions<WebhooksDbContext> option
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.HasDefaultSchema("webhooks");
-
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(WebhooksDbContext).Assembly);
 
         modelBuilder.UseOutbox();

@@ -4,7 +4,7 @@ namespace Ordering.Api.Features;
 
 public static class Endpoints
 {
-    public static RouteGroupBuilder MapOrdersApi(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapOrdersApi(this IEndpointRouteBuilder app)
     {
         var api = app.MapGroup("api/orders");
 
@@ -57,6 +57,6 @@ public static class Endpoints
             .WithDescription("Creates a draft order.")
             .WithTags("Orders");
 
-        return api;
+        return app;
     }
 }

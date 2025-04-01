@@ -7,7 +7,7 @@ export interface CatalogStore {
   categories: ShallowRef<Category[]>;
   categoryProducts: ShallowRef<Product[]>;
   products: ShallowRef<Product[]>;
-  getProducts: (payload: GetProductsRequest) => Promise<void>;
+  getProducts: (payload?: GetProductsRequest) => Promise<void>;
 }
 
 export interface GetProductsRequest{
@@ -24,7 +24,7 @@ export const useCatalogStore = defineStore("catalog", (): CatalogStore => {
   const categoryProducts = ref<Product[]>([]);
   const products = ref<Product[]>([]);
 
-  async function getProducts(payload: GetProductsRequest) : Promise<void> {
+  async function getProducts(payload?: GetProductsRequest) : Promise<void> {
     
   }
 

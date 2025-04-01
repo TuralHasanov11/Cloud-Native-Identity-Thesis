@@ -3,6 +3,10 @@ import type { NavigationMenuItem } from "@nuxt/ui";
 
 const route = useRoute();
 
+const {getBasket} = useBasket();
+
+await getBasket()
+
 const items = computed<NavigationMenuItem[]>(() => [
   {
     label: "Home",
@@ -24,17 +28,27 @@ const rightMenuItems = computed<NavigationMenuItem[]>(() => [
     type: "label",
     children:[
     {
+      label: 'Orders',
+      icon: 'i-lucide-user',
+      to: "/user/orders",
+    },
+    {
       label: 'Profile',
       icon: 'i-lucide-user',
-      to: "/identity/profile",
+      to: "/user/profile",
     },
     {
       label: 'Logout',
       icon: 'i-lucide-log-out',
-      to: "/identity/logout",
+      to: "/user/logout",
     }
     ]
   },
+  {
+    label: "Cart",
+    icon: "i-lucide-shopping-cart",
+    to: "/cart",
+  }
 ]);
 
 const search = ref<string>("");

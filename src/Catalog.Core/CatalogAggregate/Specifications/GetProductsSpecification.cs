@@ -15,7 +15,7 @@ public class GetProductsSpecification : Specification<Product>
 
     public GetProductsSpecification WithNameCriteria(string? name)
     {
-        AddCriteria(p => p.Name == name, name != null);
+        AddCriteria(p => p.Name == name, !string.IsNullOrEmpty(name));
         return this;
     }
 

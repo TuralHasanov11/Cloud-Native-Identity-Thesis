@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Catalog.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20250330163721_Init")]
+    [Migration("20250401073509_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -105,7 +105,6 @@ namespace Catalog.Infrastructure.Data.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("PictureFileName")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
@@ -127,8 +126,7 @@ namespace Catalog.Infrastructure.Data.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("Name");
 
                     b.HasIndex("ProductTypeId");
 

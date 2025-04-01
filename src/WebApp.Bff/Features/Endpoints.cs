@@ -2,9 +2,9 @@
 
 public static class Endpoints
 {
-    public static IEndpointRouteBuilder MapBffApi(IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapBffApi(this IEndpointRouteBuilder app)
     {
-        var identityApi = app.MapGroup("identity");
+        var identityApi = app.MapGroup("/api/identity");
 
         identityApi.MapGet("user-info", Identity.UserInfo.Handle)
             .AllowAnonymous()

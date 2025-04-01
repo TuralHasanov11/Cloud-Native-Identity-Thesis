@@ -1,6 +1,7 @@
 using Serilog;
 using ServiceDefaults.Middleware;
-using WebApp.Bff;
+using WebApp.Bff.Extensions;
+using WebApp.Bff.Features;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -41,6 +42,12 @@ try
     app.MapDefaultEndpoints();
 
     app.UseDefaultOpenApi();
+
+    app.MapReverseProxy();
+
+    //app.MapForwarder("/{**catch-all}", app.Configuration["ClientUrl"]!);
+
+    app.MapBffApi();
 
     await app.RunAsync();
 }

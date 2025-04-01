@@ -1,0 +1,92 @@
+export type CardType = {
+    id: string
+    name: string
+}
+
+
+export type OrderSummary = {
+    orderNumber: string
+    date: string
+    status: string
+    total: number
+}
+
+export type ShipOrderRequest = {
+    orderNumber: string
+}
+
+export enum OrderStatus
+{
+    Default,
+    Submitted,
+    AwaitingValidation,
+    StockConfirmed,
+    Paid,
+    Shipped,
+    Cancelled
+}
+
+
+export type OrderItem = {
+    productId: string
+    productName: string
+    pictureUrl: string
+    unitPrice: number
+    units: number
+    discount: number
+}
+
+export type Order = {
+    orderNumber: string
+    date: string
+    description: string
+    city: string
+    country: string
+    state: string
+    street: string
+    zipcode: string
+    status: string
+    total: number
+    orderItems: OrderItem[]
+}
+
+export type OrderDraft = {
+    orderItems: OrderItem[]
+    total: number
+}
+
+export type DraftOrderRequest = {
+    customerId: string
+    items: OrderItem[]
+}
+
+export type CreateOrderRequest = {
+    userId: string
+    userName: string
+    city: string
+    street: string
+    state: string
+    country: string
+    zipCode: string
+    cardNumber: string
+    cardHolderName: string
+    cardExpiration: string
+    cardSecurityNumber: string
+    cardTypeId: number
+    customer: string
+    items: OrderItem[]
+}
+
+export type CancelOrderRequest = {
+    orderNumber: string
+}
+
+export type BasketItem = {
+    id: string
+    productId: string
+    productName: string
+    unitPrice: number
+    oldUnitPrice: number
+    quantity: number
+    pictureUrl: string
+}

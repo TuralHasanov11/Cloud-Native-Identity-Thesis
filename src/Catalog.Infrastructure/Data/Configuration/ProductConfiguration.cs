@@ -41,6 +41,7 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Price);
 
         builder.Property(p => p.PictureFileName)
+            .IsRequired(false)
             .HasMaxLength(200);
 
         builder.Property(p => p.AvailableStock);
@@ -54,7 +55,6 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.RowVersion)
             .IsRowVersion();
 
-        builder.HasIndex(p => p.Name)
-            .IsUnique();
+        builder.HasIndex(p => p.Name);
     }
 }

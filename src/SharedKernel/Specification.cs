@@ -10,7 +10,7 @@ public abstract class Specification<TEntity>(
 {
     private readonly List<Expression<Func<TEntity, bool>>> _criteria = criteria is null ? [] : [criteria];
 
-    private readonly List<bool> _criteriaCondition = [criteriaCondition];
+    private readonly List<bool> _criteriaCondition = criteria is null ? [] : [criteriaCondition];
 
     public IReadOnlyList<Expression<Func<TEntity, bool>>> Criteria => _criteria.AsReadOnly();
 

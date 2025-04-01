@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Webhooks.Api.Extensions;
+namespace Microsoft.AspNetCore.Hosting;
 
 internal static class ActivityExtensions
 {

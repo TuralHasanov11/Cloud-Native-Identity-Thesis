@@ -3,7 +3,6 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Options;
-using Ordering.Infrastructure.Data;
 using Ordering.Infrastructure.IntegrationEvents;
 using Ordering.Infrastructure.Repositories;
 using Outbox.Services;
@@ -43,18 +42,18 @@ public static class Extensions
                 sp.GetRequiredService<OrderingDbContext>(),
                 Contracts.AssemblyReference.Assembly));
 
-        //services.AddMigration<OrderingDbContext, OrderingContextSeed>();
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddMigration<OrderingDbContext, OrderingDbContextSeed>();
+        }
 
         builder.Services.AddTransient<IOrderingIntegrationEventService, OrderingIntegrationEventService>();
 
         builder.ConfigureEventBus();
 
-        builder.Services.AddHttpContextAccessor();
-        builder.Services.AddTransient<IIdentityService, IdentityService>();
-
-        // Configure mediatR
         builder.Services.AddMediatR(cfg =>
         {
+            cfg.RegisterServicesFromAssemblies(Infrastructure.AssemblyReference.Assembly);
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             //cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
             //cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
@@ -65,6 +64,9 @@ public static class Extensions
         builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
         builder.Services.AddScoped<ICardTypeRepository, CardTypeRepository>();
+
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddTransient<IIdentityService, IdentityService>();
     }
 
     private static void ConfigureEventBus(this IHostApplicationBuilder builder)

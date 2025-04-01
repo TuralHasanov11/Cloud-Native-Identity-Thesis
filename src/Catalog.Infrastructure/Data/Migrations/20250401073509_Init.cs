@@ -80,7 +80,7 @@ namespace Catalog.Infrastructure.Data.Migrations
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
-                    PictureFileName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    PictureFileName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     ProductTypeId = table.Column<Guid>(type: "uuid", nullable: false),
                     BrandId = table.Column<Guid>(type: "uuid", nullable: false),
                     AvailableStock = table.Column<int>(type: "integer", nullable: false),
@@ -131,8 +131,7 @@ namespace Catalog.Infrastructure.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_products_Name",
                 table: "products",
-                column: "Name",
-                unique: true);
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_products_ProductTypeId",

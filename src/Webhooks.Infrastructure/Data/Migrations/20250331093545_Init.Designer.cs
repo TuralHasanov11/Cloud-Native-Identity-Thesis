@@ -12,15 +12,14 @@ using Webhooks.Infrastructure.Data;
 namespace Webhooks.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(WebhooksDbContext))]
-    [Migration("20250324133833_Webhooks.Api")]
-    partial class WebhooksApi
+    [Migration("20250331093545_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("webhooks")
                 .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -53,7 +52,7 @@ namespace Webhooks.Infrastructure.Data.Migrations
 
                     b.HasIndex("StartTimeUtc");
 
-                    b.ToTable("AuditEntry", "webhooks");
+                    b.ToTable("audit_entries", (string)null);
                 });
 
             modelBuilder.Entity("Outbox.OutboxMessage", b =>
@@ -92,7 +91,7 @@ namespace Webhooks.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("outbox_messages", "webhooks");
+                    b.ToTable("outbox_messages", (string)null);
                 });
 
             modelBuilder.Entity("Webhooks.Core.WebhookAggregate.WebhookSubscription", b =>
@@ -123,8 +122,9 @@ namespace Webhooks.Infrastructure.Data.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -132,7 +132,7 @@ namespace Webhooks.Infrastructure.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("webhooks", "webhooks");
+                    b.ToTable("webhooks", (string)null);
                 });
 #pragma warning restore 612, 618
         }

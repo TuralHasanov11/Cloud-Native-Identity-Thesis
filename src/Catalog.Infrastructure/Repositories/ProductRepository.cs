@@ -25,11 +25,18 @@ public class ProductRepository(CatalogDbContext dbContext) : IProductRepository
         int pageSize = 10,
         CancellationToken cancellationToken = default)
     {
-        var (dataTask, countTask) = dbContext.Products.GetQuery(specification)
-            .OrderBy(p => p.Id)
-            .Paginate(pageCursor, field: p => p.Id, pageSize, cancellationToken);
 
-        return (await dataTask, await countTask);
+        var queryable = dbContext.Products.GetQuery(specification);
+
+        var products = await queryable
+                .OrderBy(p => p.Id)
+                .Where(p => p.Id > pageCursor)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+        var count = await queryable.LongCountAsync(cancellationToken);
+
+        return (products, count);
     }
 
     public async Task<IEnumerable<Product>> ListAsync(

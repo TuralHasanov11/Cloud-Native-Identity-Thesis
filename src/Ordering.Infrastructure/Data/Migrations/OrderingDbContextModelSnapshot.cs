@@ -18,7 +18,6 @@ namespace Ordering.Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("ordering")
                 .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -51,7 +50,7 @@ namespace Ordering.Infrastructure.Data.Migrations
 
                     b.HasIndex("StartTimeUtc");
 
-                    b.ToTable("AuditEntry", "ordering");
+                    b.ToTable("audit_entries", (string)null);
                 });
 
             modelBuilder.Entity("Ordering.Core.CustomerAggregate.CardType", b =>
@@ -74,7 +73,7 @@ namespace Ordering.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("card_types", "ordering");
+                    b.ToTable("card_types", (string)null);
                 });
 
             modelBuilder.Entity("Ordering.Core.CustomerAggregate.Customer", b =>
@@ -82,9 +81,10 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("IdentityId")
+                    b.Property<string>("IdentityId")
+                        .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("uuid");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -101,7 +101,7 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.HasIndex("IdentityId")
                         .IsUnique();
 
-                    b.ToTable("customers", "ordering");
+                    b.ToTable("customers", (string)null);
                 });
 
             modelBuilder.Entity("Ordering.Core.CustomerAggregate.PaymentMethod", b =>
@@ -144,7 +144,7 @@ namespace Ordering.Infrastructure.Data.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("payment_methods", "ordering");
+                    b.ToTable("payment_methods", (string)null);
                 });
 
             modelBuilder.Entity("Ordering.Core.OrderAggregate.Order", b =>
@@ -213,7 +213,7 @@ namespace Ordering.Infrastructure.Data.Migrations
 
                     b.HasIndex("PaymentMethodId");
 
-                    b.ToTable("orders", "ordering");
+                    b.ToTable("orders", (string)null);
                 });
 
             modelBuilder.Entity("Ordering.Core.OrderAggregate.OrderItem", b =>
@@ -255,7 +255,7 @@ namespace Ordering.Infrastructure.Data.Migrations
 
                     b.HasIndex("OrderId1");
 
-                    b.ToTable("order_items", "ordering");
+                    b.ToTable("order_items", (string)null);
                 });
 
             modelBuilder.Entity("Outbox.OutboxMessage", b =>
@@ -294,7 +294,7 @@ namespace Ordering.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("outbox_messages", "ordering");
+                    b.ToTable("outbox_messages", (string)null);
                 });
 
             modelBuilder.Entity("Ordering.Core.CustomerAggregate.PaymentMethod", b =>

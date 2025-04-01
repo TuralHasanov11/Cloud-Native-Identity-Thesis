@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { categoryProducts, getProducts } = useCatalog();
-const { storeSettings } = useAppConfig();
+// const { storeSettings } = useAppConfig();
 const route = useRoute();
 
 await getProducts({category: route.params.slug as string});

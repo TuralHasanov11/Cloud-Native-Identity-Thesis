@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 namespace ServiceDefaults;
@@ -104,26 +103,11 @@ internal static class OpenApiOptionsExtensions
 
     public static OpenApiOptions ApplyApiVersionDescription(this OpenApiOptions options)
     {
-        options.AddOperationTransformer((operation, context, cancellationToken) =>
-        {
-            var apiVersionParameter = operation.Parameters.FirstOrDefault(p => p.Name == "api-version");
-            if (apiVersionParameter is not null)
-            {
-                apiVersionParameter.Description = "The API version, in the format 'major.minor'.";
-                switch (context.DocumentName)
-                {
-                    case "v1":
-                        apiVersionParameter.Schema.Example = new OpenApiString("1.0");
-                        break;
-                    case "v2":
-                        apiVersionParameter.Schema.Example = new OpenApiString("2.0");
-                        break;
-                    default:
-                        break;
-                }
-            }
-            return Task.CompletedTask;
-        });
+        //options.AddOperationTransformer((operation, context, cancellationToken) =>
+        //{
+        //    return Task.CompletedTask;
+        //});
+
         return options;
     }
 

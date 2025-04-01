@@ -1,12 +1,9 @@
 ﻿using Audit;
 using EventBus.Extensions;
-using MassTransit;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Options;
+using ServiceDefaults.Identity;
 using Webhooks.Api.Features.Webhooks;
-using Webhooks.Infrastructure.Data;
-using Webhooks.Infrastructure.Services;
 
 namespace Webhooks.Api.Extensions;
 
@@ -40,10 +37,14 @@ internal static class Extensions
             }
         });
 
-        //builder.Services.AddMigration<WebhooksDbContext>();
+        builder.Services.AddMigration<WebhooksDbContext>();
 
         builder.Services.AddTransient<IGrantUrlTesterService, GrantUrlTesterService>();
         builder.Services.AddTransient<IWebhooksSender, WebhooksSender>();
+        builder.Services.AddScoped<IWebhookSubscriptionRepository, WebhookSubscriptionRepository>();
+
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddTransient<IIdentityService, IdentityService>();
     }
 
     private static void ConfigureEventBus(this IHostApplicationBuilder builder)

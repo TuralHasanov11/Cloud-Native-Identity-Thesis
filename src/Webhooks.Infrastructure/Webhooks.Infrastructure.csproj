@@ -13,4 +13,8 @@
     <ProjectReference Include="..\Webhooks.Core\Webhooks.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+  </ItemGroup>
+
 </Project>

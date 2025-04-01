@@ -29,7 +29,7 @@ public sealed class Product : EntityBase<ProductId>
 
     public decimal Price { get; private set; }
 
-    public Uri PictureFileName { get; private set; }
+    public Uri? PictureFileName { get; private set; }
 
     public ProductTypeId ProductTypeId { get; private set; }
 

@@ -12,7 +12,9 @@ internal static class MigrateDbContextExtensions
         where TContext : DbContext
         => services.AddMigration<TContext>((_, _) => Task.CompletedTask);
 
-    public static IServiceCollection AddMigration<TContext>(this IServiceCollection services, Func<TContext, IServiceProvider, Task> seeder)
+    public static IServiceCollection AddMigration<TContext>(
+        this IServiceCollection services,
+        Func<TContext, IServiceProvider, Task> seeder)
         where TContext : DbContext
     {
         // Enable migration tracing
@@ -26,7 +28,8 @@ internal static class MigrateDbContextExtensions
         where TDbSeeder : class, IDbSeeder<TContext>
     {
         services.AddScoped<IDbSeeder<TContext>, TDbSeeder>();
-        return services.AddMigration<TContext>((context, sp) => sp.GetRequiredService<IDbSeeder<TContext>>().SeedAsync(context));
+        return services.AddMigration<TContext>(
+            (context, sp) => sp.GetRequiredService<IDbSeeder<TContext>>().SeedAsync(context));
     }
 
     private static async Task MigrateDbContextAsync<TContext>(this IServiceProvider services, Func<TContext, IServiceProvider, Task> seeder) where TContext : DbContext
@@ -50,13 +53,15 @@ internal static class MigrateDbContextExtensions
         {
             logger.LogError(ex, "An error occurred while migrating the database used on context {DbContextName}", typeof(TContext).Name);
 
-            activity.SetExceptionTags(ex);
+            activity?.SetExceptionTags(ex);
 
             throw;
         }
     }
 
-    private static async Task InvokeSeeder<TContext>(Func<TContext, IServiceProvider, Task> seeder, TContext context, IServiceProvider services)
+    private static async Task InvokeSeeder<TContext>(
+        Func<TContext, IServiceProvider, Task> seeder,
+        TContext context, IServiceProvider services)
         where TContext : DbContext
     {
         using var activity = ActivitySource.StartActivity($"Migrating {typeof(TContext).Name}");
@@ -74,8 +79,11 @@ internal static class MigrateDbContextExtensions
         }
     }
 
-    private sealed class MigrationHostedService<TContext>(IServiceProvider serviceProvider, Func<TContext, IServiceProvider, Task> seeder)
-        : BackgroundService where TContext : DbContext
+    private sealed class MigrationHostedService<TContext>(
+        IServiceProvider serviceProvider,
+        Func<TContext, IServiceProvider, Task> seeder)
+        : BackgroundService
+        where TContext : DbContext
     {
         public override Task StartAsync(CancellationToken cancellationToken)
         {
@@ -89,7 +97,8 @@ internal static class MigrateDbContextExtensions
     }
 }
 
-public interface IDbSeeder<in TContext> where TContext : DbContext
+public interface IDbSeeder<in TContext>
+    where TContext : DbContext
 {
     Task SeedAsync(TContext context);
 }

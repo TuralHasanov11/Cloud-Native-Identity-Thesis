@@ -1,5 +1,6 @@
 ﻿namespace Catalog.IntegrationTests.Products;
 
+[Collection(nameof(IntegrationTestCollection))]
 public class ProductRepositoryTests : BaseIntegrationTest
 {
     private readonly IProductRepository _repository;

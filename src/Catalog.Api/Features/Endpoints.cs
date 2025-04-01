@@ -1,6 +1,4 @@
-﻿using Catalog.Core.Identity;
-
-namespace Catalog.Api.Features;
+﻿namespace Catalog.Api.Features;
 
 public static class Endpoints
 {
@@ -84,21 +82,21 @@ public static class Endpoints
             .WithTags("Brands");
 
         api.MapPost("products", Products.Create.Handle)
-            .RequireAuthorization(p => p.RequireRole(Roles.Editor))
+            .AllowAnonymous()
             .WithName("CreateProduct")
             .WithSummary("Create a catalog product")
             .WithDescription("Create a new product in the catalog")
             .WithTags("Products");
 
         api.MapPut("products/{id:guid}", Products.Update.Handle)
-            .RequireAuthorization(p => p.RequireRole(Roles.Editor))
+            .AllowAnonymous()
             .WithName("UpdateProduct")
             .WithSummary("Create or replace a catalog product")
             .WithDescription("Create or replace a catalog product")
             .WithTags("Products");
 
         api.MapDelete("products/{id:guid}", Products.DeleteById.Handle)
-            .RequireAuthorization(p => p.RequireRole(Roles.Editor))
+            .AllowAnonymous()
             .WithName("DeleteProductById")
             .WithSummary("Delete catalog product")
             .WithDescription("Delete the specified catalog product")

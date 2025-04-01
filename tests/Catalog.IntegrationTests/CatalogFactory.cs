@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System.Data.Common;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
 
@@ -16,7 +18,7 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
         .WithDatabase("catalog")
         .Build();
 
-    //private readonly DbConnection _dbConnection = default!;
+    private DbConnection _dbConnection = default!;
 
 #pragma warning disable IDE0052 // Remove unread private members
     //private Respawner _respawner = default!;
@@ -37,7 +39,7 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
         await _rabbitMqContainer.StartAsync();
 
-        //_dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
+        _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
 
         HttpClient = CreateClient(new WebApplicationFactoryClientOptions
         {
@@ -106,7 +108,7 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     public new async Task DisposeAsync()
     {
-        //await _dbConnection.DisposeAsync();
+        await _dbConnection.DisposeAsync();
         await _dbContainer.StopAsync();
         await _dbContainer.DisposeAsync();
         await _rabbitMqContainer.StopAsync();

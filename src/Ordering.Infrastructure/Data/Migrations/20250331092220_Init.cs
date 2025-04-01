@@ -7,17 +7,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ordering.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class OrderingApi : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "ordering");
-
             migrationBuilder.CreateTable(
-                name: "AuditEntry",
-                schema: "ordering",
+                name: "audit_entries",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -29,12 +25,11 @@ namespace Ordering.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AuditEntry", x => x.Id);
+                    table.PrimaryKey("PK_audit_entries", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "card_types",
-                schema: "ordering",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -49,11 +44,10 @@ namespace Ordering.Infrastructure.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "customers",
-                schema: "ordering",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    IdentityId = table.Column<Guid>(type: "uuid", maxLength: 255, nullable: false),
+                    IdentityId = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
@@ -64,7 +58,6 @@ namespace Ordering.Infrastructure.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "outbox_messages",
-                schema: "ordering",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -84,7 +77,6 @@ namespace Ordering.Infrastructure.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "payment_methods",
-                schema: "ordering",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -102,21 +94,18 @@ namespace Ordering.Infrastructure.Data.Migrations
                     table.ForeignKey(
                         name: "FK_payment_methods_card_types_CardTypeId",
                         column: x => x.CardTypeId,
-                        principalSchema: "ordering",
                         principalTable: "card_types",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_payment_methods_customers_CustomerId",
                         column: x => x.CustomerId,
-                        principalSchema: "ordering",
                         principalTable: "customers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "orders",
-                schema: "ordering",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -139,13 +128,11 @@ namespace Ordering.Infrastructure.Data.Migrations
                     table.ForeignKey(
                         name: "FK_orders_customers_CustomerId",
                         column: x => x.CustomerId,
-                        principalSchema: "ordering",
                         principalTable: "customers",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_orders_payment_methods_PaymentMethodId",
                         column: x => x.PaymentMethodId,
-                        principalSchema: "ordering",
                         principalTable: "payment_methods",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -153,7 +140,6 @@ namespace Ordering.Infrastructure.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "order_items",
-                schema: "ordering",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -172,64 +158,54 @@ namespace Ordering.Infrastructure.Data.Migrations
                     table.ForeignKey(
                         name: "FK_order_items_orders_OrderId",
                         column: x => x.OrderId,
-                        principalSchema: "ordering",
                         principalTable: "orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_order_items_orders_OrderId1",
                         column: x => x.OrderId1,
-                        principalSchema: "ordering",
                         principalTable: "orders",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuditEntry_StartTimeUtc",
-                schema: "ordering",
-                table: "AuditEntry",
+                name: "IX_audit_entries_StartTimeUtc",
+                table: "audit_entries",
                 column: "StartTimeUtc");
 
             migrationBuilder.CreateIndex(
                 name: "IX_customers_IdentityId",
-                schema: "ordering",
                 table: "customers",
                 column: "IdentityId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_order_items_OrderId",
-                schema: "ordering",
                 table: "order_items",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_order_items_OrderId1",
-                schema: "ordering",
                 table: "order_items",
                 column: "OrderId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_orders_CustomerId",
-                schema: "ordering",
                 table: "orders",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_orders_PaymentMethodId",
-                schema: "ordering",
                 table: "orders",
                 column: "PaymentMethodId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_payment_methods_CardTypeId",
-                schema: "ordering",
                 table: "payment_methods",
                 column: "CardTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_payment_methods_CustomerId",
-                schema: "ordering",
                 table: "payment_methods",
                 column: "CustomerId");
         }
@@ -238,32 +214,25 @@ namespace Ordering.Infrastructure.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AuditEntry",
-                schema: "ordering");
+                name: "audit_entries");
 
             migrationBuilder.DropTable(
-                name: "order_items",
-                schema: "ordering");
+                name: "order_items");
 
             migrationBuilder.DropTable(
-                name: "outbox_messages",
-                schema: "ordering");
+                name: "outbox_messages");
 
             migrationBuilder.DropTable(
-                name: "orders",
-                schema: "ordering");
+                name: "orders");
 
             migrationBuilder.DropTable(
-                name: "payment_methods",
-                schema: "ordering");
+                name: "payment_methods");
 
             migrationBuilder.DropTable(
-                name: "card_types",
-                schema: "ordering");
+                name: "card_types");
 
             migrationBuilder.DropTable(
-                name: "customers",
-                schema: "ordering");
+                name: "customers");
         }
     }
 }

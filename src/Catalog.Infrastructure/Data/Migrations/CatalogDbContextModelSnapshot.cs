@@ -102,7 +102,6 @@ namespace Catalog.Infrastructure.Data.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("PictureFileName")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
@@ -124,8 +123,7 @@ namespace Catalog.Infrastructure.Data.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("Name");
 
                     b.HasIndex("ProductTypeId");
 

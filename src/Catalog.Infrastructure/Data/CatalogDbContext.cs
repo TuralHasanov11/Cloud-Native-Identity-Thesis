@@ -10,16 +10,16 @@ public class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbCo
 
     public DbSet<ProductType> ProductTypes { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(builder);
+        base.OnModelCreating(modelBuilder);
 
         //builder.HasPostgresExtension("vector");
 
-        builder.ApplyConfigurationsFromAssembly(typeof(CatalogDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogDbContext).Assembly);
 
-        builder.UseOutbox();
+        modelBuilder.UseOutbox();
 
-        builder.UseAudit();
+        modelBuilder.UseAudit();
     }
 }
