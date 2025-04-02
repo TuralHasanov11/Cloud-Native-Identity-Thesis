@@ -20,7 +20,26 @@ public static class Extensions
                    //        new AuthenticationHeaderValue("Bearer", token.AccessToken);
                });
            })
-           .AddCorrelationId();
+        .AddCorrelationId();
+
+        AddCors(builder);
+    }
+
+    private static void AddCors(IHostApplicationBuilder builder)
+    {
+        var clientUrl = builder.Configuration.GetSection("ClientUrl").Get<string>();
+        ArgumentNullException.ThrowIfNull(clientUrl);
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: Policies.DefaultCorsPolicy, policy =>
+            {
+                policy.WithOrigins(clientUrl)
+                    .AllowCredentials()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
     }
 
     public static void AddAuthenticationServices(this IHostApplicationBuilder builder)

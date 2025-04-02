@@ -17,15 +17,16 @@ const items = computed<NavigationMenuItem[]>(() => [
     to: "/products",
     active: route.path.startsWith("/products"),
   },
-]);
-
-const rightMenuItems = computed<NavigationMenuItem[]>(() => [
+  {
+    label: "Categories",
+    to: "/categories",
+    active: route.path.startsWith("/categories"),
+  },
   {
     label: "Benjamin",
     avatar: {
       src: "https://github.com/benjamincanac.png",
     },
-    type: "label",
     children:[
     {
       label: 'Orders',
@@ -35,12 +36,13 @@ const rightMenuItems = computed<NavigationMenuItem[]>(() => [
     {
       label: 'Profile',
       icon: 'i-lucide-user',
-      to: "/user/profile",
+      to: "/user",
     },
     {
       label: 'Logout',
       icon: 'i-lucide-log-out',
       to: "/user/logout",
+      external: true,
     }
     ]
   },
@@ -74,6 +76,21 @@ function onSubmitSearch() {
     <UNavigationMenu :items="items" variant="link" />
 
     <template #right>
+      
+      <UColorModeButton />
+      <UButton label="Sign in" color="neutral" variant="ghost" @click="login" />
+      <UButton
+        label="Sign up"
+        color="neutral"
+        trailing-icon="i-lucide-arrow-right"
+        class="hidden lg:flex"
+        @click="signUp"
+      />
+    </template>
+
+    <template #body>
+      <UNavigationMenu :items="items" orientation="vertical" />
+
       <form @submit.prevent="onSubmitSearch">
         <UFormField name="search" size="lg">
           <UInput
@@ -88,20 +105,6 @@ function onSubmitSearch() {
           </UInput>
         </UFormField>
       </form>
-      <UColorModeButton />
-      <UButton label="Sign in" color="neutral" variant="ghost" @click="login" />
-      <UButton
-        label="Sign up"
-        color="neutral"
-        trailing-icon="i-lucide-arrow-right"
-        class="hidden lg:flex"
-        @click="signUp"
-      />
-      <UNavigationMenu :items="rightMenuItems" orientation="vertical" />
-    </template>
-
-    <template #body>
-      <UNavigationMenu :items="items" orientation="vertical" />
     </template>
   </UHeader>
 </template>

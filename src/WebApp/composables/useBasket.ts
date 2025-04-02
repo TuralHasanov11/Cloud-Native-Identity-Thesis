@@ -1,15 +1,27 @@
 import type { BasketItem, Cart } from "~/types/basket";
 
-export const CART_NULL_OBJECT: Cart = {
+
+export const DEFAULT_CART: Cart = {
   items: [],
-};
+}
 
 export default function useBasket() {
-  const cart = useState<Cart>("cart", () => CART_NULL_OBJECT);
+  const cart = useState<Cart>("cart", () => DEFAULT_CART);
   const totalQuantity = computed(() => {
     return cart.value.items.reduce((total, item) => total + item.quantity, 0);
   }
   );
+  const isEmpty = computed(() => {
+    return cart.value.items.length === 0;
+  })
+
+  const productCount = computed(() => {
+    return cart.value.items.reduce((total, item) => total + item.quantity, 0);
+  })
+
+  const total = computed(() => {
+    return cart.value.items.reduce((total, item) => total + item.unitPrice * item.quantity, 0);
+  })
 
   const isShowingCart = useState<boolean>("isShowingCart", () => false);
   const isUpdatingCart = useState<boolean>("isUpdatingCart", () => false);
@@ -30,7 +42,7 @@ export default function useBasket() {
   async function deleteBasket(): Promise<boolean> {
     try {
         // TODO: Delete the basket on the server
-      cart.value = CART_NULL_OBJECT;
+      cart.value = DEFAULT_CART;
       return true;
     } catch (error: unknown) {
       console.error("Error deleting basket:", error);
@@ -133,6 +145,9 @@ export default function useBasket() {
     deleteBasket,
     updateBasket,
     totalQuantity,
-    getBasket
+    getBasket,
+    isEmpty,
+    productCount,
+    total,
   };
 }

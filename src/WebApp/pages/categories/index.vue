@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-const { categories } = useCatalog();
+const { brands, getBrands } = useCatalog();
+
+await getBrands()
 
 useSeoMeta({
   title: "Categories",
@@ -18,11 +20,11 @@ useSeoMeta({
     /> -->
 
       <UPageBody>
-        <UBlogPosts v-if="categories?.length">
+        <UBlogPosts v-if="brands?.length">
           <UBlogPost
-            v-for="(category, index) in categories"
+            v-for="(category, index) in brands"
             :key="category.id"
-            :to="`/product-category/${category.slug}`"
+            :to="`/product-category/${category.id}`"
             :title="category.name"
             :orientation="index === 0 ? 'horizontal' : 'vertical'"
             :class="[index === 0 && 'col-span-full']"

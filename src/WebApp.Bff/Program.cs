@@ -34,6 +34,8 @@ try
 
     app.UseMiddleware<ContentTypeOptionsMiddleware>();
 
+    app.UseCors(Policies.DefaultCorsPolicy);
+
     app.UseAuthentication();
     app.UseAuthorization();
 
@@ -45,7 +47,7 @@ try
 
     app.MapReverseProxy();
 
-    //app.MapForwarder("/{**catch-all}", app.Configuration["ClientUrl"]!);
+    app.MapForwarder("/{**catch-all}", app.Configuration["ClientUrl"]!);
 
     app.MapBffApi();
 

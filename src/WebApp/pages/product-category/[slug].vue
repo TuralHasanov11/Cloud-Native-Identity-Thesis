@@ -1,16 +1,16 @@
 <script setup lang="ts">
-const { categoryProducts, getProducts } = useCatalog();
+const { products, getProducts } = useCatalog();
 // const { storeSettings } = useAppConfig();
 const route = useRoute();
 
-await getProducts({category: route.params.slug as string});
+await getProducts({brand: route.params.slug as string});
 
 watch(
   () => route.query,
   async () => {
     if (route.name !== 'product-category-slug') return;
 
-    await getProducts({category: route.params.slug as string});
+    await getProducts({brand: route.params.slug as string});
   },
 );
 
@@ -40,7 +40,7 @@ useSeoMeta({
                 <!-- <OrderByDropdown v-if="storeSettings.showOrderByDropdown" class="hidden md:inline-flex" /> -->
                 <!-- <ShowFilterTrigger v-if="storeSettings.showFilters" class="md:hidden" /> -->
             </div>
-            <ProductGrid :products="categoryProducts" />
+            <ProductGrid :products="products.data" />
         </div>
         
       </UPageBody>

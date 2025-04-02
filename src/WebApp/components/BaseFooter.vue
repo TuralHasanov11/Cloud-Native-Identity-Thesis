@@ -3,17 +3,18 @@
 <template>
   <UFooter :ui="{ top: 'border-b border-[var(--ui-border)]' }">
     <template #top>
-      <UContainer />
+      <UContainer/>
     </template>
 
     <template #left>
-      <LanguageSwitcher class="mt-8" />
       <p class="text-(--ui-text-muted) text-sm">
         Copyright © {{ new Date().getFullYear() }}. All rights reserved.
       </p>
     </template>
 
     <template #right>
+      <LanguageSwitcher />
+      
       <UColorModeButton />
 
       <UButton
@@ -24,6 +25,7 @@
         color="neutral"
         variant="ghost"
       />
+
     </template>
   </UFooter>
 </template>

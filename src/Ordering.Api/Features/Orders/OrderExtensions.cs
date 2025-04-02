@@ -4,7 +4,7 @@ public static class OrderExtensions
 {
     public static OrderItemDto ToOrderItemDto(this BasketItemDto item)
     {
-        return new OrderItemDto(item.ProductId, item.ProductName, item.PictureUrl, item.UnitPrice, item.Quantity);
+        return new OrderItemDto(item.ProductId, item.ProductName, item.PictureUrl, item.UnitPrice, item.Quantity, item.UnitPrice * item.Quantity);
     }
 
     public static OrderDraftDto ToOrderDraftDto(this Order order)
@@ -16,6 +16,7 @@ public static class OrderExtensions
                 PictureUrl: oi.PictureUrl,
                 UnitPrice: oi.UnitPrice,
                 Units: oi.Units,
+                TotalPrice: oi.TotalPrice,
                 Discount: oi.Discount)),
             order.GetTotal());
     }
@@ -33,7 +34,7 @@ public static class OrderExtensions
             order.Address.ZipCode,
             order.OrderStatus.ToString(),
             order.GetTotal(),
-            [.. order.OrderItems.Select(oi => new OrderItemDto(oi.ProductId, oi.ProductName, oi.PictureUrl, oi.UnitPrice, oi.Units))]);
+            [.. order.OrderItems.Select(oi => new OrderItemDto(oi.ProductId, oi.ProductName, oi.PictureUrl, oi.UnitPrice, oi.Units, oi.TotalPrice))]);
     }
 
     public static OrderSummary ToOrderSummary(this Order order)

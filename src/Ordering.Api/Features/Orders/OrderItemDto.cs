@@ -6,4 +6,5 @@ public record OrderItemDto(
     Uri PictureUrl,
     decimal UnitPrice,
     int Units,
+    decimal TotalPrice,
     decimal Discount = 0);

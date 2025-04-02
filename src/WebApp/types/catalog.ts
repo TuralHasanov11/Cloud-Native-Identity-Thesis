@@ -7,7 +7,14 @@ export type Product = {
     brandId: string,
     availableStock: number,
     restockThreshold: number,
-    maxStockThreshold: number
+    maxStockThreshold: number,
+    categories: Category[]
+}
+
+export type Category = {
+    id: string
+    slug: string
+    name: string
 }
 
 export type CreateProductRequest = {
@@ -40,4 +47,9 @@ export type Brand = {
 export type ProductType = {
     id: string
     name: string
+}
+
+export enum StockStatusEnum {
+    OUT_OF_STOCK,
+    IN_STOCK
 }
