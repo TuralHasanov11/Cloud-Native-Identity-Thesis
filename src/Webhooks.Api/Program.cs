@@ -25,9 +25,10 @@ try
 
     app.UseDefaultLogging();
 
+    app.UseExceptionHandler();
+
     if (!app.Environment.IsDevelopment())
     {
-        app.UseExceptionHandler();
         app.UseHsts();
     }
 

@@ -15,12 +15,20 @@ public static class Extensions
            {
                context.AddRequestTransform(async request =>
                {
+                   Console.WriteLine(request);
                    //var token = await request.HttpContext.GetUserAccessTokenAsync();
                    //request.ProxyRequest.Headers.Authorization =
                    //        new AuthenticationHeaderValue("Bearer", token.AccessToken);
                });
            })
-        .AddCorrelationId();
+        .AddCorrelationId()
+        .ConfigureHttpClient((context, handler) =>
+        {
+            if (builder.Configuration.GetValue<bool>("ReverseProxy:HttpClient:DangerousAcceptAnyServerCertificate"))
+            {
+                handler.SslOptions.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+            }
+        });
 
         AddCors(builder);
     }

@@ -15,8 +15,8 @@ services:
     depends_on:
     - rabbitmq
     - redis
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalog-api
@@ -34,8 +34,8 @@ services:
     depends_on:
     - rabbitmq
     - catalog.postgres
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   catalog.postgres:
     image: postgres:latest
@@ -48,8 +48,8 @@ services:
       - ./.containers/catalog-postgres:/var/lib/postgresql/data
     ports:
       - "54321:5432"
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   ordering.api:
     image: ${DOCKER_REGISTRY-}ordering-api
@@ -67,8 +67,8 @@ services:
     depends_on:
     - rabbitmq
     - ordering.postgres
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   # orderprocessor:
   #   image: ${DOCKER_REGISTRY-}orderprocessor
@@ -79,8 +79,8 @@ services:
   #   depends_on:
   #   - rabbitmq
   #   - ordering.postgres
-    # networks:
-    #   - microservices-net
+  #  networks:
+  #    - thesis-net
 
   ordering.postgres:
     image: postgres:latest
@@ -93,8 +93,8 @@ services:
       - ./.containers/ordering-postgres:/var/lib/postgresql/data
     ports:
       - "54322:5432"
-    # networks:
-    #   - microservices-net-
+    networks:
+      - thesis-net
 
   paymentprocessor:
     image: ${DOCKER_REGISTRY-}paymentprocessor
@@ -111,8 +111,8 @@ services:
     - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
     depends_on:
     - rabbitmq
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   webhooks.api:
     image: ${DOCKER_REGISTRY-}webhooks-api
@@ -130,8 +130,8 @@ services:
     depends_on:
     - rabbitmq
     - webhooks.postgres
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   webhooks.postgres:
     image: postgres:latest
@@ -144,8 +144,8 @@ services:
       - ./.containers/webhooks-postgres:/var/lib/postgresql/data
     ports:
       - "54323:5432"
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   webhooks.client:
     image: ${DOCKER_REGISTRY-}webhooks-client
@@ -162,8 +162,8 @@ services:
     - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
     depends_on:
     - webhooks.api
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   webapp.bff:
     image: ${DOCKER_REGISTRY-}webapp-bff
@@ -183,8 +183,8 @@ services:
     - catalog.api
     - ordering.api
     - paymentprocessor
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   papercut:
     image: changemakerstudiosus/papercut-smtp:latest
@@ -192,8 +192,8 @@ services:
     ports:
       - "8080:80"
       - "25:25"
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   seq:
     image: datalust/seq:latest
@@ -205,8 +205,8 @@ services:
     ports:
       - "5341:5341"
       - "8081:80"
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -218,8 +218,8 @@ services:
       - "5050:80"
     volumes:
       - ./.containers/pgadmin:/var/lib/pgadmin
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   rabbitmq:
     image: rabbitmq:4.0-management
@@ -234,8 +234,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: "guest"
       RABBITMQ_DEFAULT_PASS: "guest"
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
   redis:
     image: redis:latest
@@ -244,9 +244,9 @@ services:
       - "6379:6379"
     volumes:
       - ./.containers/redis/data:/data
-    # networks:
-    #   - microservices-net
+    networks:
+      - thesis-net
 
-# networks:
-#   thesis-net:
-#     driver: bridge
+networks:
+  thesis-net:
+    driver: bridge

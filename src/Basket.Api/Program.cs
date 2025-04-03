@@ -28,9 +28,10 @@ try
 
     app.UseDefaultLogging();
 
+    app.UseExceptionHandler();
+
     if (!app.Environment.IsDevelopment())
     {
-        app.UseExceptionHandler("/Error");
         app.UseHsts();
     }
 
@@ -40,7 +41,7 @@ try
 
     //app.UseRateLimiter();
     //app.UseRequestLocalization();
-    //app.UseCors(Policies.DefaultCorsPolicy);
+    app.UseCors("CorsPolicy");
 
     //app.UseOutputCache();
 
@@ -49,6 +50,8 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     //app.UseResponseCompression();
+
+    app.UseStatusCodePages();
 
     app.MapDefaultEndpoints();
 

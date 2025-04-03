@@ -10,6 +10,11 @@ export type BasketItem = {
     oldUnitPrice?: number
 }
 
+// Jannis Modification
+
 export type UpdateBasketRequest = {
     items: BasketItem[]
 }
+
+
+// Aytaj Modification

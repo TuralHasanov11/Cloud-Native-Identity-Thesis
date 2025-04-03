@@ -4,7 +4,7 @@ public static class Endpoints
 {
     public static IEndpointRouteBuilder MapCatalogApi(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("api/catalog");
+        var api = app.MapGroup("api");
 
         api.MapGet("products", Products.List.Handle)
             .AllowAnonymous()
