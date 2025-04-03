@@ -39,7 +39,7 @@ dotnet ef migrations add <migration_name> --output-dir Data/Migrations
 
 ### Format
 ```sh
-dotnet format ./AppSolution.sln
+dotnet format ./CloudNativeIdentityThesis.sln
 ```
 
 ### Testing

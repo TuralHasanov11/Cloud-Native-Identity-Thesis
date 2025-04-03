@@ -1,0 +1,252 @@
+services:
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basket-api
+    container_name: basket.api
+    build:
+      context: .
+      dockerfile: src/Basket.Api/Dockerfile
+    ports:
+    - "5100:5100"
+    - "5101:5101"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - rabbitmq
+    - redis
+    networks:
+      - thesis-net
+
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalog-api
+    container_name: catalog.api
+    build:
+      context: .
+      dockerfile: src/Catalog.Api/Dockerfile
+    ports:
+    - "5102:5102"
+    - "5103:5103"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - rabbitmq
+    - catalog.postgres
+    networks:
+      - thesis-net
+
+  catalog.postgres:
+    image: postgres:latest
+    container_name: catalog.postgres
+    environment:
+      - POSTGRES_DB=catalog
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/catalog-postgres:/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+    networks:
+      - thesis-net
+
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}ordering-api
+    container_name: ordering.api
+    build:
+      context: .
+      dockerfile: src/Ordering.Api/Dockerfile
+    ports:
+    - "5104:5104"
+    - "5105:5105"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - rabbitmq
+    - ordering.postgres
+    networks:
+      - thesis-net
+
+  # orderprocessor:
+  #   image: ${DOCKER_REGISTRY-}orderprocessor
+  #   container_name: orderprocessor
+  #   build:
+  #     context: .
+  #     dockerfile: src/OrderProcessor/Dockerfile
+  #   depends_on:
+  #   - rabbitmq
+  #   - ordering.postgres
+  #  networks:
+  #    - thesis-net
+
+  ordering.postgres:
+    image: postgres:latest
+    container_name: ordering.postgres
+    environment:
+      - POSTGRES_DB=ordering
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/ordering-postgres:/var/lib/postgresql/data
+    ports:
+      - "54322:5432"
+    networks:
+      - thesis-net
+
+  paymentprocessor:
+    image: ${DOCKER_REGISTRY-}paymentprocessor
+    container_name: paymentprocessor
+    build:
+      context: .
+      dockerfile: src/PaymentProcessor/Dockerfile
+    ports:
+    - "5106:5106"
+    - "5107:5107"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - rabbitmq
+    networks:
+      - thesis-net
+
+  webhooks.api:
+    image: ${DOCKER_REGISTRY-}webhooks-api
+    container_name: webhooks.api
+    build:
+      context: .
+      dockerfile: src/Webhooks.Api/Dockerfile
+    ports:
+    - "5108:5108"
+    - "5109:5109"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - rabbitmq
+    - webhooks.postgres
+    networks:
+      - thesis-net
+
+  webhooks.postgres:
+    image: postgres:latest
+    container_name: webhooks.postgres
+    environment:
+      - POSTGRES_DB=webhooks
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/webhooks-postgres:/var/lib/postgresql/data
+    ports:
+      - "54323:5432"
+    networks:
+      - thesis-net
+
+  webhooks.client:
+    image: ${DOCKER_REGISTRY-}webhooks-client
+    container_name: webhooks.client
+    build:
+      context: .
+      dockerfile: src/Webhooks.Client/Dockerfile
+    ports:
+    - "5110:5110"
+    - "5111:5111"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - webhooks.api
+    networks:
+      - thesis-net
+
+  webapp.bff:
+    image: ${DOCKER_REGISTRY-}webapp-bff
+    container_name: webapp.bff
+    build:
+      context: .
+      dockerfile: src/WebApp.Bff/Dockerfile
+    ports:
+    - "5112:5112"
+    - "5113:5113"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - basket.api
+    - catalog.api
+    - ordering.api
+    - paymentprocessor
+    networks:
+      - thesis-net
+
+  papercut:
+    image: changemakerstudiosus/papercut-smtp:latest
+    container_name: "papercut"
+    ports:
+      - "8080:80"
+      - "25:25"
+    networks:
+      - thesis-net
+
+  seq:
+    image: datalust/seq:latest
+    container_name: "seq"
+    volumes:
+      - ./.containers/seq:/data
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:5341"
+      - "8081:80"
+    networks:
+      - thesis-net
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: "pgadmin"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@postgres.com
+      - PGADMIN_DEFAULT_PASSWORD=postgres
+    ports:
+      - "5050:80"
+    volumes:
+      - ./.containers/pgadmin:/var/lib/pgadmin
+    networks:
+      - thesis-net
+
+  rabbitmq:
+    image: rabbitmq:4.0-management
+    container_name: "rabbitmq"
+    hostname: "rabbitmq"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - ./.containers/queue/data:/var/lib/rabbitmq
+      - ./.containers/queue/log:/var/log/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+    networks:
+      - thesis-net
+
+  redis:
+    image: redis:latest
+    container_name: "redis"
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./.containers/redis/data:/data
+    networks:
+      - thesis-net
+
+networks:
+  thesis-net:
+    driver: bridge

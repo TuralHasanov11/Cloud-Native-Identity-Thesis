@@ -1,0 +1,17 @@
+﻿global using Ardalis.Result;
+global using Audit;
+global using FluentValidation;
+global using MediatR;
+global using Microsoft.AspNetCore.Http.HttpResults;
+global using Microsoft.AspNetCore.Mvc;
+global using Ordering.Contracts.Abstractions;
+global using Ordering.Contracts.IntegrationEvents;
+global using Ordering.Core.CustomerAggregate;
+global using Ordering.Core.CustomerAggregate.Specifications;
+global using Ordering.Core.OrderAggregate;
+global using Ordering.Core.OrderAggregate.Events;
+global using Ordering.Core.OrderAggregate.Specifications;
+global using Ordering.Infrastructure.Data;
+global using Serilog;
+global using ServiceDefaults;
+global using SharedKernel;

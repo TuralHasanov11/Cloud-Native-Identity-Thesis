@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+	<PackageReference Include="NetArchTest.Rules" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Basket.Api\Basket.Api.csproj" />
+    <ProjectReference Include="..\..\src\Basket.Core\Basket.Core.csproj" />
+    <ProjectReference Include="..\..\src\Basket.Infrastructure\Basket.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Catalog.Api\Catalog.Api.csproj" />
+    <ProjectReference Include="..\..\src\Catalog.Core\Catalog.Core.csproj" />
+    <ProjectReference Include="..\..\src\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Ordering.Api\Ordering.Api.csproj" />
+    <ProjectReference Include="..\..\src\Ordering.Contracts\Ordering.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Ordering.Core\Ordering.Core.csproj" />
+    <ProjectReference Include="..\..\src\Ordering.Infrastructure\Ordering.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\OrderProcessor\OrderProcessor.csproj" />
+    <ProjectReference Include="..\..\src\PaymentProcessor\PaymentProcessor.csproj" />
+    <ProjectReference Include="..\..\src\SharedKernel\SharedKernel.csproj" />
+    <ProjectReference Include="..\..\src\Webhooks.Api\Webhooks.Api.csproj" />
+    <ProjectReference Include="..\..\src\Webhooks.Contracts\Webhooks.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Webhooks.Core\Webhooks.Core.csproj" />
+    <ProjectReference Include="..\..\src\Webhooks.Infrastructure\Webhooks.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

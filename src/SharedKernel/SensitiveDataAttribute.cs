@@ -3,9 +3,10 @@
 namespace SharedKernel;
 
 [AttributeUsage(AttributeTargets.Property)]
-public class SensitiveDataAttribute : DataClassificationAttribute
+public sealed class SensitiveDataAttribute : DataClassificationAttribute
 {
-    public SensitiveDataAttribute() : base(ApplicationLoggingTaxonomy.SensitiveData)
+    public SensitiveDataAttribute()
+        : base(ApplicationLoggingTaxonomy.SensitiveData)
     {
     }
 }

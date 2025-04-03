@@ -20,13 +20,9 @@ jobs:
      matrix:
       dotnet-version: [9.0.x]
       os: [ubuntu-latest, windows-2022]
-        
+
     steps:
     - uses: actions/checkout@v4
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: "15"
     - name: Setup .NET ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v4
       with:
@@ -40,3 +36,33 @@ jobs:
     - name: Test
       run: dotnet test ./CloudNativeIdentityThesis.sln --configuration Release --no-build --no-restore --verbosity normal
     - uses: actions/upload-artifact@v4
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Login to DockerHub
+      run: echo "${{secrets.DOCKERHUB_PASSWORD}}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+    - name: Build and push basket-api image
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/basket-api:latest -f ./src/Basket.Api/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/basket-api:latest
+
+    - name: Build and push catalog-api image
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/catalog-api:latest -f ./src/Catalog.Api/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/catalog-api:latest
+
+    - name: Build and push ordering-api image
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/ordering-api:latest -f ./src/Ordering.Api/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/ordering-api:latest
+
+    - name: Build and push paymentprocessor image
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/paymentprocessor:latest -f ./src/PaymentProcessor.Api/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/paymentprocessor:latest
+
+    - name: Build and push orderprocessor image
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/orderprocessor:latest -f ./src/OrderProcessor.Api/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/orderprocessor:latest

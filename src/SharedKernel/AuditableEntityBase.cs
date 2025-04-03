@@ -30,9 +30,8 @@ public abstract class AuditableEntityBase : EntityBase, IAuditable
     public string? UpdatedByUserName { get; }
 }
 
-
 public abstract class AuditableEntityBase<TId> : EntityBase<TId>, IAuditable
-    where TId : struct, IEquatable<TId>
+    where TId : class, IEquatable<TId>
 {
     public DateTime CreatedOnUtc { get; }
 

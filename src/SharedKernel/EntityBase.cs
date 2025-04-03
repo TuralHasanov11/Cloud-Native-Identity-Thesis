@@ -2,7 +2,9 @@
 
 public abstract class EntityBase : HasDomainEventsBase
 {
-    protected EntityBase() { }
+    protected EntityBase()
+    {
+    }
 
     public int Id { get; }
 
@@ -10,9 +12,11 @@ public abstract class EntityBase : HasDomainEventsBase
 }
 
 public abstract class EntityBase<TId> : HasDomainEventsBase
-  where TId : struct, IEquatable<TId>
+  where TId : class, IEquatable<TId>
 {
-    protected EntityBase() { }
+    protected EntityBase()
+    {
+    }
 
     protected EntityBase(TId id)
     {
