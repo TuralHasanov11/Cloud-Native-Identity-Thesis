@@ -3,11 +3,11 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
   runtimeConfig:{
-    bffProxyUrl: 'https://localhost:5113'
+    bffProxyUrl: ''
   },
   modules: [
     "@nuxtjs/seo",
-    "@nuxt/content",
+    // "@nuxt/content",
     "@nuxt/eslint",
     "@nuxt/fonts",
     "@nuxt/icon",
@@ -21,6 +21,17 @@ export default defineNuxtConfig({
     "nuxt-security",
     "nuxt-auth-utils",
   ],
+  devServer:{
+    https: {
+      key: "./cert/webapp-key.pem",
+      cert: "./cert/webapp.pem",
+    },
+  },
+  vite:{
+    server: {
+      allowedHosts: ['webapp'],
+    },
+  },
   css: ["~/assets/css/main.css"],
   components: [{ path: "./components", pathPrefix: false }],
   i18n: {

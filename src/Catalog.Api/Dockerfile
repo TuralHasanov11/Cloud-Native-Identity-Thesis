@@ -22,7 +22,6 @@ COPY ["src/Catalog.Infrastructure/Catalog.Infrastructure.csproj", "src/Catalog.I
 COPY ["src/Audit/Audit.csproj", "src/Audit/"]
 COPY ["src/Catalog.Contracts/Catalog.Contracts.csproj", "src/Catalog.Contracts/"]
 COPY ["src/Outbox/Outbox.csproj", "src/Outbox/"]
-COPY ["src/Catalog.UseCases/Catalog.UseCases.csproj", "src/Catalog.UseCases/"]
 COPY ["src/ServiceDefaults/ServiceDefaults.csproj", "src/ServiceDefaults/"]
 RUN dotnet restore "./src/Catalog.Api/Catalog.Api.csproj"
 COPY . .

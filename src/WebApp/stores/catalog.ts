@@ -44,8 +44,8 @@ export const useCatalogStore = defineStore("catalog", (): CatalogStore => {
   }
 
   async function getBrands(): Promise<void> {
-    const { data } = await useFetch<Brand[]>("/api/gateway/catalog/brands");
-
+    const { data } = await useFetch<Brand[]>("/api/catalog/brands");
+    console.log("getBrands", data.value);
     if (data.value) {
       brands.value = data.value;
     }
@@ -53,7 +53,7 @@ export const useCatalogStore = defineStore("catalog", (): CatalogStore => {
 
   async function getProductTypes(): Promise<void> {
     const { data } = await useFetch<ProductType[]>(
-      "/api/gateway/catalog/product-types"
+      "/api/catalog/product-types"
     );
 
     if (data.value) {

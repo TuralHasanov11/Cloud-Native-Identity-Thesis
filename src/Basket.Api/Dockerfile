@@ -18,7 +18,6 @@ COPY ["src/Basket.Api/Basket.Api.csproj", "src/Basket.Api/"]
 COPY ["src/Basket.Core/Basket.Core.csproj", "src/Basket.Core/"]
 COPY ["src/Basket.Infrastructure/Basket.Infrastructure.csproj", "src/Basket.Infrastructure/"]
 COPY ["src/EventBus/EventBus.csproj", "src/EventBus/"]
-COPY ["src/Basket.UseCases/Basket.UseCases.csproj", "src/Basket.UseCases/"]
 COPY ["src/ServiceDefaults/ServiceDefaults.csproj", "src/ServiceDefaults/"]
 COPY ["src/SharedKernel/SharedKernel.csproj", "src/SharedKernel/"]
 RUN dotnet restore "./src/Basket.Api/Basket.Api.csproj"

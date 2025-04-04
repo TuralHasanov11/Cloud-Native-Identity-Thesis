@@ -42,7 +42,15 @@ public static class Extensions
         {
             options.AddPolicy(name: Policies.DefaultCorsPolicy, policy =>
             {
-                policy.WithOrigins(clientUrl)
+                policy.WithOrigins(
+                        "https://webapp:3000",
+                        "https://localhost:3000",
+                        "https://webapp:3001",
+                        "https://localhost:3001",
+                        "https://localhost:5113", 
+                        "http://localhost:5112", 
+                        "https://webapp.bff:5113", 
+                        "http://webapp.bff:5112")
                     .AllowCredentials()
                     .AllowAnyMethod()
                     .AllowAnyHeader();

@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-const { brands, getBrands } = useCatalog();
+  const { brands, getBrands } = useCatalog();
 
-await getBrands()
+  await callOnce(() => getBrands(), {
+    mode: "navigation",
+  });
 
-useSeoMeta({
-  title: "Categories",
-  ogTitle: "Categories",
-  description: "All product categories",
-  ogDescription: "All product categories",
-});
+  useSeoMeta({
+    title: "Categories",
+    ogTitle: "Categories",
+    description: "All product categories",
+    ogDescription: "All product categories",
+  });
 </script>
 
 <template>

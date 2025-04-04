@@ -186,6 +186,22 @@ services:
     networks:
       - thesis-net
 
+  webapp:
+    image: ${DOCKER_REGISTRY-}webapp
+    container_name: webapp
+    build:
+      context: .
+      dockerfile: src/WebApp/Dockerfile
+    ports:
+    - "3000:3000"
+    depends_on:
+    - webapp.bff
+    networks:
+      - thesis-net
+    environment:
+      NUXT_BFF_PROXY_URL: "https://webapp.bff:5113"
+      NUXT_SESSION_PASSWORD: "3336a8a9ba564e85a218a89b6e5c1264"
+
   papercut:
     image: changemakerstudiosus/papercut-smtp:latest
     container_name: "papercut"

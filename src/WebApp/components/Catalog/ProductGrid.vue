@@ -12,9 +12,9 @@ defineProps<{ products: Product[] }>();
       <TransitionGroup name="shrink" tag="div" mode="in-out" class="product-grid">
         <ProductCard v-for="(product, i) in products" :key="product.id" :product :index="i" />
       </TransitionGroup>
-      <Pagination />
+      <!-- <Pagination /> -->
     </section>
-    <NoProductsFound v-else />
+    <!-- <NoProductsFound v-else /> -->
   </Transition>
 </template>
 

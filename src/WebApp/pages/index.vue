@@ -29,7 +29,7 @@ useSeoMeta({
             <NuxtLink class="text-primary" to="/categories">{{ $t('messages.general.viewAll') }}</NuxtLink>
           </div>
           <div class="grid justify-center grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-6">
-            <CategoryCard v-for="category in brands" :key="category.id" :category="category" />
+            <LazyCategoryCard v-for="category in brands" :key="category.id" hydrate-on-visible :category="category" />
           </div>
         </section>
 

@@ -7,6 +7,11 @@ docker build -t <user_name_>/<image_name_>:latest -f ./src/<ServiceName>/Dockerf
 docker push <user_name_>/<image_name_>:latest
 ```
 
+```sh
+docker-compose build 
+docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
+```
+
 ### Application Inspector
 
 ```sh
