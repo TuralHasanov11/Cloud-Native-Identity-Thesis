@@ -1,9 +1,9 @@
 ﻿namespace Catalog.IntegrationTests.Products;
 
-[Collection(nameof(IntegrationTestCollection))]
 public class ProductRepositoryTests : BaseIntegrationTest
 {
     private readonly IProductRepository _repository;
+    private static readonly CancellationTokenSource _cancellationTokenSource = new(TimeSpan.FromSeconds(30));
 
     public ProductRepositoryTests(CatalogFactory factory)
         : base(factory)
@@ -15,24 +15,28 @@ public class ProductRepositoryTests : BaseIntegrationTest
     public async Task CreateAsync_ShouldAddProduct()
     {
         // Arrange
+        await SeedDatabase();
+
+        var brand = await DbContext.Brands.FirstAsync();
+        var productType = await DbContext.ProductTypes.FirstAsync();
 
         var product = Product.Create(
             "Product1",
             "Description1",
             10.0m,
-            new ProductTypeId(Guid.NewGuid()),
-            new BrandId(Guid.NewGuid()),
+            productType.Id,
+            brand.Id,
             100,
             10,
             200);
 
         // Act
-        await _repository.CreateAsync(product);
-        await _repository.SaveChangesAsync();
+        await _repository.CreateAsync(product, _cancellationTokenSource.Token);
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
 
         // Assert
         var createdProduct = await _repository.SingleOrDefaultAsync(
-            new GetProductByIdSpecification(product.Id));
+            new GetProductByIdSpecification(product.Id), _cancellationTokenSource.Token);
 
         Assert.NotNull(createdProduct);
     }
@@ -41,19 +45,23 @@ public class ProductRepositoryTests : BaseIntegrationTest
     public async Task Delete_ShouldRemoveProduct()
     {
         // Arrange
+        await SeedDatabase();
+
+        var brand = await DbContext.Brands.FirstAsync();
+        var productType = await DbContext.ProductTypes.FirstAsync();
 
         var product = Product.Create(
-            "Product1",
+            "Product2",
             "Description1",
             10.0m,
-            new ProductTypeId(Guid.NewGuid()),
-            new BrandId(Guid.NewGuid()),
+            productType.Id,
+            brand.Id,
             100,
             10,
             200);
 
-        await _repository.CreateAsync(product);
-        await _repository.SaveChangesAsync();
+        await _repository.CreateAsync(product, _cancellationTokenSource.Token);
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
 
         // Act
         _repository.Delete(product);
@@ -61,7 +69,8 @@ public class ProductRepositoryTests : BaseIntegrationTest
 
         // Assert
         var deletedProduct = await _repository.SingleOrDefaultAsync(
-            new GetProductByIdSpecification(product.Id));
+            new GetProductByIdSpecification(product.Id), 
+            _cancellationTokenSource.Token);
 
         Assert.Null(deletedProduct);
     }
@@ -112,23 +121,28 @@ public class ProductRepositoryTests : BaseIntegrationTest
     [Fact]
     public async Task SingleOrDefaultAsync_ShouldReturnProduct()
     {
+        await SeedDatabase();
+
         // Arrange
+        var brand = await DbContext.Brands.FirstAsync();
+        var productType = await DbContext.ProductTypes.FirstAsync();
+
         var product = Product.Create(
-            "Product1",
+            "Product2",
             "Description1",
             10.0m,
-            new ProductTypeId(Guid.NewGuid()),
-            new BrandId(Guid.NewGuid()),
+            productType.Id,
+            brand.Id,
             100,
             10,
             200);
 
-        await _repository.CreateAsync(product);
-        await _repository.SaveChangesAsync();
+        await _repository.CreateAsync(product, _cancellationTokenSource.Token);
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
         var specification = new GetProductByIdSpecification(product.Id);
 
         // Act
-        var result = await _repository.SingleOrDefaultAsync(specification);
+        var result = await _repository.SingleOrDefaultAsync(specification, _cancellationTokenSource.Token);
 
         // Assert
         Assert.NotNull(result);
@@ -142,7 +156,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
         var specification = new GetProductByIdSpecification(new ProductId(Guid.NewGuid()));
 
         // Act
-        var result = await _repository.SingleOrDefaultAsync(specification);
+        var result = await _repository.SingleOrDefaultAsync(specification, _cancellationTokenSource.Token);
 
         // Assert
         Assert.Null(result);
@@ -152,18 +166,23 @@ public class ProductRepositoryTests : BaseIntegrationTest
     public async Task Update_ShouldModifyProduct()
     {
         // Arrange
+        await SeedDatabase();
+
+        var brand = await DbContext.Brands.FirstAsync();
+        var productType = await DbContext.ProductTypes.FirstAsync();
+
         var product = Product.Create(
-            "Product1",
+            "Product3",
             "Description1",
             10.0m,
-            new ProductTypeId(Guid.NewGuid()),
-            new BrandId(Guid.NewGuid()),
+            productType.Id,
+            brand.Id,
             100,
             10,
             200);
 
-        await _repository.CreateAsync(product);
-        await _repository.SaveChangesAsync();
+        await _repository.CreateAsync(product, _cancellationTokenSource.Token);
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
 
         // Act
         product.Update(
@@ -176,15 +195,45 @@ public class ProductRepositoryTests : BaseIntegrationTest
             15,
             300);
         _repository.Update(product);
-        await _repository.SaveChangesAsync();
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
 
         // Assert
         var updatedProduct = await _repository.SingleOrDefaultAsync(
-            new GetProductByIdSpecification(product.Id));
+            new GetProductByIdSpecification(product.Id),
+            _cancellationTokenSource.Token);
 
         Assert.NotNull(updatedProduct);
         Assert.Equal("UpdatedProduct", updatedProduct.Name);
         Assert.Equal("UpdatedDescription", updatedProduct.Description);
         Assert.Equal(15.0m, updatedProduct.Price);
+    }
+
+    public IEnumerable<Brand> GetBrands()
+    {
+        yield return Brand.Create("Brand1");
+        yield return Brand.Create("Brand2");
+    }
+
+    public IEnumerable<ProductType> GetProductTypes()
+    {
+        yield return ProductType.Create("ProductType1");
+        yield return ProductType.Create("ProductType2");
+    }
+
+    public async Task SeedDatabase()
+    {
+        if (!await DbContext.Brands.AnyAsync())
+        {
+            var brands = GetBrands();
+            await DbContext.AddRangeAsync(brands);
+            await DbContext.SaveChangesAsync();
+        }
+
+        if (!await DbContext.ProductTypes.AnyAsync())
+        {
+            var productTypes = GetProductTypes();
+            await DbContext.AddRangeAsync(productTypes);
+            await DbContext.SaveChangesAsync();
+        }
     }
 }

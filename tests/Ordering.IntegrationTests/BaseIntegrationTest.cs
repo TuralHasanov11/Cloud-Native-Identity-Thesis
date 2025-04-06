@@ -1,21 +1,19 @@
-﻿namespace Catalog.IntegrationTests;
+﻿namespace Ordering.IntegrationTests;
 
 [Collection(nameof(IntegrationTestCollection))]
 public class BaseIntegrationTest : IAsyncLifetime
 {
-    protected const string ApiBaseUrl = "https://localhost:5103";
-
     private readonly Func<Task> _resetDatabase;
 
-    protected CatalogDbContext DbContext { get; }
+    protected OrderingDbContext DbContext { get; }
 
     private readonly IServiceScope _scope;
 
-    protected BaseIntegrationTest(CatalogFactory factory)
+    protected BaseIntegrationTest(OrderingFactory factory)
     {
         _scope = factory.Services.CreateScope();
         _resetDatabase = factory.ResetDatabaseAsync;
-        DbContext = _scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+        DbContext = _scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
     }
 
     public Task InitializeAsync()

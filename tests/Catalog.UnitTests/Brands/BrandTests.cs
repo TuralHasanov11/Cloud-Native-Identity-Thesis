@@ -18,24 +18,13 @@ public class BrandTests
         Assert.NotEqual(Guid.Empty, brand.Id.Value);
     }
 
-    [Fact]
-    public void Create_ShouldThrowException_WhenNameIsNull()
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void Create_ShouldThrowException_WhenNameIsNull(string name)
     {
-        // Arrange
-        string name = null;
-
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => Brand.Create(name));
-    }
-
-    [Fact]
-    public void Create_ShouldThrowException_WhenNameIsEmpty()
-    {
-        // Arrange
-        var name = string.Empty;
-
-        // Act & Assert
-        Assert.Throws<ArgumentException>(() => Brand.Create(name));
+        Assert.Throws<BrandNameEmptyException>(() => Brand.Create(name));
     }
 
     [Fact]
@@ -52,26 +41,16 @@ public class BrandTests
         Assert.Equal(newName, brand.Name);
     }
 
-    [Fact]
-    public void UpdateName_ShouldThrowException_WhenNameIsNull()
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void UpdateName_ShouldThrowException_WhenNameIsNull(string newName)
     {
         // Arrange
         var brand = Brand.Create("Brand1");
-        string newName = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => brand.UpdateName(newName));
-    }
-
-    [Fact]
-    public void UpdateName_ShouldThrowException_WhenNameIsEmpty()
-    {
-        // Arrange
-        var brand = Brand.Create("Brand1");
-        var newName = string.Empty;
-
-        // Act & Assert
-        Assert.Throws<ArgumentException>(() => brand.UpdateName(newName));
+        Assert.Throws<BrandNameEmptyException>(() => brand.UpdateName(newName));
     }
 
     [Fact]
@@ -86,5 +65,24 @@ public class BrandTests
         // Assert
         Assert.Equal(brand.Id, brandDto.Id);
         Assert.Equal(brand.Name, brandDto.Name);
+    }
+
+    [Theory]
+    [InlineData("A very long brand name that exceeds the maximum length of one hundred characters which should throw an exception")]
+    public void Create_ShouldThrowException_WhenNameIsTooLong(string name)
+    {
+        // Act & Assert
+        Assert.Throws<BrandNameTooLongException>(() => Brand.Create(name));
+    }
+
+    [Theory]
+    [InlineData("A very long brand name that exceeds the maximum length of one hundred characters which should throw an exception")]
+    public void UpdateName_ShouldThrowException_WhenNameIsTooLong(string newName)
+    {
+        // Arrange
+        var brand = Brand.Create("Brand1");
+
+        // Act & Assert
+        Assert.Throws<BrandNameTooLongException>(() => brand.UpdateName(newName));
     }
 }

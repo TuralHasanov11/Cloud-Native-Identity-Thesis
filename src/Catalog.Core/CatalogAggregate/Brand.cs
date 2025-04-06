@@ -5,10 +5,7 @@ public sealed class Brand : EntityBase<BrandId>
     private Brand(string name)
         : base(new BrandId(Guid.CreateVersion7()))
     {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            throw new ArgumentException("The brand name cannot be null or empty.", nameof(name));
-        }
+        ValidateName(name);
 
         Name = name;
     }
@@ -17,10 +14,7 @@ public sealed class Brand : EntityBase<BrandId>
 
     public void UpdateName(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            throw new ArgumentException("The brand name cannot be null or empty.", nameof(name));
-        }
+        ValidateName(name);
 
         Name = name;
     }
@@ -28,5 +22,20 @@ public sealed class Brand : EntityBase<BrandId>
     public static Brand Create(string name)
     {
         return new Brand(name);
+    }
+
+    private static void ValidateName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new BrandNameEmptyException();
+        }
+
+        const int maxLength = 100;
+
+        if (name.Length > maxLength)
+        {
+            throw new BrandNameTooLongException(name.Length, maxLength);
+        }
     }
 }

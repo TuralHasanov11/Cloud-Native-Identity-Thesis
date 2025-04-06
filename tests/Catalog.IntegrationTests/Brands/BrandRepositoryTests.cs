@@ -1,9 +1,9 @@
 ﻿namespace Catalog.IntegrationTests.Brands;
 
-[Collection(nameof(IntegrationTestCollection))]
 public class BrandRepositoryTests : BaseIntegrationTest
 {
     private readonly IBrandRepository _repository;
+    private static readonly CancellationTokenSource _cancellationTokenSource = new(TimeSpan.FromSeconds(30));
 
     public BrandRepositoryTests(CatalogFactory factory)
         : base(factory)
@@ -18,8 +18,8 @@ public class BrandRepositoryTests : BaseIntegrationTest
         var brand = Brand.Create("Brand1");
 
         // Act
-        await _repository.CreateAsync(brand);
-        await _repository.SaveChangesAsync();
+        await _repository.CreateAsync(brand, _cancellationTokenSource.Token);
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
 
         // Assert
         var createdBrand = await _repository.SingleOrDefaultAsync(new GetBrandSpecification(brand.Id));
@@ -30,14 +30,14 @@ public class BrandRepositoryTests : BaseIntegrationTest
     public async Task Delete_ShouldRemoveBrand()
     {
         // Arrange
-        var brand = Brand.Create("Brand1");
+        var brand = Brand.Create("Brand2");
 
-        await _repository.CreateAsync(brand);
-        await _repository.SaveChangesAsync();
+        await _repository.CreateAsync(brand, _cancellationTokenSource.Token);
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
 
         // Act
         _repository.Delete(brand);
-        await _repository.SaveChangesAsync();
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
 
         // Assert
         var deletedBrand = await _repository.SingleOrDefaultAsync(new GetBrandSpecification(brand.Id));
@@ -48,35 +48,35 @@ public class BrandRepositoryTests : BaseIntegrationTest
     public async Task ListAsync_ShouldReturnBrands()
     {
         // Arrange
-        var brand1 = Brand.Create("Brand1");
-        var brand2 = Brand.Create("Brand2");
+        var brand1 = Brand.Create("Brand3");
+        var brand2 = Brand.Create("Brand4");
 
-        await _repository.CreateAsync(brand1);
-        await _repository.CreateAsync(brand2);
-        await _repository.SaveChangesAsync();
+        await _repository.CreateAsync(brand1, _cancellationTokenSource.Token);
+        await _repository.CreateAsync(brand2, _cancellationTokenSource.Token);
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
 
         var specification = new GetBrandsSpecification();
 
         // Act
-        var brands = await _repository.ListAsync(specification);
+        var brands = await _repository.ListAsync(specification, _cancellationTokenSource.Token);
 
         // Assert
-        Assert.Contains(brands, b => b.Name == "Brand1");
-        Assert.Contains(brands, b => b.Name == "Brand2");
+        Assert.Contains(brands, b => b.Name == "Brand3");
+        Assert.Contains(brands, b => b.Name == "Brand4");
     }
 
     [Fact]
     public async Task SingleOrDefaultAsync_ShouldReturnBrand()
     {
         // Arrange
-        var brand = Brand.Create("Brand1");
+        var brand = Brand.Create("Brand5");
 
-        await _repository.CreateAsync(brand);
-        await _repository.SaveChangesAsync();
+        await _repository.CreateAsync(brand, _cancellationTokenSource.Token);
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
         var specification = new GetBrandSpecification(brand.Id);
 
         // Act
-        var result = await _repository.SingleOrDefaultAsync(specification);
+        var result = await _repository.SingleOrDefaultAsync(specification, _cancellationTokenSource.Token);
 
         // Assert
         Assert.NotNull(result);
@@ -90,7 +90,7 @@ public class BrandRepositoryTests : BaseIntegrationTest
         var specification = new GetBrandSpecification(new BrandId(Guid.NewGuid()));
 
         // Act
-        var result = await _repository.SingleOrDefaultAsync(specification);
+        var result = await _repository.SingleOrDefaultAsync(specification, _cancellationTokenSource.Token);
 
         // Assert
         Assert.Null(result);
@@ -100,18 +100,18 @@ public class BrandRepositoryTests : BaseIntegrationTest
     public async Task Update_ShouldModifyBrand()
     {
         // Arrange
-        var brand = Brand.Create("Brand1");
+        var brand = Brand.Create("Brand6");
 
-        await _repository.CreateAsync(brand);
-        await _repository.SaveChangesAsync();
+        await _repository.CreateAsync(brand, _cancellationTokenSource.Token);
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
 
         // Act
         brand.UpdateName("UpdatedBrand");
         _repository.Update(brand);
-        await _repository.SaveChangesAsync();
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
 
         // Assert
-        var updatedBrand = await _repository.SingleOrDefaultAsync(new GetBrandSpecification(brand.Id));
+        var updatedBrand = await _repository.SingleOrDefaultAsync(new GetBrandSpecification(brand.Id), _cancellationTokenSource.Token);
         Assert.NotNull(updatedBrand);
         Assert.Equal("UpdatedBrand", updatedBrand.Name);
     }

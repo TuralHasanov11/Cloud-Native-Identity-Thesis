@@ -1,139 +1,117 @@
-﻿namespace Ordering.IntegrationTests.Customers;
+﻿using Ordering.Core.CustomerAggregate.Specifications;
 
-public class CardTypeRepositoryTests : IClassFixture<OrderingFactory>
+namespace Ordering.IntegrationTests.Customers;
+
+public class CardTypeRepositoryTests : BaseIntegrationTest
 {
-    private readonly OrderingFactory _factory;
+    private readonly ICardTypeRepository _cardTypeRepository;
 
-    public CardTypeRepositoryTests(OrderingFactory factory)
+    public CardTypeRepositoryTests(OrderingFactory factory) : base(factory)
     {
-        _factory = factory;
+        _cardTypeRepository = factory.Services.GetRequiredService<ICardTypeRepository>();
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task CreateAsync_ShouldAddCardType()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new CardTypeRepository(dbContext);
         var cardType = CardType.Create("Visa");
 
         // Act
-        await repository.CreateAsync(cardType);
-        await repository.SaveChangesAsync();
+        await _cardTypeRepository.CreateAsync(cardType);
+        await _cardTypeRepository.SaveChangesAsync();
 
         // Assert
-        var createdCardType = await dbContext.CardTypes.FindAsync(cardType.Id);
+        var createdCardType = await DbContext.CardTypes.FindAsync(cardType.Id);
         Assert.NotNull(createdCardType);
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task Delete_ShouldRemoveCardType()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new CardTypeRepository(dbContext);
-        var cardType = CardType.Create("MasterCard");
-
-        await repository.CreateAsync(cardType);
-        await repository.SaveChangesAsync();
+        var cardType = CardType.Create("Visa2");
+        await DbContext.CardTypes.AddAsync(cardType);
+        await DbContext.SaveChangesAsync();
 
         // Act
-        repository.Delete(cardType);
-        await repository.SaveChangesAsync();
+        _cardTypeRepository.Delete(cardType);
+        await _cardTypeRepository.SaveChangesAsync();
 
         // Assert
-        var deletedCardType = await dbContext.CardTypes.FindAsync(cardType.Id);
+        var deletedCardType = await DbContext.CardTypes.Where(c => c.Name == cardType.Name).FirstOrDefaultAsync();
         Assert.Null(deletedCardType);
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task ListAsync_ShouldReturnCardTypes()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-        await dbContext.SeedDatabase();
+        var cardType1 = CardType.Create("Visa1");
+        var cardType2 = CardType.Create("MasterCard1");
 
-        var repository = new CardTypeRepository(dbContext);
-
-        var cardType1 = CardType.Create("Visa");
-        var cardType2 = CardType.Create("MasterCard");
-
-        await repository.CreateAsync(cardType1);
-        await repository.CreateAsync(cardType2);
-        await repository.SaveChangesAsync();
+        await _cardTypeRepository.CreateAsync(cardType1);
+        await _cardTypeRepository.CreateAsync(cardType2);
+        await _cardTypeRepository.SaveChangesAsync();
 
         // Act
-        var cardTypes = await repository.ListAsync();
+        var cardTypes = await _cardTypeRepository.ListAsync();
 
         // Assert
-        Assert.Contains(cardTypes, ct => ct.Name == "Visa");
-        Assert.Contains(cardTypes, ct => ct.Name == "MasterCard");
+        Assert.Contains(cardTypes, ct => ct.Name == "Visa1");
+        Assert.Contains(cardTypes, ct => ct.Name == "MasterCard1");
     }
 
-    //[Fact(Skip = "Waiting")]
-    //public async Task SingleOrDefaultAsync_ShouldReturnCardType()
-    //{
-    //    // Arrange
-    //    var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-    //    await dbContext.SeedDatabase();
+    [Fact]
+    public async Task SingleOrDefaultAsync_ShouldReturnCardType()
+    {
+        // Arrange
+        var cardType = CardType.Create("Visa5");
 
-    //    var repository = new CardTypeRepository(dbContext);
-    //    var cardType = CardType.Create("Visa");
+        await _cardTypeRepository.CreateAsync(cardType);
+        await _cardTypeRepository.SaveChangesAsync();
+        var specification = new GetCardTypeSpecification(cardType.Id);
 
-    //    await repository.CreateAsync(cardType);
-    //    await repository.SaveChangesAsync();
-    //    var specification = new Specification<CardType>(ct => ct.Name == "Visa");
+        // Act
+        var result = await _cardTypeRepository.SingleOrDefaultAsync(specification);
 
-    //    // Act
-    //    var result = await repository.SingleOrDefaultAsync(specification);
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("Visa5", result.Name);
+    }
 
-    //    // Assert
-    //    Assert.NotNull(result);
-    //    Assert.Equal("Visa", result.Name);
-    //}
+    [Fact]
+    public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenCardTypeDoesNotExist()
+    {
+        // Arrange
+        var cardType = CardType.Create("Visa3");
+        await _cardTypeRepository.CreateAsync(cardType);
+        await _cardTypeRepository.SaveChangesAsync();
 
-    //[Fact(Skip = "Waiting")]
-    //public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenCardTypeDoesNotExist()
-    //{
-    //    // Arrange
-    //    var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-    //    await dbContext.SeedDatabase();
+        var specification = new GetCardTypeSpecification(100);
 
-    //    var repository = new CardTypeRepository(dbContext);
-    //    var specification = new Specification<CardType>(ct => ct.Name == "NonExistent");
+        // Act
+        var result = await _cardTypeRepository.SingleOrDefaultAsync(specification);
 
-    //    // Act
-    //    var result = await repository.SingleOrDefaultAsync(specification);
+        // Assert
+        Assert.Null(result);
+    }
 
-    //    // Assert
-    //    Assert.Null(result);
-    //}
-
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task Update_ShouldModifyCardType()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new CardTypeRepository(dbContext);
-        var cardType = CardType.Create("Visa");
-
-        await repository.CreateAsync(cardType);
-        await repository.SaveChangesAsync();
+        var cardType = CardType.Create("MasterCard3");
+        await _cardTypeRepository.CreateAsync(cardType);
+        await _cardTypeRepository.SaveChangesAsync();
 
         // Act
-        cardType = CardType.Create("MasterCard");
-        repository.Update(cardType);
-        await repository.SaveChangesAsync();
+        _cardTypeRepository.Update(cardType);
+        await _cardTypeRepository.SaveChangesAsync();
 
         // Assert
-        var updatedCardType = await dbContext.CardTypes.FindAsync(cardType.Id);
+        var updatedCardType = await DbContext.CardTypes.FindAsync(cardType.Id);
         Assert.NotNull(updatedCardType);
-        Assert.Equal("MasterCard", updatedCardType.Name);
+        Assert.Equal("MasterCard3", updatedCardType.Name);
     }
 }
