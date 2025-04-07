@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import useBasket from '@/composables/useBasket';
 import { useHelpers } from '@/composables/useHelpers';
-import type { BasketItem } from '@/types/ordering';
+import type { BasketItem } from '@/types/basket';
 import { computed } from 'vue';
 
 const { updateItemQuantity } = useBasket();
@@ -12,7 +12,7 @@ const { item } = defineProps<{
 }>();
 
 const productSlug = computed(() => `/products/${decodeURIComponent(item.productId)}`);
-const imgScr = computed(() => item.pictureUrl || FALLBACK_IMG);
+const imgScr = computed(() => FALLBACK_IMG);
 
 const removeItem = () => {
     updateItemQuantity(item.productId, 0);

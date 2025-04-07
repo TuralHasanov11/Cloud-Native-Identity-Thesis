@@ -1,4 +1,4 @@
-import type { BasketItem, Cart } from '@/types/basket'
+import type { BasketGrpcItem, BasketItem, Cart } from '@/types/basket'
 import { computed, ref, watch } from 'vue'
 
 export const DEFAULT_CART: Cart = {
@@ -31,7 +31,39 @@ export default function useBasket() {
 
   async function getBasket(): Promise<void> {
     try {
-      // TODO: Fetch the basket from the server
+      const loadedBasketItems: BasketGrpcItem[] = [
+        {
+          product_id: '01960006-6cba-7204-b49b-610d4ee8ab72',
+          quantity: 2,
+        },
+        {
+          product_id: '01960006-6cba-7117-81ca-678390987492',
+          quantity: 2,
+        },
+      ]
+      const productIds = loadedBasketItems.map((item) => item.product_id)
+      const catalog = useCatalog()
+
+      const products = await catalog.getProductsByIds(productIds)
+      const productMap = new Map(products.map((product) => [product.id, product]))
+
+      const basketItems: BasketItem[] = []
+
+      loadedBasketItems.forEach((item) => {
+        const product = productMap.get(item.product_id)
+        if (product) {
+          const updatedItem: BasketItem = {
+            productId: product.id,
+            productName: product.name,
+            unitPrice: product.price,
+            quantity: item.quantity,
+          }
+
+          basketItems.push(updatedItem)
+        }
+
+        cart.value.items = basketItems
+      })
     } catch (error: unknown) {
       console.error('Error deleting basket:', error)
     } finally {
@@ -76,13 +108,21 @@ export default function useBasket() {
     isUpdatingCart.value = true
 
     try {
-      cart.value.items.push(item)
+      await getBasket()
+
+      const currentItem = cart.value.items.find((i) => i.productId === item.productId)
+      if (currentItem) {
+        currentItem.quantity += item.quantity
+      } else {
+        cart.value.items.push(item)
+      }
+
       await updateBasket()
 
-      const { storeSettings } = useAppConfig()
-      if (storeSettings.autoOpenCart && !isShowingCart.value) toggleCart(true)
+      if (!isShowingCart.value) toggleCart(true)
     } catch (error: unknown) {
       console.error('Error adding item to cart:', error)
+      isUpdatingCart.value = false
     }
   }
 
@@ -94,18 +134,26 @@ export default function useBasket() {
 
   async function updateItemQuantity(productId: string, quantity: number): Promise<void> {
     isUpdatingCart.value = true
-    try {
-      const itemIndex = cart.value.items.findIndex((item) => item.productId === productId)
 
-      if (itemIndex !== -1) {
-        cart.value.items[itemIndex].quantity = quantity
-      } else {
-        console.error('Item not found in cart:', productId)
+    try {
+      await getBasket()
+
+      const currentItem = cart.value.items.find((i) => i.productId === productId)
+
+      if (currentItem) {
+        if (quantity > 0) {
+          currentItem.quantity = quantity
+        } else {
+          cart.value.items = cart.value.items.filter((i) => i.productId !== productId)
+        }
+
+        await updateBasket()
       }
 
-      await updateBasket()
+      if (!isShowingCart.value) toggleCart(true)
     } catch (error: unknown) {
-      console.error('Error updating item quantity:', error)
+      console.error('Error adding item to cart:', error)
+      isUpdatingCart.value = false
     }
   }
 
@@ -120,8 +168,7 @@ export default function useBasket() {
     }
   }
 
-  watch(cart, (newCart: Cart) => {
-    console.log(newCart)
+  watch(cart, () => {
     isUpdatingCart.value = false
   })
 

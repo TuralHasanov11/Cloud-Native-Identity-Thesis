@@ -13,3 +13,18 @@ export type BasketItem = {
 export type UpdateBasketRequest = {
   items: BasketItem[]
 }
+
+export type BasketGrpcItem = {
+  product_id: string
+  quantity: number
+}
+
+export type BasketCheckoutInfo = {
+  street?: string
+  city?: string
+  state?: string
+  country?: string
+  cardTypeId: number
+  customer?: string
+  zipcode?: string
+}

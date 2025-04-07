@@ -10,7 +10,7 @@
             <h3 class="dark:text-secondary-200 font-bold font-serif lg:capitalize mb-1 text-primary-600 uppercase">
               New Arrivals, Big Savings!
             </h3>
-            <UButton label="Shop Now" to="/women" size="xl" trailing class="mt-4" />
+            <UButton label="Shop Now" :to="{ name: 'products' }" size="xl" trailing class="mt-4" />
           </div>
         </div>
       </div>

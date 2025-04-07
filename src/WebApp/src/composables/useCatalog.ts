@@ -10,7 +10,25 @@ export default function useCatalog() {
   const catalogStore = useCatalogStore()
 
   async function getProductById(id: string): Promise<void> {
-    console.log('getProductById', id)
+    const { data } = await useBffFetch(`/api/catalog/products/${id}`).json<Product>()
+    if (data.value) {
+      product.value = data.value
+    }
+  }
+
+  async function getProductsByIds(ids: string[]): Promise<Product[]> {
+    try {
+      const params = new URLSearchParams()
+      ids.forEach((id) => params.append('ids', id))
+
+      const { data } = await useBffFetch<Product[]>(
+        `/api/catalog/products/by?${params.toString()}`,
+      ).json<Product[]>()
+      return data.value || []
+    } catch (error) {
+      console.error('Error fetching products by IDs:', error)
+      return []
+    }
   }
 
   return {
@@ -23,6 +41,7 @@ export default function useCatalog() {
     getBrands: catalogStore.getBrands,
     getProductTypes: catalogStore.getProductTypes,
     getProductById,
+    getProductsByIds,
     productsPerPage,
   }
 }

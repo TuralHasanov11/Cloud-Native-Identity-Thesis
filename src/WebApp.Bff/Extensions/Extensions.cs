@@ -43,10 +43,11 @@ public static class Extensions
             options.AddPolicy(name: Policies.DefaultCorsPolicy, policy =>
             {
                 policy.WithOrigins(
-                        "https://webapp:3000",
-                        "https://localhost:3000",
-                        "https://webapp:3001",
-                        "https://localhost:3001",
+                        clientUrl,
+                        "https://webapp:5002",
+                        "https://localhost:5002",
+                        "http://webapp:5002",
+                        "http://localhost:5002",
                         "https://localhost:5113", 
                         "http://localhost:5112", 
                         "https://webapp.bff:5113", 

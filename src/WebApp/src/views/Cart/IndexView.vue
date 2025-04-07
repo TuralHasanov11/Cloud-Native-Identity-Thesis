@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import DefaultLayout from '@/layouts/DefaultLayout.vue'
+import DefaultLayout from '@/layouts/DefaultLayout.vue';
 
 import useBasket from '@/composables/useBasket';
 
-const { cart, toggleCart, isUpdatingCart, getBasket, isEmpty, productCount, total } = useBasket();
+const { cart, isUpdatingCart, getBasket, isEmpty, productCount, total } = useBasket();
 
 await getBasket();
 </script>
 
 <template>
   <DefaultLayout>
-    <main id="cart">
+    <main id="cart" class="py-5 relative">
       <UContainer>
         <EmptyCart v-if="!isEmpty" class="rounded-lg shadow-lg p-1.5 hover:bg-red-400 hover:text-white" />
 
@@ -21,12 +21,12 @@ await getBasket();
 
         <div v-if="cart && !isEmpty">
           <ul class="flex flex-col flex-1 gap-4 p-6 overflow-y-scroll md:p-8">
-            <!-- <CartCard v-for="item in cart.items" :key="item.productId" :item /> -->
+            <CartCard v-for="item in cart.items" :key="item.productId" :item />
           </ul>
           <div class="px-8 mb-8">
             <RouterLink
               class="block p-3 text-lg text-center text-white bg-gray-800 rounded-lg shadow-md justify-evenly hover:bg-gray-900"
-              to="/checkout" @click.prevent="toggleCart()">
+              to="/checkout">
               <span class="mx-2">{{ $t("messages.shop.checkout") }}</span>
               <span>{{ total }}</span>
             </RouterLink>

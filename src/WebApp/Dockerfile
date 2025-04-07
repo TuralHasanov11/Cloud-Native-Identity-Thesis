@@ -7,36 +7,29 @@ FROM node:${NODE_VERSION}-alpine3.20 AS base
 WORKDIR /app
 
 # Copy package.json and package-lock.json files to the working directory
-COPY src/WebApp/package.json /app/
-COPY src/WebApp/package-lock.json /app/
+COPY ./package.json /app/
+COPY ./package-lock.json /app/
 
 # Install dependencies using npm
 RUN npm install && npm cache clean --force
 
 # Copy the rest of the application files to the working directory
-COPY src/WebApp/ /app/
-
-# Expose the port the application will run on
-EXPOSE 3000
-# EXPOSE 3001
+COPY ./ /app/
 
 # Build the application
-# RUN npm run build
+RUN npm run build
 
-# Create a new stage for the production image
-# FROM base as build
+# Use the lightweight Nginx image from the previous stage for the nginx container
+FROM nginx:stable-alpine as production
 
-# Set the working directory inside the container
-# WORKDIR /app
+# Copy the build application from the previous stage to the Nginx container
+COPY --from=base /app/dist/ /usr/share/nginx/html/
 
-# Copy the output from the build stage to the working directory
-# COPY --from=build /app/.output ./ 
+# Copy the nginx configuration file
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Define environment variables
-# ENV HOST=0.0.0.0
-# ARG NODE_ENV=production
-# ENV NODE_ENV=${NODE_ENV}
+# Expose port 80
+EXPOSE 80
 
-# Start the application
-# CMD ["node", "/app/server/.mjs"]
-CMD ["npm", "run", "dev"]
+# Start Nginx to serve the application
+CMD ["nginx", "-g", "daemon off;"]

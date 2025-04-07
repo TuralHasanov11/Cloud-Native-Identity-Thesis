@@ -36,12 +36,38 @@ export const useCatalogStore = defineStore('catalog', (): CatalogStore => {
   const productTypes = shallowRef<ProductType[]>([])
 
   async function getProducts(payload?: GetProductsRequest): Promise<void> {
-    console.log('getProducts', payload)
+    const params = new URLSearchParams()
+
+    if (payload?.brand) {
+      params.append('brand', payload.brand)
+    }
+
+    if (payload?.productType) {
+      params.append('type', payload.productType)
+    }
+
+    if (payload?.name) {
+      params.append('name', payload.name)
+    }
+
+    if (payload?.pageSize) {
+      params.append('pageSize', payload.pageSize.toString())
+    }
+
+    if (payload?.pageCursor) {
+      params.append('pageCursor', payload.pageCursor)
+    }
+
+    const { data } = await useBffFetch(`/api/catalog/products?${params.toString()}`).json<
+      PaginationResponse<Product, string>
+    >()
+    if (data.value) {
+      products.value = data.value
+    }
   }
 
   async function getBrands(): Promise<void> {
-    const { data } = await useBffFetch<Brand[]>('/api/catalog/brands')
-    console.log('getBrands', data.value)
+    const { data } = await useBffFetch('/api/catalog/brands').json<Brand[]>()
     if (data.value) {
       brands.value = data.value
     }

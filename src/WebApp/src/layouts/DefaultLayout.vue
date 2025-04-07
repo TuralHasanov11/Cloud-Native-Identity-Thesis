@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 import { AsyncBaseFooter } from '@/components/AsyncBaseFooter';
+import { AsyncCartSummary } from '@/components/Basket/AsyncCartSummary';
+
+const { isShowingCart } = useBasket();
 
 </script>
 
@@ -8,6 +11,10 @@ import { AsyncBaseFooter } from '@/components/AsyncBaseFooter';
         <BaseHeader />
 
         <slot />
+
+        <Transition name="slide-from-right">
+            <AsyncCartSummary v-if="isShowingCart" />
+        </Transition>
 
         <AsyncBaseFooter />
     </div>

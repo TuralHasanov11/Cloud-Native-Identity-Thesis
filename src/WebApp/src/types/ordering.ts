@@ -1,18 +1,18 @@
 export type CardType = {
-  id: string;
-  name: string;
-};
+  id: string
+  name: string
+}
 
 export type OrderSummary = {
-  orderNumber: string;
-  date: string;
-  status: string;
-  total: number;
-};
+  orderNumber: string
+  date: string
+  status: string
+  total: number
+}
 
 export type ShipOrderRequest = {
-  orderNumber: string;
-};
+  orderNumber: string
+}
 
 export enum OrderStatus {
   Default,
@@ -25,79 +25,84 @@ export enum OrderStatus {
 }
 
 export type OrderItem = {
-  productId: string;
-  productName: string;
-  pictureUrl: string;
-  unitPrice: number;
-  units: number;
-  discount: number;
-  totalPrice: number;
-};
+  productId: string
+  productName: string
+  pictureUrl: string
+  unitPrice: number
+  units: number
+  discount: number
+  totalPrice: number
+}
 
 export type Order = {
-  orderNumber: string;
-  date: string;
-  description: string;
-  city: string;
-  country: string;
-  state: string;
-  street: string;
-  zipcode: string;
-  status: string;
-  total: number;
-  orderItems: OrderItem[];
-};
+  orderNumber: string
+  date: string
+  description: string
+  city: string
+  country: string
+  state: string
+  street: string
+  zipcode: string
+  status: string
+  total: number
+  orderItems: OrderItem[]
+}
 
 export type OrderDraft = {
-  orderItems: OrderItem[];
-  total: number;
-};
+  orderItems: OrderItem[]
+  total: number
+}
 
 export type DraftOrderRequest = {
-  customerId: string;
-  items: OrderItem[];
-};
+  customerId: string
+  items: OrderItem[]
+}
 
 export type CreateOrderRequest = {
-  userId: string;
-  userName: string;
-  city: string;
-  street: string;
-  state: string;
-  country: string;
-  zipCode: string;
-  cardNumber: string;
-  cardHolderName: string;
-  cardExpiration: string;
-  cardSecurityNumber: string;
-  cardTypeId: number;
-  customer: string;
-  items: OrderItem[];
-};
+  userId: string
+  userName: string
+  city: string
+  street: string
+  state: string
+  country: string
+  zipCode: string
+  cardTypeId: number
+  customer: string
+  items: OrderItem[]
+}
 
 export type CancelOrderRequest = {
-  orderNumber: string;
-};
+  orderNumber: string
+}
 
 export type BasketItem = {
-  id: string;
-  productId: string;
-  productName: string;
-  unitPrice: number;
-  oldUnitPrice: number;
-  quantity: number;
-  pictureUrl: string;
-};
+  id: string
+  productId: string
+  productName: string
+  unitPrice: number
+  oldUnitPrice: number
+  quantity: number
+  pictureUrl: string
+}
 
 export interface Customer {
-  id: string;
-  name: string;
-  identityId: string;
+  id: string
+  name: string
+  identityId: string
   paymentMethods: PaymentMethod[]
+  address?: CustomerAddress
+}
+
+export type CustomerAddress = {
+  street?: string
+  city?: string
+  state?: string
+  country?: string
+  zipcode?: string
 }
 
 export type PaymentMethod = {
-  alias: string;
-  cardTypeId: number;
-  cardType: CardType;
-};
+  alias: string
+  cardTypeId: number
+  cardType: CardType
+}

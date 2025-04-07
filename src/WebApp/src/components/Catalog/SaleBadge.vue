@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import type { Product } from '@/types/catalog';
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
 const { product } = defineProps<{
   product: Product
 }>();
-
-const { storeSettings } = useAppConfig();
 
 const salePercentage = computed((): string => {
   if (!product?.price || !product?.price) return '';
@@ -17,11 +13,10 @@ const salePercentage = computed((): string => {
   return Math.round(((salePrice - regularPrice) / regularPrice) * 100) + ` %`;
 });
 
-const showSaleBadge = computed(() => product.price && storeSettings.saleBadge !== 'hidden');
+const showSaleBadge = computed(() => product.price != null);
 
 const textToDisplay = computed(() => {
-  if (storeSettings?.saleBadge === 'percent') return salePercentage.value;
-  return t('messages.shop.onSale') ? t('messages.shop.onSale') : 'Sale';
+  return salePercentage.value;
 });
 </script>
 

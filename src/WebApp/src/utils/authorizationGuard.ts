@@ -13,8 +13,7 @@ const guard = async (
 ) => {
   const { hasRole, isAuthenticated, login } = useIdentity()
   const toRouteMeta = to.meta as CustomRouteMeta
-  console.log(toRouteMeta.requireAuth, isAuthenticated.value)
-  console.log(toRouteMeta.requireAuth === true && isAuthenticated.value === false)
+
   if (toRouteMeta.requireRole && !hasRole(toRouteMeta.requireRole)) {
     return next({ name: 'home' })
   } else if (toRouteMeta.requireAuth === true && isAuthenticated.value === false) {

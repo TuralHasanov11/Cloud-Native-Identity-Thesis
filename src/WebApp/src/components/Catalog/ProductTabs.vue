@@ -18,5 +18,5 @@ const tabs = computed<TabsItem[]>(() => [
 </script>
 
 <template>
-    <UTabs :content="false" :items="tabs" class="w-full" />
+    <UTabs :unmount-on-hide="false" :items="tabs" class="w-full" />
 </template>

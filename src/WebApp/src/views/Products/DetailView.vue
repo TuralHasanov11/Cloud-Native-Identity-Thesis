@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 
-import useBasket from '@/composables/useBasket';
-import useCatalog from '@/composables/useCatalog';
 import type { BasketItem } from '@/types/basket';
 import { StockStatusEnum, type Product } from '@/types/catalog';
 import { computed, ref } from 'vue';
@@ -11,6 +9,8 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const { addToCart, isUpdatingCart } = useBasket();
 const { product, getProductById } = useCatalog()
+const { FALLBACK_IMG } = useHelpers();
+
 const slug = route.params.slug as string;
 const selectProductInput = computed<BasketItem>(() => ({
   productId: product.value?.id ?? '',
@@ -34,13 +34,13 @@ const stockStatus = computed<StockStatusEnum>(() => {
   return product.value != null && product.value.availableStock > 0 ? StockStatusEnum.IN_STOCK : StockStatusEnum.OUT_OF_STOCK;
 });
 const disabledAddToCart = computed(() => {
-  return product.value != null || stockStatus.value === StockStatusEnum.OUT_OF_STOCK || isUpdatingCart.value;
+  return product.value == null || stockStatus.value === StockStatusEnum.OUT_OF_STOCK || isUpdatingCart.value;
 });
 </script>
 
 <template>
   <DefaultLayout>
-    <main id="product" class="container relative py-6 xl:max-w-7xl">
+    <main id="product">
 
       <UContainer>
 
@@ -50,8 +50,7 @@ const disabledAddToCart = computed(() => {
           <div class="flex flex-col gap-10 md:flex-row md:justify-between lg:gap-24">
             <ProductImageGallery v-if="product.pictureUrl" class="relative flex-1" :main-image="product.pictureUrl"
               :gallery="[product.pictureUrl]" :product="product" />
-            <img v-else class="relative flex-1 skeleton" src="/images/placeholder.jpg"
-              :alt="product?.name || 'Product'" />
+            <img v-else class="relative flex-1 skeleton" :src="FALLBACK_IMG" :alt="product?.name || 'Product'" />
 
             <div class="lg:max-w-md xl:max-w-lg md:py-2 w-full">
               <div class="flex justify-between mb-4">
@@ -81,8 +80,9 @@ const disabledAddToCart = computed(() => {
               <form @submit.prevent="addToCart(selectProductInput)">
                 <div
                   class="fixed bottom-0 left-0 z-10 flex items-center w-full gap-4 p-4 mt-12 bg-white md:static md:bg-transparent bg-opacity-90 md:p-0">
-                  <input v-model="quantity" type="number" min="1" aria-label="Quantity"
-                    class="bg-white border rounded-lg flex text-left p-2.5 w-20 gap-4 items-center justify-center focus:outline-none">
+                  <UInput v-model="quantity" type="number" min="1" aria-label="Quantity"
+                    class="bg-white border rounded-lg flex text-left p-2.5 w-20 gap-4 items-center justify-center focus:outline-none" />
+
                   <AddToCartButton class="flex-1 w-full md:max-w-xs" :disabled="disabledAddToCart"
                     :class="{ loading: isUpdatingCart }" />
                 </div>

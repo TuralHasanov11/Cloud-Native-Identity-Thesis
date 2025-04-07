@@ -29,6 +29,13 @@ export const GUEST_CUSTOMER: Customer = {
   name: '',
   identityId: '',
   paymentMethods: [],
+  address: {
+    city: '',
+    country: '',
+    state: '',
+    street: '',
+    zipcode: '',
+  },
 }
 
 export const useCustomerStore = defineStore('customer', (): CustomerStore => {
