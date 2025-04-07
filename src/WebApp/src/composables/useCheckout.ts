@@ -2,16 +2,9 @@ import { ref } from 'vue'
 import useBasket from './useBasket'
 import useCustomer from './useCustomer'
 import useIdentity from './useIdentity'
-import { useRouter } from 'vue-router'
-import { useHelpers } from './useHelpers'
-import type { CardType } from '@/types/ordering'
+import type { CardType, CreateOrderRequest } from '@/types/ordering'
 import type { BasketCheckoutInfo } from '@/types/basket'
-
-interface OrderInput {
-  customerNote: string
-  paymentMethod: string
-  metaData?: { key: string; value: string }[]
-}
+import useOrdering from './useOrdering'
 
 const cardTypes = ref<CardType[]>([])
 
@@ -26,7 +19,7 @@ export default function useCheckout() {
     }
   }
 
-  async function processCheckout(checkoutInfo: BasketCheckoutInfo): Promise<void> {
+  async function processCheckout(checkoutInfo: BasketCheckoutInfo): Promise<boolean | void> {
     const { login, isGuest } = useIdentity()
 
     if (isGuest.value) {
@@ -34,76 +27,51 @@ export default function useCheckout() {
     }
 
     const { customer } = useCustomer()
+    const { user } = useIdentity()
 
     const { cart, emptyCart, deleteBasket } = useBasket()
+    const { createOrder } = useOrdering()
 
     isProcessingOrder.value = true
 
     console.log('processCheckout', checkoutInfo)
 
     try {
-      //   const checkoutPayload: CheckoutInput = {
-      //     billing,
-      //     shipping,
-      //     shippingMethod,
-      //     metaData: orderInput.value.metaData,
-      //     paymentMethod: orderInput.value.paymentMethod.id,
-      //     customerNote: orderInput.value.customerNote,
-      //     shipToDifferentAddress,
-      //     transactionId: orderInput.value.transactionId,
-      //     isPaid,
-      //   }
-      //   // Create account
-      //   if (orderInput.value.createAccount) {
-      //     checkoutPayload.account = { username, password } as CreateAccountInput
-      //   } else {
-      //     // Remove account from checkoutPayload if not creating account otherwise it will create an account anyway
-      //     checkoutPayload.account = null
-      //   }
-      //   const { checkout } = await GqlCheckout(checkoutPayload)
-      //   // Login user if account was created during checkout
-      //   if (orderInput.value.createAccount) {
-      //     await loginUser({ username, password })
-      //   }
-      //   const orderId = checkout?.order?.databaseId
-      //   const orderKey = checkout?.order?.orderKey
-      //   const orderInputPaymentId = orderInput.value.paymentMethod.id
-      //   const isPayPal = orderInputPaymentId === 'paypal' || orderInputPaymentId === 'ppcp-gateway'
-      //   // PayPal redirect
-      //   if ((await checkout?.redirect) && isPayPal) {
-      //     const frontEndUrl = window.location.origin
-      //     let redirectUrl = checkout?.redirect ?? ''
-      //     const payPalReturnUrl = `${frontEndUrl}/checkout/order-received/${orderId}/?key=${orderKey}&from_paypal=true`
-      //     const payPalCancelUrl = `${frontEndUrl}/checkout/?cancel_order=true&from_paypal=true`
-      //     redirectUrl = replaceQueryParam('return', payPalReturnUrl, redirectUrl)
-      //     redirectUrl = replaceQueryParam('cancel_return', payPalCancelUrl, redirectUrl)
-      //     redirectUrl = replaceQueryParam('bn', 'WooNuxt_Cart', redirectUrl)
-      //     const isPayPalWindowClosed = await openPayPalWindow(redirectUrl)
-      //     if (isPayPalWindowClosed) {
-      //       router.push(`/checkout/order-received/${orderId}/?key=${orderKey}&fetch_delay=true`)
-      //     }
-      //   } else {
-      //     router.push(`/checkout/order-received/${orderId}/?key=${orderKey}`)
-      //   }
-      //   if ((await checkout?.result) !== 'success') {
-      //     alert('There was an error processing your order. Please try again.')
-      //     window.location.reload()
-      //     return checkout
-      //   } else {
-      //     await emptyCart()
-      //     await deleteBasket()
-      //   }
-    } catch (error: any) {
-      //   const errorMessage = error?.gqlErrors?.[0].message
-      //   if (errorMessage?.includes('An account is already registered with your email address')) {
-      //     alert('An account is already registered with your email address')
-      //     return null
-      //   }
-      //   alert(errorMessage)
-      //   return null
-    }
+      const orderRequest: CreateOrderRequest = {
+        userId: user.value.id,
+        userName: user.value.name,
+        city: checkoutInfo.city,
+        country: checkoutInfo.country,
+        state: checkoutInfo.state,
+        street: checkoutInfo.street,
+        zipCode: checkoutInfo.zipcode,
+        customer: customer.value.id,
+        items: cart.value.items.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          productName: item.productName,
+          unitPrice: item.unitPrice,
+          oldUnitPrice: item.oldUnitPrice,
+          id: item.id,
+        })),
+        cardTypeId: checkoutInfo.cardTypeId,
+      }
 
-    isProcessingOrder.value = false
+      const orderResult = await createOrder(orderRequest)
+
+      if (orderResult) {
+        await emptyCart()
+        await deleteBasket()
+        return true
+      } else {
+        alert('There was an error processing your order. Please try again.')
+        return false
+      }
+    } catch (error: unknown) {
+      console.error('Error processing order:', error)
+      alert('There was an error processing your order. Please try again.')
+      return false
+    }
   }
 
   return {

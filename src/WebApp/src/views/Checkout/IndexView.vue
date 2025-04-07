@@ -3,10 +3,11 @@ import DefaultLayout from '@/layouts/DefaultLayout.vue'
 
 import { computed, onBeforeMount, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const { t } = useI18n();
 const { query } = useRoute();
+const router = useRouter();
 const { cart, isUpdatingCart, isEmpty: cartIsEmpty } = useBasket();
 const { isGuest } = useIdentity();
 const { customer } = useCustomer()
@@ -14,8 +15,6 @@ const { isProcessingOrder, processCheckout, getCardTypes } = useCheckout();
 
 const buttonText = ref<string>(isProcessingOrder.value ? t('messages.general.processing') : t('messages.shop.checkoutButton'));
 const isCheckoutDisabled = computed<boolean>(() => isProcessingOrder.value || isUpdatingCart.value);
-
-const isPaid = ref<boolean>(false);
 
 await getCardTypes()
 
@@ -26,13 +25,19 @@ onBeforeMount(async () => {
 const payNow = async () => {
   buttonText.value = t('messages.general.processing');
 
-  await processCheckout({
-    street: customer.value?.address?.street,
-    city: customer.value?.address?.city,
-    state: customer.value?.address?.state,
-    country: customer.value?.address?.country,
-    zipcode: customer.value?.address?.zipcode,
-    cardTypeId: 1 // TODO: get from API
+  if (customer.value.address) {
+    await processCheckout({
+      street: customer.value.address.street,
+      city: customer.value.address.city,
+      state: customer.value.address.state,
+      country: customer.value.address.country,
+      zipcode: customer.value.address.zipCode,
+      cardTypeId: 1, // TODO: get from API,
+    });
+  }
+
+  router.replace({
+    name: 'user-orders'
   });
 };
 

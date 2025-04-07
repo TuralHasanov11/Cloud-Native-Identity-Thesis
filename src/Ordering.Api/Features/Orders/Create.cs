@@ -15,7 +15,6 @@ public static class Create
         var orderStartedIntegrationEvent = new OrderStartedIntegrationEvent(request.UserId);
         await orderingIntegrationEventService.AddAndSaveEventAsync(orderStartedIntegrationEvent);
 
-
         var order = new Order(
             new IdentityId(request.UserId),
             request.UserName,

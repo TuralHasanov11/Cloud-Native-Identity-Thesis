@@ -9,7 +9,7 @@ import { useRoute } from "vue-router";
 
 const { params, name } = useRoute();
 const { order, getOrder, isGuest: customerIsGuest } = useCustomer();
-const { formatDate, formatPrice } = useHelpers();
+const { formatDate, formatPrice, FALLBACK_IMG } = useHelpers();
 
 const isLoaded = ref<boolean>(false);
 const errorMessage = ref("");
@@ -22,7 +22,6 @@ const orderIsNotCompleted = computed<boolean>(
       order.value?.status !== OrderStatus.AwaitingValidation.toString()) ||
     order.value?.status !== OrderStatus.Cancelled.toString()
 );
-// const hasDiscount = computed<boolean>(() => !!parseFloat(order.value?.di || '0'));
 
 await getOrder(params.id as string)
 
@@ -104,8 +103,8 @@ const refreshOrder = async () => {
                   <div v-for="item in order.orderItems" :key="item.productId"
                     class="flex items-center justify-between gap-8">
                     <RouterLink :to="`/products/${item.productId}`">
-                      <img class="w-16 h-16 rounded-xl" :src="item.pictureUrl || '/images/placeholder.png'"
-                        :alt="'Product image'" :title="'Product image'" width="64" height="64" loading="lazy" />
+                      <img class="w-16 h-16 rounded-xl" :src="item.pictureUrl || FALLBACK_IMG" :alt="'Product image'"
+                        :title="'Product image'" width="64" height="64" loading="lazy" />
                     </RouterLink>
 
                     <div class="text-sm text-gray-600">

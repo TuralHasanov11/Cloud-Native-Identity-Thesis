@@ -68,7 +68,7 @@ export type CreateOrderRequest = {
   zipCode: string
   cardTypeId: number
   customer: string
-  items: OrderItem[]
+  items: BasketItem[]
 }
 
 export type CancelOrderRequest = {
@@ -80,9 +80,8 @@ export type BasketItem = {
   productId: string
   productName: string
   unitPrice: number
-  oldUnitPrice: number
+  oldUnitPrice?: number
   quantity: number
-  pictureUrl: string
 }
 
 export interface Customer {
@@ -94,11 +93,11 @@ export interface Customer {
 }
 
 export type CustomerAddress = {
-  street?: string
-  city?: string
-  state?: string
-  country?: string
-  zipcode?: string
+  street: string
+  city: string
+  state: string
+  country: string
+  zipCode: string
 }
 
 export type PaymentMethod = {

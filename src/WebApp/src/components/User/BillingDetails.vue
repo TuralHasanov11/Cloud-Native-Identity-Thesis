@@ -40,7 +40,7 @@ const address = defineModel<CustomerAddress>('address', { required: true })
 
         <div class="w-full">
             <label for="zip">{{ $t('messages.billing.zip') }}</label>
-            <UInput id="zip" disabled v-model="address.zipcode" placeholder="10001" autocomplete="postal-code"
+            <UInput id="zip" disabled v-model="address.zipCode" placeholder="10001" autocomplete="postal-code"
                 type="text" required />
         </div>
     </div>

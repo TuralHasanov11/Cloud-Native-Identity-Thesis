@@ -3,6 +3,7 @@ export interface Cart {
 }
 
 export type BasketItem = {
+  id: string
   productId: string
   quantity: number
   productName: string
@@ -20,11 +21,10 @@ export type BasketGrpcItem = {
 }
 
 export type BasketCheckoutInfo = {
-  street?: string
-  city?: string
-  state?: string
-  country?: string
+  street: string
+  city: string
+  state: string
+  country: string
   cardTypeId: number
-  customer?: string
-  zipcode?: string
+  zipcode: string
 }

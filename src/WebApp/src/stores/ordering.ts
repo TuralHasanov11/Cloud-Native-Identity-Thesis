@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { shallowRef, type ShallowRef } from 'vue'
-import type { Customer, Order } from '@/types/ordering'
+import type { Customer, Order, OrderSummary } from '@/types/ordering'
 
 export const ORDER_NULL_OBJECT: Order = {
   orderNumber: '',
@@ -19,7 +19,7 @@ export const ORDER_NULL_OBJECT: Order = {
 export interface CustomerStore {
   customer: ShallowRef<Customer>
   order: ShallowRef<Order>
-  orders: ShallowRef<Order[]>
+  orders: ShallowRef<OrderSummary[]>
   getOrders: () => Promise<void>
   getOrder: (id: string) => Promise<void>
 }
@@ -34,20 +34,35 @@ export const GUEST_CUSTOMER: Customer = {
     country: '',
     state: '',
     street: '',
-    zipcode: '',
+    zipCode: '',
   },
 }
 
 export const useCustomerStore = defineStore('customer', (): CustomerStore => {
   const customer = shallowRef<Customer>(GUEST_CUSTOMER)
   const order = shallowRef<Order>(ORDER_NULL_OBJECT)
-  const orders = shallowRef<Order[]>([])
+  const orders = shallowRef<OrderSummary[]>([])
 
   async function getOrder(id: string): Promise<void> {
-    console.log(id)
+    try {
+      const { data } = await useBffFetch(`/api/ordering/orders/${id}`).json<Order>()
+
+      if (data.value) {
+        order.value = data.value
+      }
+    } catch (error) {
+      console.error('Error fetching order:', error)
+      order.value = ORDER_NULL_OBJECT
+    }
   }
 
-  async function getOrders(): Promise<void> {}
+  async function getOrders(): Promise<void> {
+    const { data } = await useBffFetch('/api/ordering/orders/user').json<OrderSummary[]>()
+
+    if (data.value) {
+      orders.value = data.value
+    }
+  }
 
   return {
     customer,
@@ -58,8 +73,9 @@ export const useCustomerStore = defineStore('customer', (): CustomerStore => {
   }
 })
 
-// export interface OrdersStore {}
+// export interface OrdersStore {
+// }
 
-// export const useOrdersStore = defineStore("orders", (): OrdersStore => {
-//   return {};
-// });
+// export const useOrdersStore = defineStore('orders', (): OrdersStore => {
+
+// })
