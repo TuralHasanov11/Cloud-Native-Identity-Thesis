@@ -26,19 +26,21 @@ const payNow = async () => {
   buttonText.value = t('messages.general.processing');
 
   if (customer.value.address) {
-    await processCheckout({
+    if (await processCheckout({
       street: customer.value.address.street,
       city: customer.value.address.city,
       state: customer.value.address.state,
       country: customer.value.address.country,
       zipcode: customer.value.address.zipCode,
       cardTypeId: 1, // TODO: get from API,
-    });
+    })) {
+      router.replace({
+        name: 'user-orders'
+      });
+    }
   }
 
-  router.replace({
-    name: 'user-orders'
-  });
+
 };
 
 

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 const { cart, toggleCart, isUpdatingCart, isEmpty, productCount, total } = useBasket();
+
+const { formatPrice } = useHelpers();
+
 </script>
 
 <template>
@@ -25,7 +28,7 @@ const { cart, toggleCart, isUpdatingCart, isEmpty, productCount, total } = useBa
                     class="block p-3 text-lg text-center text-white bg-gray-800 rounded-lg shadow-md justify-evenly hover:bg-gray-900"
                     to="/checkout" @click.prevent="toggleCart()">
                     <span class="mx-2">{{ $t('messages.shop.checkout') }}</span>
-                    <span>{{ total }}</span>
+                    <span>{{ formatPrice(total) }}</span>
 
                 </RouterLink>
             </div>

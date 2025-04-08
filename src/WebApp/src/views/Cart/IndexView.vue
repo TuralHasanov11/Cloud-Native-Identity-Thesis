@@ -3,7 +3,7 @@ import DefaultLayout from '@/layouts/DefaultLayout.vue';
 
 import useBasket from '@/composables/useBasket';
 
-const { cart, isUpdatingCart, getBasket, isEmpty, productCount, total } = useBasket();
+const { cart, isUpdatingCart, loadBasket: getBasket, isEmpty, productCount, total } = useBasket();
 
 await getBasket();
 </script>

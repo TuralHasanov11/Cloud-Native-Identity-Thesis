@@ -10,10 +10,10 @@ public static class ListByUser
         CancellationToken cancellationToken)
     {
         var user = identityService.GetUser();
-        var userId = user.GetUserId();
+        var userId = user?.GetUserId();
 
         var orders = await orderRepository.ListAsync(
-            new GetOrdersByCustomerIdSpecification(new IdentityId(userId)),
+            new GetOrdersByCustomerIdSpecification(new IdentityId(userId!)), // TODO: Handle null userId
             o => o.ToOrderSummary(),
             cancellationToken);
 

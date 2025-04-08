@@ -1,4 +1,4 @@
-import type { BasketGrpcItem, BasketItem, Cart } from '@/types/basket'
+import type { BasketGrpcItem, BasketItem, Cart, CustomerBasketResponse } from '@/types/basket'
 import { computed, ref, watch } from 'vue'
 
 export const DEFAULT_CART: Cart = {
@@ -29,19 +29,16 @@ const isUpdatingCoupon = ref<boolean>(false)
 export default function useBasket() {
   //   const paymentGateways = useState<PaymentGateways | null>('paymentGateways', () => null);
 
-  async function getBasket(): Promise<void> {
+  async function getBasket(): Promise<BasketGrpcItem[]> {
+    const { data } = await useBffFetch('/api/basket/basket').json<CustomerBasketResponse>()
+
+    return data.value?.items ?? []
+  }
+
+  async function loadBasket(): Promise<void> {
     try {
-      const loadedBasketItems: BasketGrpcItem[] = [
-        {
-          product_id: '01960006-6cba-7204-b49b-610d4ee8ab72',
-          quantity: 2,
-        },
-        {
-          product_id: '01960006-6cba-7117-81ca-678390987492',
-          quantity: 2,
-        },
-      ]
-      const productIds = loadedBasketItems.map((item) => item.product_id)
+      const loadedBasketItems: BasketGrpcItem[] = await getBasket()
+      const productIds = loadedBasketItems.map((item) => item.productId)
       const catalog = useCatalog()
 
       const products = await catalog.getProductsByIds(productIds)
@@ -50,7 +47,7 @@ export default function useBasket() {
       const basketItems: BasketItem[] = []
 
       loadedBasketItems.forEach((item) => {
-        const product = productMap.get(item.product_id)
+        const product = productMap.get(item.productId)
         if (product) {
           const updatedItem: BasketItem = {
             productId: product.id,
@@ -73,7 +70,7 @@ export default function useBasket() {
 
   async function deleteBasket(): Promise<boolean> {
     try {
-      // TODO: Delete the basket on the server
+      await useBffFetch('/api/basket/basket').delete()
       cart.value = DEFAULT_CART
       return true
     } catch (error: unknown) {
@@ -86,7 +83,16 @@ export default function useBasket() {
 
   async function updateBasket(): Promise<boolean> {
     try {
-      // TODO: Update the basket on the server
+      console.log(cart.value)
+      const items = cart.value.items.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      })) as BasketGrpcItem[]
+
+      await useBffFetch('/api/basket/basket').post({
+        items,
+      })
+
       return true
     } catch (error: unknown) {
       console.error('Error updating basket:', error)
@@ -108,7 +114,7 @@ export default function useBasket() {
     isUpdatingCart.value = true
 
     try {
-      await getBasket()
+      await loadBasket()
 
       const currentItem = cart.value.items.find((i) => i.productId === item.productId)
       if (currentItem) {
@@ -136,7 +142,7 @@ export default function useBasket() {
     isUpdatingCart.value = true
 
     try {
-      await getBasket()
+      await loadBasket()
 
       const currentItem = cart.value.items.find((i) => i.productId === productId)
 
@@ -150,7 +156,7 @@ export default function useBasket() {
         await updateBasket()
       }
 
-      if (!isShowingCart.value) toggleCart(true)
+      // if (!isShowingCart.value) toggleCart(true)
     } catch (error: unknown) {
       console.error('Error adding item to cart:', error)
       isUpdatingCart.value = false
@@ -185,7 +191,7 @@ export default function useBasket() {
     deleteBasket,
     updateBasket,
     totalQuantity,
-    getBasket,
+    loadBasket,
     isEmpty,
     productCount,
     total,

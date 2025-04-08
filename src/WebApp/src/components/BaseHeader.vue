@@ -7,7 +7,7 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 
-const { getBasket } = useBasket();
+const { loadBasket: getBasket } = useBasket();
 const { login, logout, user } = useIdentity();
 
 await getBasket()

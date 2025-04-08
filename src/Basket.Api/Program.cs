@@ -1,5 +1,5 @@
 using Basket.Api.Extensions;
-using Basket.Api.Features.Basket;
+using Basket.Api.Features;
 using Serilog;
 using ServiceDefaults.Middleware;
 
@@ -16,7 +16,7 @@ try
     builder.Host.UseDefaultServiceProvider(config => config.ValidateOnBuild = true);
     builder.WebHost.UseKestrel(options => options.AddServerHeader = false);
 
-    builder.AddBasicServiceDefaults();
+    builder.AddServiceDefaults();
     builder.AddApplicationServices();
 
     builder.Services.AddGrpc();
@@ -55,7 +55,8 @@ try
 
     app.MapDefaultEndpoints();
 
-    app.MapGrpcService<BasketService>();
+    //app.MapGrpcService<BasketService>();
+    app.MapBasketEndpoints();
 
     app.UseDefaultOpenApi();
 

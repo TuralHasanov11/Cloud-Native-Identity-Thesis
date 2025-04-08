@@ -3,7 +3,6 @@ export interface Cart {
 }
 
 export type BasketItem = {
-  id: string
   productId: string
   quantity: number
   productName: string
@@ -12,12 +11,16 @@ export type BasketItem = {
 }
 
 export type UpdateBasketRequest = {
-  items: BasketItem[]
+  items: BasketGrpcItem[]
 }
 
 export type BasketGrpcItem = {
-  product_id: string
+  productId: string
   quantity: number
+}
+
+export type CustomerBasketResponse = {
+  items: BasketGrpcItem[]
 }
 
 export type BasketCheckoutInfo = {

@@ -23,9 +23,8 @@ watch(isUpdatingCart, () => {
 <template>
   <UButton type="submit"
     class="rounded-lg flex font-bold bg-gray-800 text-white text-center min-w-[150px] p-2.5 gap-4 items-center justify-center focus:outline-none"
-    :class="{ disabled: 'cursor-not-allowed bg-gray-400' }" :disabled="disabled" @click="isLoading = true">
+    :disabled="disabled" @click="isLoading = true">
     <span>{{ addToCartButtonText }}</span>
-    <LoadingIcon v-if="isLoading" stroke="4" size="12" color="#fff" />
   </UButton>
 </template>
 

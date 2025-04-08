@@ -67,10 +67,6 @@ const disabledAddToCart = computed(() => {
                   <span class="text-gray-400">{{ $t('messages.shop.availability') }}: </span>
                   <StockStatus :stock-status="stockStatus" @updated="mergeLiveStockStatus" />
                 </div>
-                <!-- <div v-if="storeSettings.showSKU && product.sku" class="flex items-center gap-2">
-          <span class="text-gray-400">{{ $t('messages.shop.sku') }}: </span>
-          <span>{{ product.sku || 'N/A' }}</span>
-        </div> -->
               </div>
 
               <div class="mb-8 font-light prose">{{ product.description }}</div>
@@ -83,8 +79,7 @@ const disabledAddToCart = computed(() => {
                   <UInput v-model="quantity" type="number" min="1" aria-label="Quantity"
                     class="bg-white border rounded-lg flex text-left p-2.5 w-20 gap-4 items-center justify-center focus:outline-none" />
 
-                  <AddToCartButton class="flex-1 w-full md:max-w-xs" :disabled="disabledAddToCart"
-                    :class="{ loading: isUpdatingCart }" />
+                  <AddToCartButton class="flex-1 w-full md:max-w-xs" :disabled="disabledAddToCart" />
                 </div>
               </form>
 
@@ -107,10 +102,6 @@ const disabledAddToCart = computed(() => {
           <div v-if="product.description" class="my-32">
             <ProductTabs :product />
           </div>
-          <!-- <div v-if="product.related && storeSettings.showRelatedProducts" class="my-32">
-    <div class="mb-4 text-xl font-semibold">{{ $t('messages.shop.youMayLike') }}</div>
-    <ProductRow :products="product.related.nodes" class="grid-cols-2 md:grid-cols-4 lg:grid-cols-5" />
-  </div> -->
         </div>
       </UContainer>
 

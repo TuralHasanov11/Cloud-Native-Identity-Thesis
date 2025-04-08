@@ -52,7 +52,6 @@ export default function useCheckout() {
           productName: item.productName,
           unitPrice: item.unitPrice,
           oldUnitPrice: item.oldUnitPrice,
-          id: item.id,
         })),
         cardTypeId: checkoutInfo.cardTypeId,
       }
@@ -71,6 +70,8 @@ export default function useCheckout() {
       console.error('Error processing order:', error)
       alert('There was an error processing your order. Please try again.')
       return false
+    } finally {
+      isProcessingOrder.value = false
     }
   }
 

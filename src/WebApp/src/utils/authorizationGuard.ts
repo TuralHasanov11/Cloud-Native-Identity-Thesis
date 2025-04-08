@@ -17,7 +17,8 @@ const guard = async (
   if (toRouteMeta.requireRole && !hasRole(toRouteMeta.requireRole)) {
     return next({ name: 'home' })
   } else if (toRouteMeta.requireAuth === true && isAuthenticated.value === false) {
-    return login()
+    login()
+    return next({ name: 'home' })
   } else {
     return next()
   }
