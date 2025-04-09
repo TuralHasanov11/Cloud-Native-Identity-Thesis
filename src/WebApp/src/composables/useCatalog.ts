@@ -20,11 +20,15 @@ export default function useCatalog() {
     try {
       const params = new URLSearchParams()
       ids.forEach((id) => params.append('ids', id))
+      const query = params.toString()
+      if (query) {
+        const { data } = await useBffFetch<Product[]>(
+          `/api/catalog/products/by?${params.toString()}`,
+        ).json<Product[]>()
+        return data.value || []
+      }
 
-      const { data } = await useBffFetch<Product[]>(
-        `/api/catalog/products/by?${params.toString()}`,
-      ).json<Product[]>()
-      return data.value || []
+      return []
     } catch (error) {
       console.error('Error fetching products by IDs:', error)
       return []

@@ -8,7 +8,7 @@ import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
 const { params, name } = useRoute();
-const { order, getOrder, isGuest: customerIsGuest } = useCustomer();
+const { order, getOrder } = useCustomer();
 const { formatDate, formatPrice, FALLBACK_IMG } = useHelpers();
 
 const isLoaded = ref<boolean>(false);
@@ -68,7 +68,7 @@ const refreshOrder = async () => {
               </template>
               <hr class="my-8">
             </div>
-            <div v-if="order && !customerIsGuest" class="flex-1 w-full">
+            <div v-if="order" class="flex-1 w-full">
               <div class="flex items-start justify-between">
                 <div class="w-[21%]">
                   <div class="mb-2 text-xs text-gray-400 uppercase">
@@ -86,13 +86,12 @@ const refreshOrder = async () => {
                   <div class="mb-2 text-xs text-gray-400 uppercase">
                     {{ $t("messages.general.status") }}
                   </div>
-                  <OrderStatusLabel :order="order" />
+                  <OrderStatusLabel :status="order.status" />
                 </div>
                 <div class="w-[21%]">
                   <div class="mb-2 text-xs text-gray-400 uppercase">
                     {{ $t("messages.general.paymentMethod") }}
                   </div>
-                  <!-- <div class="leading-none">{{ order.paymentMethodTitle }}</div> -->
                 </div>
               </div>
 
@@ -120,22 +119,7 @@ const refreshOrder = async () => {
               <hr class="my-8">
 
               <div>
-                <!-- <div class="flex justify-between">
-            <span>{{ $t("messages.shop.subtotal") }}</span>
-            <span>{{ order.subtotal }}</span>
-          </div>
-          <div class="flex justify-between">
-            <span>{{ $t("messages.general.tax") }}</span>
-            <span>{{ order.totalTax }}</span>
-          </div>
-          <div class="flex justify-between">
-            <span>{{ $t("messages.general.shipping") }}</span>
-            <span>{{ order.shippingTotal }}</span>
-          </div>
-          <div v-if="hasDiscount" class="flex justify-between text-primary">
-            <span>{{ $t("messages.shop.discount") }}</span>
-            <span>- {{ order.discountTotal }}</span>
-          </div> -->
+
                 <hr class="my-8">
                 <div class="flex justify-between">
                   <span class>{{ $t("messages.shop.total") }}</span>

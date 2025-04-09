@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import DefaultLayout from '@/layouts/DefaultLayout.vue'
+import DefaultLayout from '@/layouts/DefaultLayout.vue';
 
 import useBasket from "@/composables/useBasket";
-import useCustomer from "@/composables/useCustomer";
 import useIdentity from "@/composables/useIdentity";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
@@ -10,11 +9,10 @@ import { useRoute } from "vue-router";
 const { user, logout } = useIdentity();
 
 const { cart } = useBasket();
-const { customer } = useCustomer();
 const route = useRoute();
 
 const activeTab = computed(() => route.query.tab || "my-details");
-const showLoader = computed(() => !cart.value && !customer.value);
+const showLoader = computed(() => !cart.value);
 
 </script>
 

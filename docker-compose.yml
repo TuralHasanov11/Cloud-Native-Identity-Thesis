@@ -79,7 +79,7 @@ services:
   #   depends_on:
   #   - rabbitmq
   #   - ordering.postgres
-  #  networks:
+  #   networks:
   #    - thesis-net
 
   ordering.postgres:

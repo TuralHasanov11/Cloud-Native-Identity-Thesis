@@ -1,13 +1,14 @@
-﻿using Basket.Api.Features.Basket;
-using ServiceDefaults.Identity;
+﻿using ServiceDefaults.Identity;
 
 namespace Basket.Api.Features;
 
 public static class Endpoints
 {
-    public static IEndpointRouteBuilder MapBasketEndpoints(this IEndpointRouteBuilder api)
+    public static IEndpointRouteBuilder MapBasketEndpoints(this IEndpointRouteBuilder app)
     {
-        api.MapGet("/api/basket", async (IBasketRepository repository, IIdentityService identityService) =>
+        var api = app.MapGroup("api");
+
+        api.MapGet("basket", async (IIdentityService identityService, IBasketRepository repository) =>
         {
             var user = identityService.GetUser();
             var userId = user?.GetUserId();
@@ -32,7 +33,7 @@ public static class Endpoints
         .Produces(StatusCodes.Status401Unauthorized)
         .Produces(StatusCodes.Status404NotFound);
 
-        api.MapPost("/api/basket", async (UpdateBasketRequest request, IBasketRepository repository, IIdentityService identityService) =>
+        api.MapPost("basket", async (UpdateBasketRequest request, IBasketRepository repository, IIdentityService identityService) =>
         {
             var user = identityService.GetUser();
             var userId = user?.GetUserId();
@@ -58,7 +59,7 @@ public static class Endpoints
         .Produces(StatusCodes.Status401Unauthorized)
         .Produces(StatusCodes.Status404NotFound);
 
-        api.MapDelete("/api/basket", async (IBasketRepository repository, IIdentityService identityService) =>
+        api.MapDelete("basket", async (IBasketRepository repository, IIdentityService identityService) =>
         {
             var user = identityService.GetUser();
             var userId = user?.GetUserId();
@@ -71,7 +72,7 @@ public static class Endpoints
         .Produces(StatusCodes.Status204NoContent)
         .Produces(StatusCodes.Status401Unauthorized);
 
-        return api;
+        return app;
     }
 
     private static CustomerBasketResponse MapToCustomerBasketResponse(CustomerBasket customerBasket)

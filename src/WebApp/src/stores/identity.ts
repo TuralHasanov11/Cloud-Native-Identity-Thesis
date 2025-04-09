@@ -8,6 +8,13 @@ export const GUEST_USER: User = {
   id: '',
   name: 'Guest',
   email: '',
+  address: {
+    city: '',
+    country: '',
+    state: '',
+    street: '',
+    zipCode: '',
+  },
   //   roles: [],
 }
 

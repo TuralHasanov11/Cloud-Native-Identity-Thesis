@@ -15,7 +15,7 @@ public static class UserInfo
             return TypedResults.Ok(UserInfoDto.Guest);
         }
 
-        var userInfo = new UserInfoDto(user.GetUserId(), user.GetUserName());
+        var userInfo = new UserInfoDto(user.GetUserId(), user.GetUserName(), AddressExtensions.ToAddress(user.GetAddress()));
 
         return TypedResults.Ok(userInfo);
     }

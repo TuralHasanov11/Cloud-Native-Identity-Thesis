@@ -10,7 +10,7 @@ const { query } = useRoute();
 const router = useRouter();
 const { cart, isUpdatingCart, isEmpty: cartIsEmpty } = useBasket();
 const { isGuest } = useIdentity();
-const { customer } = useCustomer()
+const { user } = useIdentity()
 const { isProcessingOrder, processCheckout, getCardTypes } = useCheckout();
 
 const buttonText = ref<string>(isProcessingOrder.value ? t('messages.general.processing') : t('messages.shop.checkoutButton'));
@@ -25,13 +25,13 @@ onBeforeMount(async () => {
 const payNow = async () => {
   buttonText.value = t('messages.general.processing');
 
-  if (customer.value.address) {
+  if (user.value.address) {
     if (await processCheckout({
-      street: customer.value.address.street,
-      city: customer.value.address.city,
-      state: customer.value.address.state,
-      country: customer.value.address.country,
-      zipcode: customer.value.address.zipCode,
+      street: user.value.address.street,
+      city: user.value.address.city,
+      state: user.value.address.state,
+      country: user.value.address.country,
+      zipcode: user.value.address.zipCode,
       cardTypeId: 1, // TODO: get from API,
     })) {
       router.replace({
@@ -51,7 +51,7 @@ const payNow = async () => {
     <main id="checkout" class="py-5">
       <UContainer>
         <div class="flex flex-col min-h-[600px]">
-          <template v-if="cart && customer">
+          <template v-if="cart">
             <div v-if="cartIsEmpty" class="flex flex-col items-center justify-center flex-1 mb-12">
               <UIcon name="ion:cart-outline" size="156" class="opacity-25 mb-5" />
               <h2 class="text-2xl font-bold mb-2">{{ $t('messages.shop.cartEmpty') }}</h2>
@@ -74,7 +74,7 @@ const payNow = async () => {
 
                 <div>
                   <h2 class="w-full mb-3 text-2xl font-semibold">{{ $t('messages.billing.billingDetails') }}</h2>
-                  <BillingDetails v-if="customer.address" v-model:address="customer.address" />
+                  <BillingDetails v-if="user.address" v-model:address="user.address" />
                 </div>
 
               </div>

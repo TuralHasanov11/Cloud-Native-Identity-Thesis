@@ -1,5 +1,6 @@
 using Basket.Api.Extensions;
 using Basket.Api.Features;
+using Basket.Api.Features.Basket;
 using Serilog;
 using ServiceDefaults.Middleware;
 
@@ -55,7 +56,7 @@ try
 
     app.MapDefaultEndpoints();
 
-    //app.MapGrpcService<BasketService>();
+    app.MapGrpcService<BasketService>();
     app.MapBasketEndpoints();
 
     app.UseDefaultOpenApi();

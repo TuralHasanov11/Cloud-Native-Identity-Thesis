@@ -12,17 +12,19 @@ public static class Extensions
     {
         builder.AddDefaultAuthentication();
 
-        builder.Services.AddHttpContextAccessor();
-        builder.Services.AddTransient<IIdentityService, IdentityService>();
 
         builder.Services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = builder.Configuration.GetConnectionString("Redis");
         });
 
-        builder.Services.AddHybridCache();
+        builder.Services.AddDistributedMemoryCache();
+        //builder.Services.AddHybridCache();
 
-        builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddTransient<IIdentityService, IdentityService>();
+
+        builder.Services.AddSingleton<IBasketRepository, BasketRepository>();
 
         builder.ConfigureEventBus();
 

@@ -149,8 +149,7 @@ namespace Ordering.Infrastructure.Data.Migrations
                     Discount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     Units = table.Column<int>(type: "integer", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
-                    OrderId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -161,11 +160,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                         principalTable: "orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_order_items_orders_OrderId1",
-                        column: x => x.OrderId1,
-                        principalTable: "orders",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -183,11 +177,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                 name: "IX_order_items_OrderId",
                 table: "order_items",
                 column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_order_items_OrderId1",
-                table: "order_items",
-                column: "OrderId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_orders_CustomerId",

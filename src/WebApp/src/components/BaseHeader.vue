@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import useBasket from "@/composables/useBasket";
-import useIdentity from "@/composables/useIdentity";
 import type { NavigationMenuItem } from "@nuxt/ui";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -10,7 +8,9 @@ const route = useRoute();
 const { loadBasket: getBasket } = useBasket();
 const { login, logout, user } = useIdentity();
 
-await getBasket()
+onMounted(async () => {
+  await getBasket();
+})
 
 const items = computed<NavigationMenuItem[][]>(() => [
   [

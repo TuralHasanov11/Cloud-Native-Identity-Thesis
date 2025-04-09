@@ -38,7 +38,7 @@ const goToOrder = (orderNumber: string): void => {
             <td class="rounded-l-lg">{{ order.orderNumber }}</td>
             <td>{{ formatDate(order.date) }}</td>
             <td>
-              <OrderStatusLabel v-if="order.status" :order="order" />
+              <OrderStatusLabel v-if="order.status" :status="order.status" />
             </td>
             <td class="text-right rounded-r-lg">{{ order.total }}</td>
           </tr>

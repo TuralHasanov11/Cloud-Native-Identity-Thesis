@@ -88,15 +88,6 @@ export interface Customer {
   name: string
   identityId: string
   paymentMethods: PaymentMethod[]
-  address?: CustomerAddress
-}
-
-export type CustomerAddress = {
-  street: string
-  city: string
-  state: string
-  country: string
-  zipCode: string
 }
 
 export type PaymentMethod = {

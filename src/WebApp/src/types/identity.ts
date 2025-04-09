@@ -4,6 +4,15 @@ export type User = {
   email: string
 
   roles?: string[]
+  address: Address
+}
+
+export type Address = {
+  street: string
+  city: string
+  state: string
+  country: string
+  zipCode: string
 }
 
 //   export type Role = {

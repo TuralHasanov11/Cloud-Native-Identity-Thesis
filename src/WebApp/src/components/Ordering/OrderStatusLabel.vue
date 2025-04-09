@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { OrderStatus, type Order } from '@/types/ordering'
-import { computed } from 'vue'
+import { OrderStatus } from '@/types/ordering';
+import { computed } from 'vue';
 
-const props = defineProps<{ order: Order }>()
+const props = defineProps<{ status: string }>()
 
 const orderStatus = computed<string>(() => {
-  switch (props.order?.status) {
+  switch (props.status) {
     case OrderStatus.Shipped.toString():
     case OrderStatus.Paid.toString():
       return 'bg-green-50 border-green-100 text-green-600'
@@ -24,6 +24,6 @@ const orderStatus = computed<string>(() => {
 
 <template>
   <span :class="orderStatus"
-    class="border rounded-md font-semibold bg-gray-100 text-xs leading-none p-1.5 inline-block">{{ order.status
+    class="border rounded-md font-semibold bg-gray-100 text-xs leading-none p-1.5 inline-block">{{ status
     }}</span>
 </template>

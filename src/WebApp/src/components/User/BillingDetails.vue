@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import type { CustomerAddress } from '@/types/ordering';
+import type { Address } from '@/types/identity';
+
 
 const { user } = useIdentity()
-const address = defineModel<CustomerAddress>('address', { required: true })
+const address = defineModel<Address>('address', { required: true })
 
 </script>
 

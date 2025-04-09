@@ -18,7 +18,7 @@ namespace Ordering.Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -227,9 +227,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("OrderId1")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("PictureUrl")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -252,8 +249,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("OrderId1");
 
                     b.ToTable("order_items", (string)null);
                 });
@@ -329,14 +324,10 @@ namespace Ordering.Infrastructure.Data.Migrations
             modelBuilder.Entity("Ordering.Core.OrderAggregate.OrderItem", b =>
                 {
                     b.HasOne("Ordering.Core.OrderAggregate.Order", null)
-                        .WithMany()
+                        .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Ordering.Core.OrderAggregate.Order", null)
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId1");
                 });
 
             modelBuilder.Entity("Ordering.Core.CustomerAggregate.Customer", b =>
