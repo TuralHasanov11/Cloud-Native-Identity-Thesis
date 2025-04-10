@@ -81,12 +81,9 @@ namespace Ordering.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Alias = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    CardNumber = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
-                    SecurityNumber = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    CardHolderName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    ExpirationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CardTypeId = table.Column<int>(type: "integer", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uuid", nullable: true)
+                    CustomerId = table.Column<Guid>(type: "uuid", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -149,7 +146,8 @@ namespace Ordering.Infrastructure.Data.Migrations
                     Discount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     Units = table.Column<int>(type: "integer", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    OrderId = table.Column<Guid>(type: "uuid", nullable: false)
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {

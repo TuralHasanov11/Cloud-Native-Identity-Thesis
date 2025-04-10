@@ -23,5 +23,5 @@ function onChangeLanguage(payload: Event) {
 </script>
 
 <template>
-  <USelect :items="languages" v-model="locale" class="w-48" @change="onChangeLanguage" />
+  <USelect :items="languages" v-model="locale" class="w-48 mb-5" @change="onChangeLanguage" />
 </template>

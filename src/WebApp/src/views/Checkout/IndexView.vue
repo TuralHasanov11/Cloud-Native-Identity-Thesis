@@ -82,7 +82,6 @@ const payNow = async () => {
               <OrderSummary>
                 <UButton type="submit" :disabled="isCheckoutDisabled">
                   {{ buttonText }}
-                  <LoadingIcon v-if="isProcessingOrder" color="#fff" size="18" />
                 </UButton>
               </OrderSummary>
             </form>

@@ -18,6 +18,8 @@ const selectProductInput = computed<BasketItem>(() => ({
   productName: product.value?.name ?? '',
   unitPrice: product.value?.price ?? 0,
   oldUnitPrice: product.value?.price,
+  pictureUrl: product.value?.pictureUrl ?? FALLBACK_IMG,
+  id: product.value?.id ?? '',
 }));
 
 await getProductById(slug);

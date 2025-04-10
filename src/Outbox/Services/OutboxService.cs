@@ -29,11 +29,12 @@ public class OutboxService<TContext> : IOutboxService, IDisposable
 
     public Task SaveEventAsync(IntegrationEvent message, IDbContextTransaction transaction)
     {
-        ArgumentNullException.ThrowIfNull(transaction);
+        //ArgumentNullException.ThrowIfNull(transaction);
 
-        var eventLogEntry = new OutboxMessage(message, DateTime.UtcNow, transaction.TransactionId);
+        //var eventLogEntry = new OutboxMessage(message, DateTime.UtcNow, transaction.TransactionId);
+        var eventLogEntry = new OutboxMessage(message, DateTime.UtcNow, Guid.NewGuid());
 
-        _context.Database.UseTransaction(transaction.GetDbTransaction());
+        //_context.Database.UseTransaction(transaction.GetDbTransaction());
         _context.Set<OutboxMessage>().Add(eventLogEntry);
 
         return _context.SaveChangesAsync();

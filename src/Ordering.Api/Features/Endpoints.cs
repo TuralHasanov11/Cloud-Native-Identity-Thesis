@@ -1,6 +1,4 @@
-﻿using Ordering.Core.Identity;
-
-namespace Ordering.Api.Features;
+﻿namespace Ordering.Api.Features;
 
 public static class Endpoints
 {

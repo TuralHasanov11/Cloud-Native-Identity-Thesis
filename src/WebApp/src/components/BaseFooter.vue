@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <section id="footer">
+  <section id="footer" class="py-5">
     <UContainer>
       <LanguageSwitcher />
       <p class="text-(--ui-text-muted) text-sm">

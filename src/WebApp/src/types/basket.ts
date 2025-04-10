@@ -3,11 +3,13 @@ export interface Cart {
 }
 
 export type BasketItem = {
+  id: string
   productId: string
-  quantity: number
   productName: string
   unitPrice: number
   oldUnitPrice?: number
+  quantity: number
+  pictureUrl: string
 }
 
 export type UpdateBasketRequest = {

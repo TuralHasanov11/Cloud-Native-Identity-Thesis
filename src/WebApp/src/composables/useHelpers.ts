@@ -1,3 +1,7 @@
+import { ref } from 'vue'
+
+const isShowingMobileMenu = ref<boolean>(false)
+
 export function useHelpers() {
   const isDev: boolean = process.env.NODE_ENV === 'development'
   const FALLBACK_IMG = '/images/placeholder.jpg'
@@ -9,6 +13,10 @@ export function useHelpers() {
       day: 'numeric',
       year: 'numeric',
     })
+  }
+
+  function toggleMobileMenu(state: boolean | undefined = undefined): void {
+    isShowingMobileMenu.value = state ?? !isShowingMobileMenu.value
   }
 
   const formatPrice = (price: number): string =>
@@ -46,5 +54,7 @@ export function useHelpers() {
     removeBodyClass,
     addBodyClass,
     toggleBodyClass,
+    isShowingMobileMenu,
+    toggleMobileMenu,
   }
 }

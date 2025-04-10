@@ -25,10 +25,6 @@ public class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler(
         customer.VerifyOrAddPaymentMethod(
             cardTypeId,
             $"Payment Method on {DateTime.UtcNow}",
-            domainEvent.CardNumber,
-            domainEvent.CardSecurityNumber,
-            domainEvent.CardHolderName,
-            domainEvent.CardExpiration,
             domainEvent.Order.Id);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);

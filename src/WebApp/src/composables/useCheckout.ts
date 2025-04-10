@@ -1,9 +1,8 @@
+import type { BasketCheckoutInfo } from '@/types/basket'
+import type { CardType, CreateOrderRequest } from '@/types/ordering'
 import { ref } from 'vue'
 import useBasket from './useBasket'
-import useCustomer from './useCustomer'
 import useIdentity from './useIdentity'
-import type { CardType, CreateOrderRequest } from '@/types/ordering'
-import type { BasketCheckoutInfo } from '@/types/basket'
 import useOrdering from './useOrdering'
 
 const cardTypes = ref<CardType[]>([])
@@ -26,7 +25,6 @@ export default function useCheckout() {
       return login()
     }
 
-    const { customer } = useCustomer()
     const { user } = useIdentity()
 
     const { cart, emptyCart, deleteBasket } = useBasket()
@@ -45,13 +43,15 @@ export default function useCheckout() {
         state: checkoutInfo.state,
         street: checkoutInfo.street,
         zipCode: checkoutInfo.zipcode,
-        customer: customer.value.id,
+        customer: user.value.id,
         items: cart.value.items.map((item) => ({
           productId: item.productId,
           quantity: item.quantity,
           productName: item.productName,
           unitPrice: item.unitPrice,
-          oldUnitPrice: item.oldUnitPrice,
+          oldUnitPrice: item.oldUnitPrice || 0,
+          id: item.id,
+          pictureUrl: item.pictureUrl,
         })),
         cardTypeId: checkoutInfo.cardTypeId,
       }

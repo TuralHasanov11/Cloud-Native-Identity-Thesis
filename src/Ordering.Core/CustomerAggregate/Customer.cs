@@ -18,14 +18,10 @@ public sealed class Customer : EntityBase<CustomerId>, IAggregateRoot
     public PaymentMethod VerifyOrAddPaymentMethod(
         int cardTypeId,
         string alias,
-        string cardNumber,
-        string securityNumber,
-        string cardHolderName,
-        DateTime expiration,
         OrderId orderId)
     {
         var existingPayment = PaymentMethods
-            .FirstOrDefault(p => p.IsEqualTo(cardTypeId, cardNumber, expiration));
+            .FirstOrDefault(p => p.IsEqualTo(cardTypeId));
 
         if (existingPayment != null)
         {
@@ -34,7 +30,7 @@ public sealed class Customer : EntityBase<CustomerId>, IAggregateRoot
             return existingPayment;
         }
 
-        var payment = new PaymentMethod(cardTypeId, alias, cardNumber, securityNumber, cardHolderName, expiration);
+        var payment = new PaymentMethod(cardTypeId, alias);
 
         PaymentMethods.Add(payment);
 

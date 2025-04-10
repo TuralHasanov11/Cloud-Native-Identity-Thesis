@@ -8,10 +8,6 @@ public sealed record CreateOrderRequest(
     string State,
     string Country,
     string ZipCode,
-    string CardNumber,
-    string CardHolderName,
-    DateTime CardExpiration,
-    string CardSecurityNumber,
     int CardTypeId,
     Guid Customer,
     IReadOnlyCollection<BasketItemDto> Items);

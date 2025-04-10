@@ -10,10 +10,10 @@ await getBrands()
 <template>
   <DefaultLayout>
     <main id="home">
-      <UContainer>
-        <HeroBanner />
+      <HeroBanner />
 
-        <section class="container my-16">
+      <UContainer>
+        <section class="my-16">
           <div class="flex items-end justify-between">
             <h2 class="text-lg font-semibold md:text-2xl">{{ $t('messages.shop.shopByCategory') }}</h2>
             <RouterLink class="text-primary" to="/categories">{{ $t('messages.general.viewAll') }}</RouterLink>

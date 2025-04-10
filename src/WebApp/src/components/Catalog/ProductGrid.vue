@@ -15,7 +15,7 @@ defineProps<{ products: Product[] }>();
       </TransitionGroup>
       <!-- <Pagination /> -->
     </section>
-    <!-- <NoProductsFound v-else /> -->
+    <NoProductsFound v-else />
   </Transition>
 </template>
 

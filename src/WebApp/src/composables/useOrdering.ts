@@ -1,17 +1,21 @@
+import { HttpStatusCode } from '@/types/common'
 import type { CreateOrderRequest } from '@/types/ordering'
 
 export default function useOrdering() {
   async function createOrder(request: CreateOrderRequest): Promise<boolean> {
-    console.log('createOrder', request)
-    return false
-    // try {
-    //   await useBffFetch('api/ordering/orders').post(request)
+    try {
+      const { statusCode, data } = await useBffFetch('api/ordering/orders').post(request)
 
-    //   return true
-    // } catch (error) {
-    //   console.error('Error creating order:', error)
-    //   return false
-    // }
+      if (statusCode.value === HttpStatusCode.OK) {
+        return true
+      }
+
+      console.error('Error creating order:', data.value)
+      return false
+    } catch (error) {
+      console.error('Error creating order:', error)
+      return false
+    }
   }
 
   return {

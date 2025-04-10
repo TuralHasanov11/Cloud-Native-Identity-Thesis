@@ -9,9 +9,6 @@ public static class Create
         ILogger<CreateOrderRequest> logger,
         CancellationToken cancellationToken)
     {
-        var _ = request.CardNumber[^4..]
-            .PadLeft(request.CardNumber.Length, 'X'); // TODO: Unused variable
-
         var orderStartedIntegrationEvent = new OrderStartedIntegrationEvent(request.UserId);
         await orderingIntegrationEventService.AddAndSaveEventAsync(orderStartedIntegrationEvent);
 
@@ -20,10 +17,7 @@ public static class Create
             request.UserName,
             new Address(request.Street, request.City, request.State, request.Country, request.ZipCode),
             request.CardTypeId,
-            request.CardNumber,
-            request.CardSecurityNumber,
-            request.CardHolderName,
-            request.CardExpiration);
+            customerId: new CustomerId(request.Customer));
 
         foreach (var item in request.Items.ToOrderItemsDto())
         {

@@ -54,6 +54,9 @@ export default function useBasket() {
             productName: product.name,
             unitPrice: product.price,
             quantity: item.quantity,
+            oldUnitPrice: 0,
+            pictureUrl: product.pictureUrl ?? '',
+            id: product.id,
           }
 
           basketItems.push(updatedItem)

@@ -76,11 +76,13 @@ export type CancelOrderRequest = {
 }
 
 export type BasketItem = {
+  id: string
   productId: string
   productName: string
   unitPrice: number
   oldUnitPrice?: number
   quantity: number
+  pictureUrl: string
 }
 
 export interface Customer {
