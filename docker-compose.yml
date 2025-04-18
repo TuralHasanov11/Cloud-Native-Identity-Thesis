@@ -186,30 +186,18 @@ services:
     networks:
       - thesis-net
 
-  # webapp:
-  #   image: ${DOCKER_REGISTRY-}webapp
-  #   container_name: webapp
-  #   build:
-  #     context: .
-  #     dockerfile: src/WebApp/Dockerfile
-  #   ports:
-  #   - 8082:80
-  #   networks:
-  #     - thesis-net
-  #   environment:
-  #     VITE_API_URI: "https://webapp.bff:5113"
-
-  # nginx:
-  #   image: nginx:alpine
-  #   container_name: nginx-app
-  #   volumes:
-  #   - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-  #   ports:
-  #   - 80:80
-  #   depends_on:
-  #   - webapp
-  #   networks:
-  #     - thesis-net
+  webapp:
+    image: ${DOCKER_REGISTRY-}webapp
+    container_name: webapp
+    build:
+      context: .
+      dockerfile: src/WebApp/Dockerfile
+    ports:
+    - 5173:80
+    networks:
+      - thesis-net
+    environment:
+      VITE_API_URI: "https://webapp.bff:5113"
 
   papercut:
     image: changemakerstudiosus/papercut-smtp:latest
@@ -271,6 +259,29 @@ services:
       - ./.containers/redis/data:/data
     networks:
       - thesis-net
+
+  # prometheus:
+  #   image: prom/prometheus
+  #   container_name: prometheus
+  #   command:
+  #     - '--config.file=/etc/prometheus/prometheus.yml'
+  #   ports:
+  #     - 9090:9090
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./prometheus:/etc/prometheus
+
+  # grafana:
+  #   image: grafana/grafana
+  #   container_name: grafana
+  #   ports:
+  #     - 3000:3000
+  #   restart: unless-stopped
+  #   environment:
+  #     - GF_SECURITY_ADMIN_USER=admin
+  #     - GF_SECURITY_ADMIN_PASSWORD=grafana
+  #   volumes:
+  #     - ./grafana/datasource:/etc/grafana/provisioning/datasources
 
 networks:
   thesis-net:

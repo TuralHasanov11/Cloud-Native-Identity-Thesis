@@ -1,5 +1,6 @@
 ### CI/CD
 ```sh
+docker tag <image_name_> <user_name_>/<image_name_>
 docker build -t <user_name_>/<image_name_>:latest -f ./src/<ServiceName>/Dockerfile .
 ```
 

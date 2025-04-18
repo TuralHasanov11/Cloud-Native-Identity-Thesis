@@ -7,6 +7,8 @@
     <UserSecretsId>a4f190f0-defc-4dca-a62a-c80c4da94ce5</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
+	<GenerateComplianceReport>true</GenerateComplianceReport>
+	<ComplianceReportOutputPath>$(MSBuildThisFileDirectory)\..\..\ComplianceReport\WebAppBff</ComplianceReportOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

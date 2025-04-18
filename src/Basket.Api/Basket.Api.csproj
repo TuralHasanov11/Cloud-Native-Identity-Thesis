@@ -8,6 +8,8 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+	<GenerateComplianceReport>true</GenerateComplianceReport>
+	<ComplianceReportOutputPath>$(MSBuildThisFileDirectory)\..\..\ComplianceReport\BasketApi</ComplianceReportOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

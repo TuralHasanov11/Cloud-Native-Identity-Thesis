@@ -2,11 +2,16 @@
 
 namespace SharedKernel;
 
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-public sealed class PersonalDataAttribute : DataClassificationAttribute
+[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
+public sealed class EUIIDataAttribute : DataClassificationAttribute
 {
-    public PersonalDataAttribute()
-        : base(ApplicationLoggingTaxonomy.PersonalData)
-    {
-    }
+    public EUIIDataAttribute() 
+        : base(ApplicationLoggingTaxonomy.EUIIDataClassification) { }
+}
+
+[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
+public sealed class EUPDataAttribute : DataClassificationAttribute
+{
+    public EUPDataAttribute() 
+        : base(ApplicationLoggingTaxonomy.EUPDataClassification) { }
 }

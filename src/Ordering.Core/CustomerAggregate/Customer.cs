@@ -11,6 +11,7 @@ public sealed class Customer : EntityBase<CustomerId>, IAggregateRoot
 
     public IdentityId IdentityId { get; }
 
+    [EUIIData]
     public string Name { get; }
 
     public ICollection<PaymentMethod> PaymentMethods { get; } = [];

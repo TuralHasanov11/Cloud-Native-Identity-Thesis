@@ -11,7 +11,6 @@ const { params, name } = useRoute();
 const { order, getOrder } = useCustomer();
 const { formatDate, formatPrice, FALLBACK_IMG } = useHelpers();
 
-const isLoaded = ref<boolean>(false);
 const errorMessage = ref("");
 
 const isSummaryPage = computed<boolean>(() => name === "order-summary");
@@ -26,7 +25,6 @@ const orderIsNotCompleted = computed<boolean>(
 await getOrder(params.id as string)
 
 const refreshOrder = async () => {
-  isLoaded.value = false;
   await getOrder(params.id as string);
 };
 
@@ -38,7 +36,7 @@ const refreshOrder = async () => {
       <UContainer>
         <div
           class="w-full min-h-[600px] flex items-center p-4 text-gray-800 md:bg-white md:rounded-xl md:mx-auto md:shadow-lg md:my-24 md:mt-8 md:max-w-3xl md:p-16 flex-col">
-          <LoadingIcon v-if="!isLoaded" class="flex-1" />
+          <LoadingIcon v-if="!order" class="flex-1" />
           <template v-else>
             <div v-if="order" class="w-full">
               <template v-if="isSummaryPage">

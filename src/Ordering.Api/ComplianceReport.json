@@ -1,0 +1,28 @@
+﻿
+{
+    "Name": "Ordering.Api",
+    "Types": [
+        {
+            "Name": "Ordering.Api.Features.Orders.CreateOrderRequestLogger",
+            "Logging Methods": [
+                {
+                    "Name": "LogCreatingOrder",
+                    "Parameters": [
+                        {
+                            "Name": "logger",
+                            "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.CreateOrderRequest>",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\Create.cs",
+                            "Line": "46"
+                        },
+                        {
+                            "Name": "order",
+                            "Type": "Ordering.Core.OrderAggregate.Order",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\Create.cs",
+                            "Line": "46"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

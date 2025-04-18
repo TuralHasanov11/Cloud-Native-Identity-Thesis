@@ -7,6 +7,7 @@ public sealed class Order
 
     public Address Address { get; private set; }
 
+    [EUPData]
     public CustomerId? CustomerId { get; private set; }
 
     public Customer Customer { get; }

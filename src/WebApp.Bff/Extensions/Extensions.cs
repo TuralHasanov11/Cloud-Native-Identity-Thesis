@@ -44,14 +44,10 @@ public static class Extensions
             {
                 policy.WithOrigins(
                         clientUrl,
-                        "https://webapp:5002",
-                        "https://localhost:5002",
-                        "http://webapp:5002",
-                        "http://localhost:5002",
-                        "https://localhost:5113", 
-                        "http://localhost:5112", 
-                        "https://webapp.bff:5113", 
-                        "http://webapp.bff:5112")
+                        "https://webapp:5173",
+                        "https://localhost:5173",
+                        "http://webapp:5173",
+                        "http://localhost:5173")
                     .AllowCredentials()
                     .AllowAnyMethod()
                     .AllowAnyHeader();

@@ -1,0 +1,32 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.vitest.json"
+    }
+  ],
+  "compilerOptions": {
+    "module": "nodenext",
+    "paths": {
+      // ...
+      "#build/*": ["./node_modules/@nuxt/ui/.nuxt/*"]
+    }
+  },
+  "exclude": [
+    "./node_modules",
+    "./dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.test.js",
+    "**/*.spec.js",
+    "**/__tests__",
+    "**/__mocks__"
+  ],
+  "include": ["auto-imports.d.ts", "components.d.ts"]
+}

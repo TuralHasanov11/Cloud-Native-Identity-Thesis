@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-deployment
+  name: catalog-postgres-deployment
   labels:
-    app: postgres
-  namespace: modularmonolith
+    app: catalog-postgres
+  namespace: thesis
 spec:
-  ingressClassName: ingress-service
+  # ingressClassName: ingress-service
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: catalog-postgres
   template:
     metadata:
       labels:
-        app: postgres
+        app: catalog-postgres
     spec:
       containers:
-      - name: modularmonolith.postgres
+      - name: catalog.postgres
         image: postgres:latest
         ports:
         - containerPort: 5432
@@ -32,34 +32,35 @@ spec:
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
-              name: postgres-secret
+              name: catalog-postgres-secret
               key: POSTGRES_USER
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: postgres-secret
+              name: catalog-postgres-secret
               key: POSTGRES_PASSWORD
         - name: POSTGRES_DB
           valueFrom:
             secretKeyRef:
-              name: postgres-secret
+              name: catalog-postgres-secret
               key: POSTGRES_DB
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
-          name: postgres-storage
+          name: catalog-postgres-storage
       volumes:
-      - name: postgres-storage
+      - name: catalog-postgres-storage
         persistentVolumeClaim:
-          claimName: postgres-pvc
+          claimName: catalog-postgres-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-service
+  name: catalog-postgres-service
 spec:
   selector:
-    app: postgres
+    app: catalog-postgres
   ports:
     - protocol: TCP
       port: 5432
       targetPort: 5432
+      nodePort: 54321

@@ -7,14 +7,14 @@ FROM node:${NODE_VERSION}-alpine3.20 AS base
 WORKDIR /app
 
 # Copy package.json and package-lock.json files to the working directory
-COPY ./package.json /app/
-COPY ./package-lock.json /app/
+COPY ./src/WebApp/package.json /app/
+COPY ./src/WebApp/package-lock.json /app/
 
 # Install dependencies using npm
 RUN npm install && npm cache clean --force
 
 # Copy the rest of the application files to the working directory
-COPY ./ /app/
+COPY ./src/WebApp/ /app/
 
 # Build the application
 RUN npm run build
@@ -24,9 +24,6 @@ FROM nginx:stable-alpine as production
 
 # Copy the build application from the previous stage to the Nginx container
 COPY --from=base /app/dist/ /usr/share/nginx/html/
-
-# Copy the nginx configuration file
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80

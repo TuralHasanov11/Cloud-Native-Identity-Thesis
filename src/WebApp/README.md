@@ -62,9 +62,3 @@ npm run test:e2e -- --debug
 ```sh
 npm run lint
 ```
-
-### Docker
-
-```sh
-docker compose up --build
-```

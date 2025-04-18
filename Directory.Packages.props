@@ -24,6 +24,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.AuditReports" Version="9.4.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.4" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.4.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.1.0" />
@@ -39,8 +40,10 @@
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
     <PackageVersion Include="OpenTelemetry" Version="1.11.2" />
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.2" />
+    <PackageVersion Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.11.2-beta.1" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.11.2" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.11.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.EventCounters" Version="1.5.1-alpha.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.11.0-beta.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.11.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.11.1" />
