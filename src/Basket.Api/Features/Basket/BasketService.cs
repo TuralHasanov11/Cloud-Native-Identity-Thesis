@@ -2,12 +2,13 @@
 using Basket.Api.Extensions;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
+using GrpcBasket = Basket.Api.Grpc.Basket;
 
 namespace Basket.Api.Features.Basket;
 
 public class BasketService(
     IBasketRepository repository,
-    ILogger<BasketService> logger) : Basket.BasketBase
+    ILogger<BasketService> logger) : GrpcBasket.BasketBase
 {
     [AllowAnonymous]
     public override async Task<CustomerBasketResponse> GetBasket(GetBasketRequest request, ServerCallContext context)
@@ -79,7 +80,7 @@ public class BasketService(
 
         foreach (var item in customerBasket.Items)
         {
-            response.Items.Add(new BasketItem()
+            response.Items.Add(new Grpc.BasketItem
             {
                 ProductId = item.ProductId.ToString(),
                 Quantity = item.Quantity,

@@ -9,7 +9,12 @@
     <PackageVersion Include="Farfetch.LoadShedding.AspNetCore" Version="1.0.2" />
     <PackageVersion Include="FluentValidation" Version="11.11.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+    <PackageVersion Include="Google.Protobuf" Version="3.30.2" />
     <PackageVersion Include="Grpc.AspNetCore" Version="2.70.0" />
+    <PackageVersion Include="Grpc.Core.Api" Version="2.70.0" />
+    <PackageVersion Include="Grpc.Net.Client" Version="2.70.0" />
+    <PackageVersion Include="Grpc.Net.ClientFactory" Version="2.70.0" />
+    <PackageVersion Include="Grpc.Tools" Version="2.71.0" />
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.18" />
     <PackageVersion Include="Hangfire.InMemory" Version="1.0.0" />
     <PackageVersion Include="MassTransit" Version="8.4.0" />

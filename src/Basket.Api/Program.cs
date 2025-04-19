@@ -57,7 +57,6 @@ try
     app.MapDefaultEndpoints();
 
     app.MapGrpcService<BasketService>();
-    app.MapBasketEndpoints();
 
     app.UseDefaultOpenApi();
 

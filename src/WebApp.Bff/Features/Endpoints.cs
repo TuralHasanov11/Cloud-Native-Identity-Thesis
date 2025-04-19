@@ -11,7 +11,18 @@ public static class Endpoints
             .WithName("UserInfo")
             .WithSummary("Get the current user's information.")
             .WithDescription("Get the current user's information.")
-            .WithTags("Identity");
+            .WithTags("Identity")
+            .RequireRateLimiting("FixedRateLimitingPolicy");
+
+        var basketApi = app.MapGroup("/api/basket");
+
+        basketApi.MapGet("user", Basket.GetByUser.Handle)
+            .AllowAnonymous()
+            .WithName("GetBasketByUser")
+            .WithSummary("Get the current user's basket.")
+            .WithDescription("Get the current user's basket.")
+            .WithTags("Basket")
+            .RequireRateLimiting("FixedRateLimitingPolicy");
 
         return app;
     }

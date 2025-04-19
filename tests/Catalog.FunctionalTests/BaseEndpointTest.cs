@@ -19,6 +19,9 @@ public class BaseEndpointTest : IAsyncLifetime
         _resetDatabase = factory.ResetDatabaseAsync;
         DbContext = _scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
         HttpClient = factory.CreateClient();
+        // add headers to httpclient
+        HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+        HttpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
     }
 
     public Task InitializeAsync()

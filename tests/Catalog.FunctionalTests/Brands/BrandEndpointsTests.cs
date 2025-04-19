@@ -8,20 +8,19 @@ public class BrandEndpointsTests : BaseEndpointTest
     public BrandEndpointsTests(CatalogFactory factory)
         : base(factory)
     {
-       
     }
 
     [Fact]
     public async Task ListBrands_ShouldReturnBrands()
     {
-        // Arrange
+        // Arrange  
         await DbContext.Brands.AddRangeAsync(Brand.Create("Brand1"), Brand.Create("Brand2"));
         await DbContext.SaveChangesAsync();
 
-        // Act
-        var response = await HttpClient.GetAsync("api/catalog/brands");
+        // Act  
+        var response = await HttpClient.GetAsync(new Uri("api/catalog/brands", UriKind.Relative));
 
-        // Assert
+        // Assert  
         response.EnsureSuccessStatusCode();
         var brands = await response.Content.ReadFromJsonAsync<IEnumerable<BrandDto>>();
         Assert.NotNull(brands);
@@ -31,10 +30,10 @@ public class BrandEndpointsTests : BaseEndpointTest
     [Fact]
     public async Task ListBrands_ShouldReturnEmptyList_WhenNoBrandsExist()
     {
-        // Act
-        var response = await HttpClient.GetAsync("api/catalog/brands");
+        // Act  
+        var response = await HttpClient.GetAsync(new Uri("api/catalog/brands", UriKind.Relative));
 
-        // Assert
+        // Assert  
         response.EnsureSuccessStatusCode();
         var brands = await response.Content.ReadFromJsonAsync<IEnumerable<BrandDto>>();
         Assert.NotNull(brands);
@@ -44,13 +43,13 @@ public class BrandEndpointsTests : BaseEndpointTest
     [Fact]
     public async Task CreateBrand_ShouldCreateBrand()
     {
-        // Arrange
+        // Arrange  
         var newBrand = new { Name = "New Brand" };
 
-        // Act
+        // Act  
         var response = await HttpClient.PostAsJsonAsync("api/catalog/brands", newBrand);
 
-        // Assert
+        // Assert  
         response.EnsureSuccessStatusCode();
         var createdBrand = await response.Content.ReadFromJsonAsync<Brand>();
         Assert.NotNull(createdBrand);
@@ -60,28 +59,28 @@ public class BrandEndpointsTests : BaseEndpointTest
     [Fact]
     public async Task CreateBrand_ShouldReturnBadRequest_WhenNameIsEmpty()
     {
-        // Arrange
+        // Arrange  
         var newBrand = new { Name = "" };
 
-        // Act
+        // Act  
         var response = await HttpClient.PostAsJsonAsync("api/catalog/brands", newBrand);
 
-        // Assert
+        // Assert  
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
     public async Task DeleteBrand_ShouldDeleteBrand()
     {
-        // Arrange
+        // Arrange  
         await DbContext.Brands.AddAsync(Brand.Create("Brand1"));
         await DbContext.SaveChangesAsync();
         var brand = await DbContext.Brands.FirstAsync();
 
-        // Act
+        // Act  
         var response = await HttpClient.DeleteAsync($"api/catalog/brands/{brand.Id}");
 
-        // Assert
+        // Assert  
         response.EnsureSuccessStatusCode();
         var deletedBrand = await DbContext.Brands.FindAsync(brand.Id);
         Assert.Null(deletedBrand);
@@ -90,13 +89,13 @@ public class BrandEndpointsTests : BaseEndpointTest
     [Fact]
     public async Task DeleteBrand_ShouldReturnNotFound_WhenBrandDoesNotExist()
     {
-        // Arrange
+        // Arrange  
         var nonExistentBrandId = Guid.NewGuid();
 
-        // Act
+        // Act  
         var response = await HttpClient.DeleteAsync($"api/catalog/brands/{nonExistentBrandId}");
 
-        // Assert
+        // Assert  
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 }
