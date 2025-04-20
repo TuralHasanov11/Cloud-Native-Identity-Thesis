@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-deployment
+  name: webapp-bff-deployment
   labels:
-    app: web
+    app: webapp-bff
   namespace: thesis
 spec:
-  ingressClassName: web-ingress
+  # ingressClassName: web-ingress
   replicas: 1
   selector:
     matchLabels:
-      app: web
+      app: webapp-bff
   template:
     metadata:
       labels:
-        app: web
+        app: webapp-bff
     spec:
       containers:
-      - name: thesis.web
-        image: turalhasanov/modularmonolithweb:latest
+      - name: webapp.bff
+        image: turalhasanov/thesis/webapp-bff:latest
         imagePullPolicy: Always
         resources:
           limits:
@@ -33,12 +33,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: web-service
+  name: webapp-bff-service
   labels:
-    app: web
+    app: webapp-bff
 spec:
   selector:
-    app: web
+    app: webapp-bff
   ports:
   - name: http
     protocol: TCP

@@ -7,6 +7,8 @@ import App from './App.vue'
 import router from './router'
 import { createI18n } from 'vue-i18n'
 import auth from './plugins/auth'
+import PrimeVue from 'primevue/config'
+import Aura from '@primeuix/themes/aura'
 
 const app = createApp(App)
 
@@ -363,5 +365,10 @@ app.use(
   }),
 )
 app.use(router)
+app.use(PrimeVue, {
+  theme: {
+    preset: Aura,
+  },
+})
 
 app.mount('#app')

@@ -52,13 +52,14 @@ public static class Extensions
 
 
         builder.Services.AddSingleton<BasketService>();
+
         builder.AddAIServices();
 
         // HTTP and GRPC client registrations
         builder.Services.AddGrpcClient<Basket.Api.Grpc.Basket.BasketClient>(o => o.Address = new("https://basket.api:5001"))
             .AddAuthToken();
 
-        builder.Services.AddHttpClient<CatalogService>(o => o.BaseAddress = new("https://catalog.api:5003"))
+        builder.Services.AddHttpClient<ICatalogService, CatalogService>(o => o.BaseAddress = new("https://catalog.api:5003"))
             .AddAuthToken()
             .AddResilienceHandler("catalog-service", b =>
             {

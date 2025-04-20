@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: catalog-postgres-deployment
+  name: catalog-database-deployment
   labels:
-    app: catalog-postgres
+    app: catalog-database
   namespace: thesis
 spec:
   # ingressClassName: ingress-service
   replicas: 1
   selector:
     matchLabels:
-      app: catalog-postgres
+      app: catalog-database
   template:
     metadata:
       labels:
-        app: catalog-postgres
+        app: catalog-database
     spec:
       containers:
       - name: catalog.postgres
@@ -32,33 +32,34 @@ spec:
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
-              name: catalog-postgres-secret
+              name: catalog-database-secret
               key: POSTGRES_USER
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: catalog-postgres-secret
+              name: catalog-database-secret
               key: POSTGRES_PASSWORD
         - name: POSTGRES_DB
           valueFrom:
             secretKeyRef:
-              name: catalog-postgres-secret
+              name: catalog-database-secret
               key: POSTGRES_DB
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
-          name: catalog-postgres-storage
+          name: catalog-database-storage
       volumes:
-      - name: catalog-postgres-storage
+      - name: catalog-database-storage
         persistentVolumeClaim:
-          claimName: catalog-postgres-pvc
+          claimName: catalog-database-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: catalog-postgres-service
+  name: catalog-database-service
+  namespace: thesis
 spec:
   selector:
-    app: catalog-postgres
+    app: catalog-database
   ports:
     - protocol: TCP
       port: 5432

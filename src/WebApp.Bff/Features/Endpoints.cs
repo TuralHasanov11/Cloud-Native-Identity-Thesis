@@ -16,7 +16,7 @@ public static class Endpoints
 
         var basketApi = app.MapGroup("/api/basket");
 
-        basketApi.MapGet("user", Basket.GetByUser.Handle)
+        basketApi.MapGet("", Basket.GetByUser.Handle)
             .AllowAnonymous()
             .WithName("GetBasketByUser")
             .WithSummary("Get the current user's basket.")

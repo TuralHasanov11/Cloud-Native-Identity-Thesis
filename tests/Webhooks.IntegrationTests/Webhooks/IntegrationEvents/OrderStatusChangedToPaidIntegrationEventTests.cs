@@ -24,8 +24,6 @@ public class OrderStatusChangedToPaidIntegrationEventTests : IClassFixture<Webho
     public async Task Handle_ShouldSendWebhooks_WhenSubscriptionsExist()
     {
         // Arrange
-        await _dbContext.SeedDatabase();
-
         var subscription = new WebhookSubscription(
             WebhookType.OrderPaid,
             DateTime.UtcNow,
@@ -57,8 +55,6 @@ public class OrderStatusChangedToPaidIntegrationEventTests : IClassFixture<Webho
     public async Task Handle_ShouldLogInformation_WhenNoSubscriptionsExist()
     {
         // Arrange
-        await _dbContext.SeedDatabase();
-
         var orderStockItem = new OrderStockItem(Guid.NewGuid(), 5);
         var integrationEvent = new OrderStatusChangedToPaidIntegrationEvent(
             Guid.NewGuid(),

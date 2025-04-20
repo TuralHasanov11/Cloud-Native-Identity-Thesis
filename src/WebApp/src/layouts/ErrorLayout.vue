@@ -2,6 +2,8 @@
 import BaseError from '@/components/BaseError.vue';
 import { onMounted } from 'vue';
 
+import { useToast } from 'primevue/usetoast';
+
 const toast = useToast()
 
 const { error } = defineProps<{
@@ -10,8 +12,8 @@ const { error } = defineProps<{
 
 function showToast() {
     toast.add({
-        title: error.name,
-        description: error.message,
+        summary: error.name,
+        detail: error.message,
     })
 }
 

@@ -66,16 +66,16 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{6ECB75DB-2D6F-418C-8EFD-754DA3277ACD}"
 	ProjectSection(SolutionItems) = preProject
-		catalog-deployment.yaml = catalog-deployment.yaml
-		k8s\catalog-postgres-configmap.yaml = k8s\catalog-postgres-configmap.yaml
-		catalog-postgres-deployment.yaml = catalog-postgres-deployment.yaml
-		k8s\catalog-postgres-pvc.yaml = k8s\catalog-postgres-pvc.yaml
-		k8s\catalog-postgres-secret.yaml = k8s\catalog-postgres-secret.yaml
+		k8s\catalog-database-configmap.yaml = k8s\catalog-database-configmap.yaml
+		k8s\catalog-database-deployment.yaml = k8s\catalog-database-deployment.yaml
+		k8s\catalog-database-pvc.yaml = k8s\catalog-database-pvc.yaml
+		k8s\catalog-database-secret.yaml = k8s\catalog-database-secret.yaml
+		k8s\catalog-deployment.yaml = k8s\catalog-deployment.yaml
 		k8s\ingress-service.yaml = k8s\ingress-service.yaml
 		k8s\pgadmin-deployment.yaml = k8s\pgadmin-deployment.yaml
 		k8s\pgadmin-secret.yaml = k8s\pgadmin-secret.yaml
 		k8s\thesis-namespace.yaml = k8s\thesis-namespace.yaml
-		k8s\web-deployment.yaml = k8s\web-deployment.yaml
+		k8s\webapp-bff-deployment.yaml = k8s\webapp-bff-deployment.yaml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentProcessor.UnitTests", "tests\PaymentProcessor.UnitTests\PaymentProcessor.UnitTests.csproj", "{045A5315-4F5E-4297-B939-C3CCBABDFEA7}"

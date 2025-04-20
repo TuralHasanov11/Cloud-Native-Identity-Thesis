@@ -12,7 +12,7 @@ const { login, logout, user, isAuthenticated } = useIdentity();
 
 await getBasket();
 
-const items = computed<NavigationMenuItem[][]>(() => [
+const items = computed(() => [
   [
     {
       label: "Home",

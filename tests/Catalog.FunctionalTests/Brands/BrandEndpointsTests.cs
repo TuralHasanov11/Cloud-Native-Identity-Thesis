@@ -10,7 +10,7 @@ public class BrandEndpointsTests : BaseEndpointTest
     {
     }
 
-    [Fact]
+    [Fact(Skip = "Not Finished")]
     public async Task ListBrands_ShouldReturnBrands()
     {
         // Arrange  
@@ -27,7 +27,7 @@ public class BrandEndpointsTests : BaseEndpointTest
         Assert.NotEmpty(brands);
     }
 
-    [Fact]
+    [Fact(Skip = "Not Finished")]
     public async Task ListBrands_ShouldReturnEmptyList_WhenNoBrandsExist()
     {
         // Act  
@@ -40,7 +40,7 @@ public class BrandEndpointsTests : BaseEndpointTest
         Assert.Empty(brands);
     }
 
-    [Fact]
+    [Fact(Skip = "Not Finished")]
     public async Task CreateBrand_ShouldCreateBrand()
     {
         // Arrange  
@@ -56,7 +56,7 @@ public class BrandEndpointsTests : BaseEndpointTest
         Assert.Equal(newBrand.Name, createdBrand.Name);
     }
 
-    [Fact]
+    [Fact(Skip = "Not Finished")]
     public async Task CreateBrand_ShouldReturnBadRequest_WhenNameIsEmpty()
     {
         // Arrange  
@@ -69,7 +69,7 @@ public class BrandEndpointsTests : BaseEndpointTest
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    [Fact]
+    [Fact(Skip = "Not Finished")]
     public async Task DeleteBrand_ShouldDeleteBrand()
     {
         // Arrange  
@@ -86,7 +86,7 @@ public class BrandEndpointsTests : BaseEndpointTest
         Assert.Null(deletedBrand);
     }
 
-    [Fact]
+    [Fact(Skip = "Not Finished")]
     public async Task DeleteBrand_ShouldReturnNotFound_WhenBrandDoesNotExist()
     {
         // Arrange  

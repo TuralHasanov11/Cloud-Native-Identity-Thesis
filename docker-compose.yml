@@ -70,17 +70,17 @@ services:
     networks:
       - thesis-net
 
-  # orderprocessor:
-  #   image: ${DOCKER_REGISTRY-}orderprocessor
-  #   container_name: orderprocessor
-  #   build:
-  #     context: .
-  #     dockerfile: src/OrderProcessor/Dockerfile
-  #   depends_on:
-  #   - rabbitmq
-  #   - ordering.postgres
-  #   networks:
-  #    - thesis-net
+  orderprocessor:
+    image: ${DOCKER_REGISTRY-}orderprocessor
+    container_name: orderprocessor
+    build:
+      context: .
+      dockerfile: src/OrderProcessor/Dockerfile
+    depends_on:
+    - rabbitmq
+    - ordering.postgres
+    networks:
+     - thesis-net
 
   ordering.postgres:
     image: postgres:latest

@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import type { Product } from '@/types/catalog';
-import type { TabsItem } from '@nuxt/ui';
 import { computed } from 'vue';
 
 const { product } = defineProps<{
     product: Product;
 }>()
 
-const tabs = computed<TabsItem[]>(() => [
+const tabs = computed(() => [
     {
         label: 'Description',
         icon: 'i-lucide-user',

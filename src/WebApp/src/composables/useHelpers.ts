@@ -3,7 +3,6 @@ import { ref } from 'vue'
 const isShowingMobileMenu = ref<boolean>(false)
 
 export function useHelpers() {
-  const isDev: boolean = process.env.NODE_ENV === 'development'
   const FALLBACK_IMG = '/images/placeholder.jpg'
 
   const formatDate = (date?: string | null): string => {
@@ -46,7 +45,6 @@ export function useHelpers() {
   }
 
   return {
-    isDev,
     FALLBACK_IMG,
     formatDate,
     formatPrice,

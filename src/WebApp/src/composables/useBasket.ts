@@ -32,7 +32,7 @@ export default function useBasket() {
 
   async function getBasket(): Promise<void> {
     try {
-      const { data } = await useBffFetch('/api/basket/basket').json<BasketItem[]>()
+      const { data } = await useBffFetch('/api/basket').json<BasketItem[]>()
 
       cart.value.items = data.value ?? []
     } catch (error: unknown) {
