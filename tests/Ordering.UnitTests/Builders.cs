@@ -18,11 +18,7 @@ public class OrderBuilder
             new Core.CustomerAggregate.IdentityId(IdentityExtensions.GenerateId()),
             "fakeName",
             address,
-            cardTypeId: 5,
-            cardNumber: "12",
-            cardSecurityNumber: "123",
-            cardHolderName: "name",
-            cardExpiration: DateTime.UtcNow);
+            cardTypeId: 5);
     }
 
     public OrderBuilder AddOne(

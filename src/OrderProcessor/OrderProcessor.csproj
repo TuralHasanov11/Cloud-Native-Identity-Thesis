@@ -13,10 +13,12 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
     <PackageReference Include="Npgsql" />
+    <PackageReference Include="Serilog" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EventBus\EventBus.csproj" />
+    <ProjectReference Include="..\ServiceDefaults\ServiceDefaults.csproj" />
     <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 </Project>

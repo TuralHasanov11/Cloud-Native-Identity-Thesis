@@ -23,7 +23,6 @@ COPY ["src/Webhooks.Infrastructure/Webhooks.Infrastructure.csproj", "src/Webhook
 COPY ["src/Outbox/Outbox.csproj", "src/Outbox/"]
 COPY ["src/EventBus/EventBus.csproj", "src/EventBus/"]
 COPY ["src/Webhooks.Contracts/Webhooks.Contracts.csproj", "src/Webhooks.Contracts/"]
-COPY ["src/Webhooks.UseCases/Webhooks.UseCases.csproj", "src/Webhooks.UseCases/"]
 RUN dotnet restore "./src/Webhooks.Api/Webhooks.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Webhooks.Api"

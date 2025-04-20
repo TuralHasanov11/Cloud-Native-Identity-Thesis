@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -8,10 +8,16 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+	<GenerateComplianceReport>true</GenerateComplianceReport>
+	<ComplianceReportOutputPath>$(MSBuildThisFileDirectory)\..\..\ComplianceReport\BasketApi</ComplianceReportOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" />
+    <PackageReference Include="Grpc.Tools">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
@@ -25,9 +31,8 @@
     <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Protobuf Include="Features\Basket\basket.proto" GrpcServices="Server" />
-  </ItemGroup>
+    <ItemGroup>
+	    <Protobuf Include="Proto\basket.proto" GrpcServices="Server" />
+    </ItemGroup>
 
 </Project>

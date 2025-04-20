@@ -2,12 +2,13 @@
 using Basket.Api.Extensions;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
+using GrpcBasket = Basket.Api.Grpc.Basket;
 
 namespace Basket.Api.Features.Basket;
 
 public class BasketService(
     IBasketRepository repository,
-    ILogger<BasketService> logger) : Basket.BasketBase
+    ILogger<BasketService> logger) : GrpcBasket.BasketBase
 {
     [AllowAnonymous]
     public override async Task<CustomerBasketResponse> GetBasket(GetBasketRequest request, ServerCallContext context)
@@ -29,6 +30,7 @@ public class BasketService(
         return data is not null ? MapToCustomerBasketResponse(data) : new();
     }
 
+    [AllowAnonymous] // TODO: Protect
     public override async Task<CustomerBasketResponse> UpdateBasket(UpdateBasketRequest request, ServerCallContext context)
     {
         var userId = context.GetUserId();
@@ -53,6 +55,7 @@ public class BasketService(
         return MapToCustomerBasketResponse(response);
     }
 
+    [AllowAnonymous] // TODO: Protect
     public override async Task<DeleteBasketResponse> DeleteBasket(DeleteBasketRequest request, ServerCallContext context)
     {
         var userId = context.GetUserId();
@@ -77,7 +80,7 @@ public class BasketService(
 
         foreach (var item in customerBasket.Items)
         {
-            response.Items.Add(new BasketItem()
+            response.Items.Add(new Grpc.BasketItem
             {
                 ProductId = item.ProductId.ToString(),
                 Quantity = item.Quantity,

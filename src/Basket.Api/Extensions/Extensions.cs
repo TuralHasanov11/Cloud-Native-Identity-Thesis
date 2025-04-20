@@ -2,6 +2,7 @@
 using EventBus.Extensions;
 using MassTransit;
 using Microsoft.Extensions.Options;
+using ServiceDefaults.Identity;
 
 namespace Basket.Api.Extensions;
 
@@ -11,12 +12,17 @@ public static class Extensions
     {
         builder.AddDefaultAuthentication();
 
+
         builder.Services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = builder.Configuration.GetConnectionString("Redis");
         });
 
-        builder.Services.AddHybridCache();
+        builder.Services.AddDistributedMemoryCache();
+        //builder.Services.AddHybridCache();
+
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddTransient<IIdentityService, IdentityService>();
 
         builder.Services.AddSingleton<IBasketRepository, BasketRepository>();
 

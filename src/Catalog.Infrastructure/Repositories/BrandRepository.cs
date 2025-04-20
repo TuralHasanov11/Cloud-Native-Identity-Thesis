@@ -14,11 +14,11 @@ public class BrandRepository(CatalogDbContext dbContext) : IBrandRepository
         dbContext.Brands.Remove(brand);
     }
 
-    public Task<int> DeleteAsync(
+    public async Task<int> DeleteAsync(
         Specification<Brand> specification,
         CancellationToken cancellationToken = default)
     {
-        return dbContext.Brands
+        return await dbContext.Brands
             .GetQuery(specification)
             .ExecuteDeleteAsync(cancellationToken);
     }
@@ -44,22 +44,22 @@ public class BrandRepository(CatalogDbContext dbContext) : IBrandRepository
             .ToListAsync(cancellationToken);
     }
 
-    public Task<Brand?> SingleOrDefaultAsync(
+    public async Task<Brand?> SingleOrDefaultAsync(
         Specification<Brand> specification,
         CancellationToken cancellationToken = default)
     {
-        return dbContext.Brands
+        return await dbContext.Brands
             .GetQuery(specification)
             .SingleOrDefaultAsync(cancellationToken);
     }
 
-    public Task<TResponse?> SingleOrDefaultAsync<TResponse>(
+    public async Task<TResponse?> SingleOrDefaultAsync<TResponse>(
         Specification<Brand> specification,
         Expression<Func<Brand, TResponse>> mapper,
         CancellationToken cancellationToken = default)
         where TResponse : class
     {
-        return dbContext.Brands
+        return await dbContext.Brands
             .GetQuery(specification)
             .Select(mapper)
             .SingleOrDefaultAsync(cancellationToken);
@@ -70,8 +70,8 @@ public class BrandRepository(CatalogDbContext dbContext) : IBrandRepository
         dbContext.Brands.Update(brand);
     }
 
-    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

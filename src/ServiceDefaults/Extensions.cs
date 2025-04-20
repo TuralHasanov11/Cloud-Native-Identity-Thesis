@@ -94,9 +94,9 @@ public static partial class Extensions
 
         builder.Services.AddRedaction(options =>
         {
-            options.SetRedactor<ErasingRedactor>(new DataClassificationSet(ApplicationLoggingTaxonomy.SensitiveData));
+            options.SetRedactor<ErasingRedactor>(new DataClassificationSet(ApplicationLoggingTaxonomy.EUPDataClassification));
 
-            options.SetRedactor<SecretRedactor>(new DataClassificationSet(ApplicationLoggingTaxonomy.PersonalData));
+            options.SetRedactor<SecretRedactor>(new DataClassificationSet(ApplicationLoggingTaxonomy.EUIIDataClassification));
         });
 
         builder.Services.AddScoped<RequestContextMiddleware>();
@@ -132,6 +132,14 @@ public static partial class Extensions
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
+                    .AddEventCountersInstrumentation(c =>
+                    {
+                        c.AddEventSources(
+                            "Microsoft.AspNetCore.Hosting",
+                            "Microsoft-AspNetCore-Server-Kestrel",
+                            "System.Net.Http",
+                            "System.Net.Sockets");
+                    })
                     .AddMeter(
                         //DiagnosticsConfiguration.Meter.Name,
                         //MassTransit.Monitoring.InstrumentationOptions.MeterName, // MassTransit Meter
@@ -139,7 +147,8 @@ public static partial class Extensions
                         "System.Net.Http",
                         "Microsoft.AspNetCore.Server.Kestrel",
                         "Experimental.Microsoft.Extensions.AI",
-                        builder.Environment.ApplicationName);
+                        builder.Environment.ApplicationName)
+                    .AddPrometheusExporter();
             })
             .WithTracing(tracing =>
             {
@@ -185,7 +194,7 @@ public static partial class Extensions
     {
         app.UseMiddleware<RequestContextMiddleware>();
         // Uncomment the following line to enable the Prometheus endpoint (requires the OpenTelemetry.Exporter.Prometheus.AspNetCore package)
-        // app.MapPrometheusScrapingEndpoint();
+        app.MapPrometheusScrapingEndpoint();
 
         if (app.Environment.IsDevelopment())
         {

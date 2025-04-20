@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql;
+using Respawn;
 using Testcontainers.PostgreSql;
+using Testcontainers.RabbitMq;
 
 namespace Webhooks.IntegrationTests;
 
@@ -13,47 +16,106 @@ public class WebhooksFactory : WebApplicationFactory<Program>, IAsyncLifetime
         .WithImage("postgres:latest")
         .WithUsername("postgres")
         .WithPassword("postgres")
-        .WithDatabase("ordering")
+        .WithDatabase("webhooks")
         .Build();
 
     private DbConnection _dbConnection = default!;
+
+    private Respawner _respawner = default!;
+
+    private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder()
+        .WithImage("rabbitmq:4.0-management")
+        .WithUsername("guest")
+        .WithHostname("rabbitmq")
+        .WithPassword("guest")
+        .Build();
+
+    public HttpClient HttpClient { get; private set; } = default!;
 
     public async Task InitializeAsync()
     {
         await _dbContainer.StartAsync();
 
-        _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
-        await _dbConnection.OpenAsync();
+        await _rabbitMqContainer.StartAsync();
 
-        using var scope = Services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<WebhooksDbContext>();
-        await dbContext.Database.MigrateAsync();
+        _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
+
+        HttpClient = CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false,
+        });
+
+        await InitializeRespawner();
+    }
+
+    private async Task InitializeRespawner()
+    {
+        await _dbConnection.OpenAsync();
+        _respawner = await Respawner.CreateAsync(
+            _dbConnection,
+            new RespawnerOptions
+            {
+                DbAdapter = DbAdapter.Postgres,
+                SchemasToInclude = ["public"]
+            });
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        //builder.ConfigureLogging(x =>
-        //{
-        //    x.ClearProviders();
-        //    x.SetMinimumLevel(LogLevel.Warning);
-        //    x.Services.AddSingleton<ILoggerProvider>(new XUnitLoggerProvider(_testOutputHelper));
-        //});
-
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll<DbContextOptions<WebhooksDbContext>>();
-            services.RemoveAll<WebhooksDbContext>();
+            var descriptor = services.SingleOrDefault(
+                d => d.ServiceType == typeof(DbContextOptions<WebhooksDbContext>));
+
+            if (descriptor is not null)
+            {
+                services.Remove(descriptor);
+            }
 
             services.AddDbContext<WebhooksDbContext>(
-                a => a.UseNpgsql(_dbContainer.GetConnectionString()),
-                ServiceLifetime.Singleton);
+                a => a.UseNpgsql(
+                    _dbContainer.GetConnectionString(),
+                    npgsqlOptionsAction => npgsqlOptionsAction.MigrationsHistoryTable(
+                        HistoryRepository.DefaultTableName)));
+
+            //services.AddMassTransitTestHarness(x =>
+            // {
+            //     x.AddDelayedMessageScheduler();
+
+            //     x.SetKebabCaseEndpointNameFormatter();
+
+            //     x.AddConsumers(Infrastructure.AssemblyReference.Assembly);
+
+            //     x.UsingRabbitMq((context, cfg) =>
+            //     {
+            //         cfg.UseDelayedMessageScheduler();
+
+            //         var settings = context.GetRequiredService<MessageBrokerSettings>();
+
+            //         cfg.Host(new Uri(settings.Host), h =>
+            //         {
+            //             h.Username(settings.Username);
+            //             h.Password(settings.Password);
+            //         });
+
+            //         cfg.ConfigureEndpoints(context);
+            //     });
+            // });
         });
     }
+
+    public async Task ResetDatabaseAsync()
+    {
+        await _respawner.ResetAsync(_dbConnection);
+    }
+
 
     public new async Task DisposeAsync()
     {
         await _dbConnection.DisposeAsync();
         await _dbContainer.StopAsync();
         await _dbContainer.DisposeAsync();
+        await _rabbitMqContainer.StopAsync();
+        await _rabbitMqContainer.DisposeAsync();
     }
 }

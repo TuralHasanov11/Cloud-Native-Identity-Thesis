@@ -1,4 +1,8 @@
-﻿using ServiceDefaults.Identity;
+﻿using Microsoft.Extensions.Http.Resilience;
+using Polly;
+using ServiceDefaults.Identity;
+using WebApp.Bff.Features.Basket;
+using WebApp.Bff.Features.Catalog;
 using Yarp.ReverseProxy.Transforms;
 
 namespace WebApp.Bff.Extensions;
@@ -31,6 +35,53 @@ public static class Extensions
         });
 
         AddCors(builder);
+
+        //builder.Services.AddResiliencePipeline<string, BasketService>("basket-service-fallback");
+        builder.Services.AddResiliencePipeline<string, IEnumerable<Product>>(
+            "catalog-service-fallback",
+            pipelineBuilder =>
+            {
+                pipelineBuilder.AddFallback(new Polly.Fallback.FallbackStrategyOptions<IEnumerable<Product>>
+                {
+                    FallbackAction = _ =>
+                    {
+                        return Outcome.FromResultAsValueTask(Product.Empty());
+                    }
+                });
+            });
+
+
+        builder.Services.AddSingleton<BasketService>();
+
+        builder.AddAIServices();
+
+        // HTTP and GRPC client registrations
+        builder.Services.AddGrpcClient<Basket.Api.Grpc.Basket.BasketClient>(o => o.Address = new("https://basket.api:5001"))
+            .AddAuthToken();
+
+        builder.Services.AddHttpClient<ICatalogService, CatalogService>(o => o.BaseAddress = new("https://catalog.api:5003"))
+            .AddAuthToken()
+            .AddResilienceHandler("catalog-service", b =>
+            {
+                b.AddTimeout(TimeSpan.FromSeconds(5));
+                b.AddRetry(new HttpRetryStrategyOptions
+                {
+                    MaxRetryAttempts = 3,
+                    Delay = TimeSpan.FromMilliseconds(500),
+                    BackoffType = DelayBackoffType.Exponential,
+                    UseJitter = true,
+                });
+                b.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
+                {
+                    FailureRatio = 0.9,
+                    BreakDuration = TimeSpan.FromSeconds(5),
+                    SamplingDuration = TimeSpan.FromSeconds(5),
+                    MinimumThroughput = 5,
+                });
+            });
+
+        //builder.Services.AddHttpClient<OrderingService>(o => o.BaseAddress = new("http://ordering-api"))
+        //    .AddAuthToken();
     }
 
     private static void AddCors(IHostApplicationBuilder builder)
@@ -42,7 +93,12 @@ public static class Extensions
         {
             options.AddPolicy(name: Policies.DefaultCorsPolicy, policy =>
             {
-                policy.WithOrigins(clientUrl)
+                policy.WithOrigins(
+                        clientUrl,
+                        "https://webapp:5173",
+                        "https://localhost:5173",
+                        "http://webapp:5173",
+                        "http://localhost:5173")
                     .AllowCredentials()
                     .AllowAnyMethod()
                     .AllowAnyHeader();

@@ -2,7 +2,7 @@
     <PropertyGroup>
         <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-    </PropertyGroup>
+	</PropertyGroup>
 
 	<ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj'">
 	  <PackageReference Include="StyleCop.Analyzers">

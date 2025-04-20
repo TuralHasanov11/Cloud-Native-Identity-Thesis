@@ -55,14 +55,14 @@ public sealed class Product : EntityBase<ProductId>
     {
         if (AvailableStock == 0)
         {
-            throw new CatalogDomainException($"Empty stock, product item {Name} is sold out");
+            throw new CatalogException($"Empty stock, product item {Name} is sold out");
         }
 
         const int minQuantityThreshold = 0;
 
         if (quantityDesired <= minQuantityThreshold)
         {
-            throw new CatalogDomainException($"Item units desired should be greater than {minQuantityThreshold}");
+            throw new CatalogException($"Item units desired should be greater than {minQuantityThreshold}");
         }
 
         int removed = Math.Min(quantityDesired, AvailableStock);

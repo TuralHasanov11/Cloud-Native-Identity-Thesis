@@ -18,7 +18,7 @@ namespace Ordering.Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -114,29 +114,16 @@ namespace Ordering.Infrastructure.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<string>("CardHolderName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("CardNumber")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("character varying(25)");
-
                     b.Property<int>("CardTypeId")
                         .HasColumnType("integer");
 
                     b.Property<Guid?>("CustomerId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("SecurityNumber")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea");
 
                     b.HasKey("Id");
 
@@ -227,9 +214,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("OrderId1")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("PictureUrl")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -243,6 +227,11 @@ namespace Ordering.Infrastructure.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea");
+
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -252,8 +241,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("OrderId1");
 
                     b.ToTable("order_items", (string)null);
                 });
@@ -329,14 +316,10 @@ namespace Ordering.Infrastructure.Data.Migrations
             modelBuilder.Entity("Ordering.Core.OrderAggregate.OrderItem", b =>
                 {
                     b.HasOne("Ordering.Core.OrderAggregate.Order", null)
-                        .WithMany()
+                        .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Ordering.Core.OrderAggregate.Order", null)
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId1");
                 });
 
             modelBuilder.Entity("Ordering.Core.CustomerAggregate.Customer", b =>

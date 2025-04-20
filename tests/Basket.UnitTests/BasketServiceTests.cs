@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Text;
 using Basket.Api.Features.Basket;
+using Basket.Api.Grpc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 

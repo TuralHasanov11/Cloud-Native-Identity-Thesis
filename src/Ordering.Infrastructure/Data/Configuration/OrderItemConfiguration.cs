@@ -33,7 +33,12 @@ public sealed class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
             .IsRequired();
 
         builder.HasOne<Order>()
-            .WithMany()
-            .HasForeignKey(o => o.OrderId);
+            .WithMany(o => o.OrderItems)
+            .HasForeignKey(o => o.OrderId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
+
+        builder.Property(b => b.RowVersion)
+            .IsRowVersion();
     }
 }

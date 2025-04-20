@@ -3,22 +3,19 @@
 namespace Webhooks.IntegrationTests.Webhooks;
 
 
-public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
+public class WebhookSubscriptionRepositoryTests : BaseIntegrationTest
 {
-    private readonly WebhooksFactory _factory;
+    private readonly IWebhookSubscriptionRepository _repository;
+    private static readonly CancellationTokenSource _cancellationTokenSource = new(TimeSpan.FromSeconds(30));
 
-    public WebhookSubscriptionRepositoryTests(WebhooksFactory factory)
+    public WebhookSubscriptionRepositoryTests(WebhooksFactory factory) : base(factory)
     {
-        _factory = factory;
+        _repository = factory.Services.GetRequiredService<IWebhookSubscriptionRepository>();
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task CreateAsync_ShouldAddSubscription()
     {
-        var dbContext = _factory.Services.GetRequiredService<WebhooksDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new WebhookSubscriptionRepository(dbContext);
         var subscription = new WebhookSubscription(
             WebhookType.OrderPaid,
             DateTime.UtcNow,
@@ -26,21 +23,17 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
             "sample-token",
             new IdentityId(IdentityExtensions.GenerateId()));
 
-        await repository.CreateAsync(subscription);
-        await repository.SaveChangesAsync();
+        await _repository.CreateAsync(subscription, _cancellationTokenSource.Token);
+        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
 
-        var createdSubscription = await dbContext.Subscriptions.FindAsync(subscription.Id);
+        var createdSubscription = await DbContext.Subscriptions.FindAsync(subscription.Id);
         Assert.NotNull(createdSubscription);
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task Delete_ShouldRemoveSubscription()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<WebhooksDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new WebhookSubscriptionRepository(dbContext);
         var subscription = new WebhookSubscription(
             WebhookType.OrderPaid,
             DateTime.UtcNow,
@@ -48,27 +41,22 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
             "sample-token",
             new IdentityId(IdentityExtensions.GenerateId()));
 
-        await repository.CreateAsync(subscription);
-        await repository.SaveChangesAsync();
+        await _repository.CreateAsync(subscription);
+        await _repository.SaveChangesAsync();
 
         // Act
-        repository.Delete(subscription);
-        await repository.SaveChangesAsync();
+        _repository.Delete(subscription);
+        await _repository.SaveChangesAsync();
 
         // Assert
-        var deletedSubscription = await dbContext.Subscriptions.FindAsync(subscription.Id);
+        var deletedSubscription = await DbContext.Subscriptions.FindAsync(subscription.Id);
         Assert.Null(deletedSubscription);
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task ListAsync_ShouldReturnSubscriptions()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<WebhooksDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new WebhookSubscriptionRepository(dbContext);
-
         var subscription1 = new WebhookSubscription(
             WebhookType.OrderPaid,
             DateTime.UtcNow,
@@ -83,28 +71,25 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
             "sample-token2",
             new IdentityId(IdentityExtensions.GenerateId()));
 
-        await repository.CreateAsync(subscription1);
-        await repository.CreateAsync(subscription2);
-        await repository.SaveChangesAsync();
+        await _repository.CreateAsync(subscription1);
+        await _repository.CreateAsync(subscription2);
+        await _repository.SaveChangesAsync();
 
         var specification = new GetWebhookSubscriptionSpecification(WebhookType.OrderPaid);
 
         // Act
-        var subscriptions = await repository.ListAsync(specification);
+        var subscriptions = await _repository.ListAsync(specification);
 
         // Assert
         Assert.Contains(subscriptions, s => s.Id == subscription1.Id);
         Assert.Contains(subscriptions, s => s.Id == subscription2.Id);
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task SingleOrDefaultAsync_ShouldReturnSubscription()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<WebhooksDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new WebhookSubscriptionRepository(dbContext);
+        var repository = new WebhookSubscriptionRepository(DbContext);
         var subscription = new WebhookSubscription(
             WebhookType.OrderPaid,
             DateTime.UtcNow,
@@ -124,20 +109,16 @@ public class WebhookSubscriptionRepositoryTests : IClassFixture<WebhooksFactory>
         Assert.Equal(subscription.Id, result.Id);
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenSubscriptionDoesNotExist()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<WebhooksDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new WebhookSubscriptionRepository(dbContext);
         var specification = new GetWebhookSubscriptionSpecification(
             new IdentityId(IdentityExtensions.GenerateId()),
             new WebhookId(Guid.CreateVersion7()));
 
         // Act
-        var result = await repository.SingleOrDefaultAsync(specification);
+        var result = await _repository.SingleOrDefaultAsync(specification);
 
         // Assert
         Assert.Null(result);

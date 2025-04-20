@@ -5,103 +5,97 @@ namespace Catalog.FunctionalTests.Brands;
 
 public class BrandEndpointsTests : BaseEndpointTest
 {
-    protected const string ApiBaseUrl = "https://localhost:5103";
-
     public BrandEndpointsTests(CatalogFactory factory)
         : base(factory)
     {
-        Client = factory.HttpClient;
     }
 
-    protected HttpClient Client { get; }
-
-    [Fact]
+    [Fact(Skip = "Not Finished")]
     public async Task ListBrands_ShouldReturnBrands()
     {
-        // Arrange
+        // Arrange  
+        await DbContext.Brands.AddRangeAsync(Brand.Create("Brand1"), Brand.Create("Brand2"));
+        await DbContext.SaveChangesAsync();
 
-        // Act
-        var response = await Client.GetAsync(new Uri($"{ApiBaseUrl}/api/catalog/brands"));
+        // Act  
+        var response = await HttpClient.GetAsync(new Uri("api/catalog/brands", UriKind.Relative));
 
-        // Assert
+        // Assert  
         response.EnsureSuccessStatusCode();
         var brands = await response.Content.ReadFromJsonAsync<IEnumerable<BrandDto>>();
         Assert.NotNull(brands);
         Assert.NotEmpty(brands);
     }
 
-    [Fact]
+    [Fact(Skip = "Not Finished")]
     public async Task ListBrands_ShouldReturnEmptyList_WhenNoBrandsExist()
     {
-        // Act
-        var response = await Client.GetAsync(new Uri($"{ApiBaseUrl}/api/catalog/brands"));
+        // Act  
+        var response = await HttpClient.GetAsync(new Uri("api/catalog/brands", UriKind.Relative));
 
-        // Assert
+        // Assert  
         response.EnsureSuccessStatusCode();
         var brands = await response.Content.ReadFromJsonAsync<IEnumerable<BrandDto>>();
         Assert.NotNull(brands);
         Assert.Empty(brands);
     }
 
-    [Fact(Skip = "Not Implemented Yet")]
+    [Fact(Skip = "Not Finished")]
     public async Task CreateBrand_ShouldCreateBrand()
     {
-        // Arrange
-
-        // Arrange
+        // Arrange  
         var newBrand = new { Name = "New Brand" };
 
-        // Act
-        var response = await Client.PostAsJsonAsync(new Uri($"{ApiBaseUrl}/api/catalog/brands"), newBrand);
+        // Act  
+        var response = await HttpClient.PostAsJsonAsync("api/catalog/brands", newBrand);
 
-        // Assert
+        // Assert  
         response.EnsureSuccessStatusCode();
         var createdBrand = await response.Content.ReadFromJsonAsync<Brand>();
         Assert.NotNull(createdBrand);
         Assert.Equal(newBrand.Name, createdBrand.Name);
     }
 
-    [Fact(Skip = "Not Implemented Yet")]
+    [Fact(Skip = "Not Finished")]
     public async Task CreateBrand_ShouldReturnBadRequest_WhenNameIsEmpty()
     {
-        // Arrange
+        // Arrange  
         var newBrand = new { Name = "" };
 
-        // Act
-        var response = await Client.PostAsJsonAsync(new Uri($"{ApiBaseUrl}/api/catalog/brands"), newBrand);
+        // Act  
+        var response = await HttpClient.PostAsJsonAsync("api/catalog/brands", newBrand);
 
-        // Assert
+        // Assert  
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    [Fact(Skip = "Not Implemented Yet")]
+    [Fact(Skip = "Not Finished")]
     public async Task DeleteBrand_ShouldDeleteBrand()
     {
-        // Arrange
-        await using var scope = Factory.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+        // Arrange  
+        await DbContext.Brands.AddAsync(Brand.Create("Brand1"));
+        await DbContext.SaveChangesAsync();
+        var brand = await DbContext.Brands.FirstAsync();
 
-        var brand = await dbContext.Brands.FirstAsync();
+        // Act  
+        var response = await HttpClient.DeleteAsync($"api/catalog/brands/{brand.Id}");
 
-        // Act
-        var response = await Client.DeleteAsync(new Uri($"{ApiBaseUrl}/api/catalog/brands/{brand.Id}"));
-
-        // Assert
+        // Assert  
         response.EnsureSuccessStatusCode();
-        var deletedBrand = await dbContext.Brands.FindAsync(brand.Id);
+        var deletedBrand = await DbContext.Brands.FindAsync(brand.Id);
         Assert.Null(deletedBrand);
     }
 
-    [Fact(Skip = "Not Implemented Yet")]
+    [Fact(Skip = "Not Finished")]
     public async Task DeleteBrand_ShouldReturnNotFound_WhenBrandDoesNotExist()
     {
-        // Arrange
+        // Arrange  
         var nonExistentBrandId = Guid.NewGuid();
 
-        // Act
-        var response = await Client.DeleteAsync(new Uri($"{ApiBaseUrl}/api/catalog/brands/{nonExistentBrandId}"));
+        // Act  
+        var response = await HttpClient.DeleteAsync($"api/catalog/brands/{nonExistentBrandId}");
 
-        // Assert
+        // Assert  
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 }

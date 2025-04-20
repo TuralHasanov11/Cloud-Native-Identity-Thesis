@@ -161,7 +161,6 @@ internal static class OpenApiOptionsExtensions
                 Scheme = JwtBearerDefaults.AuthenticationScheme,
                 Flows = new OpenApiOAuthFlows()
                 {
-                    // TODO: Change this to use Authorization Code flow with PKCE
                     AuthorizationCode = new OpenApiOAuthFlow()
                     {
                         AuthorizationUrl = new Uri($"{enabledProvider.Authority}/connect/authorize"),
@@ -169,11 +168,11 @@ internal static class OpenApiOptionsExtensions
                         Scopes = (IDictionary<string, string>)scopes,
                     }
                 },
-                //Reference = new OpenApiReference
-                //{
-                //    Id = JwtBearerDefaults.AuthenticationScheme,
-                //    Type = ReferenceType.SecurityScheme,
-                //},
+                Reference = new OpenApiReference
+                {
+                    Id = JwtBearerDefaults.AuthenticationScheme,
+                    Type = ReferenceType.SecurityScheme,
+                },
                 In = ParameterLocation.Header,
                 BearerFormat = "JSON Web Token",
                 Description = "JWT Authorization: Bearer {token}",

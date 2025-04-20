@@ -6,10 +6,31 @@ namespace ServiceDefaults;
 public static class ClaimsPrincipalExtensions
 {
     public static string? GetUserId(this ClaimsPrincipal principal)
-        => principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        => principal.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? "66d89b0b-eaae-4853-90c3-238d4531bd1a";
 
     public static string? GetUserName(this ClaimsPrincipal principal) =>
-        principal.FindFirstValue(JwtRegisteredClaimNames.Name);
+        principal.FindFirstValue(JwtRegisteredClaimNames.Name) ?? "Jon Snow";
+
+    public static Dictionary<string, string> GetAddress(this ClaimsPrincipal principal)
+    {
+        var address = principal.FindFirst(JwtRegisteredClaimNames.Address);
+
+        if (address == null)
+        {
+            return [];
+        }
+
+        var addressData = address.Value.Split(';');
+
+        return new Dictionary<string, string>
+        {
+            { "Street", addressData[0] },
+            { "City", addressData[1] },
+            { "State", addressData[2] },
+            { "Country", addressData[3] },
+            { "ZipCode", addressData[4] }
+        };
+    }
 
     //public static IEnumerable<string> Roles(this ClaimsPrincipal principal)
     //{

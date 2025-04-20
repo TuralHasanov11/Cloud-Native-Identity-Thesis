@@ -53,7 +53,7 @@ public class ProductTests
         var product = Product.Create("Product1", "Description1", 10.0m, new ProductTypeId(Guid.NewGuid()), new BrandId(Guid.NewGuid()), 0, 10, 200);
 
         // Act & Assert
-        var exception = Assert.Throws<CatalogDomainException>(() => product.RemoveStock(10));
+        var exception = Assert.Throws<CatalogException>(() => product.RemoveStock(10));
         Assert.Equal("Empty stock, product item Product1 is sold out", exception.Message);
     }
 
@@ -64,7 +64,7 @@ public class ProductTests
         var product = Product.Create("Product1", "Description1", 10.0m, new ProductTypeId(Guid.NewGuid()), new BrandId(Guid.NewGuid()), 100, 10, 200);
 
         // Act & Assert
-        var exception = Assert.Throws<CatalogDomainException>(() => product.RemoveStock(0));
+        var exception = Assert.Throws<CatalogException>(() => product.RemoveStock(0));
         Assert.Equal("Item units desired should be greater than 0", exception.Message);
     }
 

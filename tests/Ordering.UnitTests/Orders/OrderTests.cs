@@ -24,21 +24,14 @@ public class OrderTests
         var userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         var cardTypeId = 1;
-        var cardNumber = "1234567890123456";
-        var cardSecurityNumber = "123";
-        var cardHolderName = "John Doe";
-        var cardExpiration = DateTime.UtcNow.AddYears(1);
         var customerId = new CustomerId(Guid.CreateVersion7());
         var alias = "Visa";
-        var securityNumber = "123";
-
-        var expirationDate = DateTime.UtcNow.AddYears(1);
 
         // Act
-        var paymentMethod = new PaymentMethod(cardTypeId, alias, cardNumber, securityNumber, cardHolderName, expirationDate);
+        var paymentMethod = new PaymentMethod(cardTypeId, alias);
 
         // Act
-        var order = new Order(userId, userName, address, cardTypeId, cardNumber, cardSecurityNumber, cardHolderName, cardExpiration, customerId, paymentMethod.Id);
+        var order = new Order(userId, userName, address, cardTypeId, customerId, paymentMethod.Id);
 
         // Assert
         Assert.Equal(OrderStatus.Submitted, order.OrderStatus);
@@ -53,33 +46,18 @@ public class OrderTests
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
-        const string cardNumber = "1234567890123456";
-        const string cardSecurityNumber = "123";
-        const string cardHolderName = "John Doe";
-        var cardExpiration = DateTime.UtcNow.AddYears(1);
         var customerId = new CustomerId(Guid.CreateVersion7());
         const string alias = "Visa";
-        const string securityNumber = "123";
-
-        var expirationDate = DateTime.UtcNow.AddYears(1);
 
         var paymentMethod = new PaymentMethod(
             cardTypeId,
-            alias,
-            cardNumber,
-            securityNumber,
-            cardHolderName,
-            expirationDate);
+            alias);
 
         var order = new Order(
             userId,
             userName,
             address,
             cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration,
             customerId,
             paymentMethod.Id);
 
@@ -112,33 +90,19 @@ public class OrderTests
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
-        const string cardNumber = "1234567890123456";
-        const string cardSecurityNumber = "123";
-        const string cardHolderName = "John Doe";
-        var cardExpiration = DateTime.UtcNow.AddYears(1);
         var customerId = new CustomerId(Guid.CreateVersion7());
         const string alias = "Visa";
-        const string securityNumber = "123";
 
-        var expirationDate = DateTime.UtcNow.AddYears(1);
 
         var paymentMethod = new PaymentMethod(
             cardTypeId,
-            alias,
-            cardNumber,
-            securityNumber,
-            cardHolderName,
-            expirationDate);
+            alias);
 
         var order = new Order(
             userId,
             userName,
             address,
             cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration,
             customerId,
             paymentMethod.Id);
 
@@ -168,32 +132,18 @@ public class OrderTests
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
-        const string cardNumber = "1234567890123456";
-        const string cardSecurityNumber = "123";
-        const string cardHolderName = "John Doe";
-        var cardExpiration = DateTime.UtcNow.AddYears(1);
         const string alias = "Visa";
-        const string securityNumber = "123";
 
-        var expirationDate = DateTime.UtcNow.AddYears(1);
 
         var paymentMethod = new PaymentMethod(
             cardTypeId,
-            alias,
-            cardNumber,
-            securityNumber,
-            cardHolderName,
-            expirationDate);
+            alias);
 
         var order = new Order(
             userId,
             userName,
             address,
             cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration,
             new CustomerId(Guid.CreateVersion7()),
             paymentMethod.Id);
 
@@ -216,32 +166,17 @@ public class OrderTests
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
-        const string cardNumber = "1234567890123456";
-        const string cardSecurityNumber = "123";
-        const string cardHolderName = "John Doe";
-        var cardExpiration = DateTime.UtcNow.AddYears(1);
         const string alias = "Visa";
-        const string securityNumber = "123";
-
-        var expirationDate = DateTime.UtcNow.AddYears(1);
 
         var paymentMethod = new PaymentMethod(
             cardTypeId,
-            alias,
-            cardNumber,
-            securityNumber,
-            cardHolderName,
-            expirationDate);
+            alias);
 
         var order = new Order(
             userId,
             userName,
             address,
             cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration,
             new CustomerId(Guid.CreateVersion7()),
             paymentMethod.Id);
 
@@ -263,33 +198,18 @@ public class OrderTests
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
-        const string cardNumber = "1234567890123456";
-        const string cardSecurityNumber = "123";
-        const string cardHolderName = "John Doe";
-        var cardExpiration = DateTime.UtcNow.AddYears(1);
         var customerId = new CustomerId(Guid.CreateVersion7());
         const string alias = "Visa";
-        const string securityNumber = "123";
-
-        var expirationDate = DateTime.UtcNow.AddYears(1);
 
         var paymentMethod = new PaymentMethod(
             cardTypeId,
-            alias,
-            cardNumber,
-            securityNumber,
-            cardHolderName,
-            expirationDate);
+            alias);
 
         var order = new Order(
             userId,
             userName,
             address,
             cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration,
             customerId,
             paymentMethod.Id);
 
@@ -312,33 +232,19 @@ public class OrderTests
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
-        const string cardNumber = "1234567890123456";
-        const string cardSecurityNumber = "123";
-        const string cardHolderName = "John Doe";
-        var cardExpiration = DateTime.UtcNow.AddYears(1);
         var customerId = new CustomerId(Guid.CreateVersion7());
         const string alias = "Visa";
-        const string securityNumber = "123";
 
-        var expirationDate = DateTime.UtcNow.AddYears(1);
 
         var paymentMethod = new PaymentMethod(
             cardTypeId,
-            alias,
-            cardNumber,
-            securityNumber,
-            cardHolderName,
-            expirationDate);
+            alias);
 
         var order = new Order(
             userId,
             userName,
             address,
             cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration,
             customerId,
             paymentMethod.Id);
 
@@ -362,33 +268,18 @@ public class OrderTests
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
-        const string cardNumber = "1234567890123456";
-        const string cardSecurityNumber = "123";
-        const string cardHolderName = "John Doe";
-        var cardExpiration = DateTime.UtcNow.AddYears(1);
         var customerId = new CustomerId(Guid.CreateVersion7());
         const string alias = "Visa";
-        const string securityNumber = "123";
-
-        var expirationDate = DateTime.UtcNow.AddYears(1);
 
         var paymentMethod = new PaymentMethod(
             cardTypeId,
-            alias,
-            cardNumber,
-            securityNumber,
-            cardHolderName,
-            expirationDate);
+            alias);
 
         var order = new Order(
             userId,
             userName,
             address,
             cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration,
             customerId,
             paymentMethod.Id);
 
@@ -413,33 +304,18 @@ public class OrderTests
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
-        const string cardNumber = "1234567890123456";
-        const string cardSecurityNumber = "123";
-        const string cardHolderName = "John Doe";
-        var cardExpiration = DateTime.UtcNow.AddYears(1);
         var customerId = new CustomerId(Guid.CreateVersion7());
         const string alias = "Visa";
-        const string securityNumber = "123";
-
-        var expirationDate = DateTime.UtcNow.AddYears(1);
 
         var paymentMethod = new PaymentMethod(
             cardTypeId,
-            alias,
-            cardNumber,
-            securityNumber,
-            cardHolderName,
-            expirationDate);
+            alias);
 
         var order = new Order(
             userId,
             userName,
             address,
             cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration,
             customerId,
             paymentMethod.Id);
 
@@ -460,33 +336,18 @@ public class OrderTests
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
-        const string cardNumber = "1234567890123456";
-        const string cardSecurityNumber = "123";
-        const string cardHolderName = "John Doe";
-        var cardExpiration = DateTime.UtcNow.AddYears(1);
         var customerId = new CustomerId(Guid.CreateVersion7());
         const string alias = "Visa";
-        const string securityNumber = "123";
-
-        var expirationDate = DateTime.UtcNow.AddYears(1);
 
         var paymentMethod = new PaymentMethod(
             cardTypeId,
-            alias,
-            cardNumber,
-            securityNumber,
-            cardHolderName,
-            expirationDate);
+            alias);
 
         var order = new Order(
             userId,
             userName,
             address,
             cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration,
             customerId,
             paymentMethod.Id);
 
@@ -511,33 +372,18 @@ public class OrderTests
         const string userName = "John Doe";
         var address = new Address("Street", "City", "State", "Country", "ZipCode");
         const int cardTypeId = 1;
-        const string cardNumber = "1234567890123456";
-        const string cardSecurityNumber = "123";
-        const string cardHolderName = "John Doe";
-        var cardExpiration = DateTime.UtcNow.AddYears(1);
         var customerId = new CustomerId(Guid.CreateVersion7());
         const string alias = "Visa";
-        const string securityNumber = "123";
-
-        var expirationDate = DateTime.UtcNow.AddYears(1);
 
         var paymentMethod = new PaymentMethod(
             cardTypeId,
-            alias,
-            cardNumber,
-            securityNumber,
-            cardHolderName,
-            expirationDate);
+            alias);
 
         var order = new Order(
             userId,
             userName,
             address,
             cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration,
             customerId,
             paymentMethod.Id);
 

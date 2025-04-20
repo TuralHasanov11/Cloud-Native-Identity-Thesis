@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql;
+using Respawn;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
 
@@ -20,9 +21,7 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     private DbConnection _dbConnection = default!;
 
-#pragma warning disable IDE0052 // Remove unread private members
-    //private Respawner _respawner = default!;
-#pragma warning restore IDE0052 // Remove unread private members
+    private Respawner _respawner = default!;
 
     private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder()
         .WithImage("rabbitmq:4.0-management")
@@ -46,31 +45,36 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
             AllowAutoRedirect = false,
         });
 
-        //await InitializeRespawner();
+        await InitializeRespawner();
     }
 
     private async Task InitializeRespawner()
     {
-        //await _dbConnection.OpenAsync();
-        //_respawner = await Respawner.CreateAsync(
-        //    _dbConnection,
-        //    new RespawnerOptions
-        //    {
-        //        DbAdapter = DbAdapter.Postgres,
-        //        SchemasToInclude = ["public"]
-        //    });
+        await _dbConnection.OpenAsync();
+        _respawner = await Respawner.CreateAsync(
+            _dbConnection,
+            new RespawnerOptions
+            {
+                DbAdapter = DbAdapter.Postgres,
+                SchemasToInclude = ["public"]
+            });
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll<DbContextOptions<CatalogDbContext>>();
-            services.RemoveAll<CatalogDbContext>();
+            var descriptor = services.SingleOrDefault(
+                d => d.ServiceType == typeof(DbContextOptions<CatalogDbContext>));
+
+            if (descriptor is not null)
+            {
+                services.Remove(descriptor);
+            }
 
             services.AddDbContext<CatalogDbContext>(
                 a => a.UseNpgsql(
-                    _dbContainer.GetConnectionString(),
+                    _dbContainer.GetConnectionString(), 
                     npgsqlOptionsAction => npgsqlOptionsAction.MigrationsHistoryTable(
                         HistoryRepository.DefaultTableName)));
 
@@ -102,7 +106,7 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     public async Task ResetDatabaseAsync()
     {
-        //await _respawner.ResetAsync(_dbConnection);
+        await _respawner.ResetAsync(_dbConnection);
     }
 
 

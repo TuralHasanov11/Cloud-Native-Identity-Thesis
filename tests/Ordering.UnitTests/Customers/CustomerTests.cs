@@ -50,14 +50,10 @@ public class CustomerTests
         var customer = Customer.Create(new IdentityId("id"), "John Doe");
         var cardTypeId = 1;
         var alias = "Visa";
-        var cardNumber = "1234567890123456";
-        var securityNumber = "123";
-        var cardHolderName = "John Doe";
-        var expiration = DateTime.UtcNow.AddYears(1);
         var orderId = new OrderId(Guid.CreateVersion7());
 
         // Act
-        var paymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias, cardNumber, securityNumber, cardHolderName, expiration, orderId);
+        var paymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias, orderId);
 
         // Assert
         Assert.Single(customer.PaymentMethods);
@@ -71,16 +67,12 @@ public class CustomerTests
         var customer = Customer.Create(new IdentityId("id"), "John Doe");
         var cardTypeId = 1;
         var alias = "Visa";
-        var cardNumber = "1234567890123456";
-        var securityNumber = "123";
-        var cardHolderName = "John Doe";
-        var expiration = DateTime.UtcNow.AddYears(1);
         var orderId = new OrderId(Guid.CreateVersion7());
 
-        var existingPaymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias, cardNumber, securityNumber, cardHolderName, expiration, orderId);
+        var existingPaymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias,orderId);
 
         // Act
-        var paymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias, cardNumber, securityNumber, cardHolderName, expiration, orderId);
+        var paymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias, orderId);
 
         // Assert
         Assert.Single(customer.PaymentMethods);
@@ -94,14 +86,10 @@ public class CustomerTests
         var customer = Customer.Create(new IdentityId("id"), "John Doe");
         var cardTypeId = 1;
         var alias = "Visa";
-        var cardNumber = "1234567890123456";
-        var securityNumber = "123";
-        var cardHolderName = "John Doe";
-        var expiration = DateTime.UtcNow.AddYears(1);
         var orderId = new OrderId(Guid.CreateVersion7());
 
         // Act
-        var paymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias, cardNumber, securityNumber, cardHolderName, expiration, orderId);
+        var paymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias, orderId);
 
         // Assert
         var domainEvent = customer.DomainEvents.FirstOrDefault() as CustomerAndPaymentMethodVerifiedDomainEvent;

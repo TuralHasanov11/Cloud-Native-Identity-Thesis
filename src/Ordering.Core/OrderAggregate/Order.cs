@@ -7,13 +7,14 @@ public sealed class Order
 
     public Address Address { get; private set; }
 
+    [EUPData]
     public CustomerId? CustomerId { get; private set; }
 
     public Customer Customer { get; }
 
     public OrderStatus OrderStatus { get; private set; }
 
-    public string Description { get; private set; }
+    public string Description { get; private set; } = string.Empty;
 
     public bool IsDraft { get; private set; }
 
@@ -37,10 +38,6 @@ public sealed class Order
         string userName,
         Address address,
         int cardTypeId,
-        string cardNumber,
-        string cardSecurityNumber,
-        string cardHolderName,
-        DateTime cardExpiration,
         CustomerId? customerId = null,
         PaymentMethodId? paymentMethodId = null)
         : base(new OrderId(Guid.CreateVersion7()))
@@ -54,11 +51,7 @@ public sealed class Order
         AddOrderStartedDomainEvent(
             userId,
             userName,
-            cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration);
+            cardTypeId);
     }
 
     public void AddOrderItem(Guid productId, string productName, decimal unitPrice, decimal discount, Uri pictureUrl, int units = 1)
@@ -160,21 +153,13 @@ public sealed class Order
     private void AddOrderStartedDomainEvent(
         string userId,
         string userName,
-        int cardTypeId,
-        string cardNumber,
-        string cardSecurityNumber,
-        string cardHolderName,
-        DateTime cardExpiration)
+        int cardTypeId)
     {
         var orderStartedDomainEvent = new OrderStartedDomainEvent(
             this,
             userId,
             userName,
             cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration,
             DateTime.UtcNow);
 
         AddDomainEvent(orderStartedDomainEvent);

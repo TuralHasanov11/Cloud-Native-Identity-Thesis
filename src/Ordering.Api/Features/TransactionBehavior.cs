@@ -1,17 +1,22 @@
-﻿namespace Ordering.Api.Features;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Ordering.Api.Features;
 
 public sealed class TransactionBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : ICommand<TResponse>, ICommand
 {
     private readonly ILogger<TransactionBehavior<TRequest, TResponse>> _logger;
-    //private readonly IOrderingIntegrationEventService _orderingIntegrationEventService;
+    private readonly IOrderingIntegrationEventService _orderingIntegrationEventService;
+    private readonly OrderingDbContext _dbContext;
 
     public TransactionBehavior(
-        //IOrderingIntegrationEventService orderingIntegrationEventService,
+        OrderingDbContext dbContext,
+        IOrderingIntegrationEventService orderingIntegrationEventService,
         ILogger<TransactionBehavior<TRequest, TResponse>> logger)
     {
-        //_orderingIntegrationEventService = orderingIntegrationEventService;
+        _dbContext = dbContext;
+        _orderingIntegrationEventService = orderingIntegrationEventService;
         _logger = logger;
     }
 
@@ -22,33 +27,33 @@ public sealed class TransactionBehavior<TRequest, TResponse>
 
         try
         {
-            //if (_dbContext.HasActiveTransaction)
-            //{
-            //    return await next();
-            //}
+            if (_dbContext.HasActiveTransaction)
+            {
+                return await next(cancellationToken);
+            }
 
-            //var strategy = _dbContext.Database.CreateExecutionStrategy();
+            var strategy = _dbContext.Database.CreateExecutionStrategy();
 
-            //await strategy.ExecuteAsync(async () =>
-            //{
-            //    Guid transactionId;
+            await strategy.ExecuteAsync(async () =>
+            {
+                Guid transactionId;
 
-            //    await using var transaction = await _dbContext.BeginTransactionAsync();
-            //    using (_logger.BeginScope(new List<KeyValuePair<string, object>> { new("TransactionContext", transaction.TransactionId) }))
-            //    {
-            //        _logger.LogInformation("Begin transaction {TransactionId} for {CommandName} ({@Command})", transaction.TransactionId, typeName, request);
+                await using var transaction = await _dbContext.BeginTransactionAsync();
+                using (_logger.BeginScope(new List<KeyValuePair<string, object>> { new("TransactionContext", transaction.TransactionId) }))
+                {
+                    _logger.LogInformation("Begin transaction {TransactionId} for {CommandName} ({@Command})", transaction.TransactionId, typeName, request);
 
-            //        response = await next();
+                    response = await next();
 
-            //        _logger.LogInformation("Commit transaction {TransactionId} for {CommandName}", transaction.TransactionId, typeName);
+                    _logger.LogInformation("Commit transaction {TransactionId} for {CommandName}", transaction.TransactionId, typeName);
 
-            //        await _dbContext.CommitTransactionAsync(transaction);
+                    await _dbContext.CommitTransactionAsync(transaction);
 
-            //        transactionId = transaction.TransactionId;
-            //    }
+                    transactionId = transaction.TransactionId;
+                }
 
-            //    await _orderingIntegrationEventService.PublishEventsThroughEventBusAsync(transactionId);
-            //});
+                await _orderingIntegrationEventService.PublishEventsThroughEventBusAsync(transactionId);
+            });
 
             return response;
         }

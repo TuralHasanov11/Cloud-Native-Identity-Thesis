@@ -6,7 +6,7 @@ metadata:
     app: pgadmin
   namespace: thesis
 spec:
-  ingressClassName: ingress-service
+  # ingressClassName: ingress-service
   replicas: 1
   selector:
     matchLabels:
@@ -17,7 +17,7 @@ spec:
         app: pgadmin
     spec:
       containers:
-      - name: modularmonolith.pgadmin
+      - name: pgadmin
         image: dpage/pgadmin4:latest
         ports:
         - containerPort: 80
@@ -53,4 +53,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-      nodePort: 30000
+      nodePort: 5050

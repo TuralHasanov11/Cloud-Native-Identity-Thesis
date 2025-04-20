@@ -1,10 +1,16 @@
 ### CI/CD
 ```sh
-docker build -t <user_name_>/<image_name_>:latest -f ./src/<ServiceName>/Dockerfile .
+docker tag <image_name_> <user_name_>/thesis/<image_name_>
+docker build -t <user_name_>/thesis/<image_name_>:latest -f ./src/<ServiceName>/Dockerfile .
 ```
 
 ```sh
 docker push <user_name_>/<image_name_>:latest
+```
+
+```sh
+docker-compose build 
+docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
 ```
 
 ### Application Inspector
@@ -47,5 +53,20 @@ dotnet format ./CloudNativeIdentityThesis.sln
 dotnet test --filter <ServiceName>.UnitTests --no-build --verbosity normal
 ```
 
+### Kubernetes
+```sh
+kubectl apply -f k8s/thesis-namespace.yaml
+
+kubectl get namespaces
+
+kubectl get deployments -n thesis
+
+kubectl apply -f k8s/pgadmin-deployment.yaml
+
+kubectl apply -f k8s/catalog-database-secret.yaml
+kubectl apply -f k8s/catalog-database-pvc.yaml
+kubectl apply -f k8s/catalog-database-configmap.yaml
+kubectl apply -f k8s/catalog-database-deployment.yaml
+```
 
 

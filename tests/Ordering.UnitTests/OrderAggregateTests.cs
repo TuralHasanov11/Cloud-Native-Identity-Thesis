@@ -107,20 +107,12 @@ public class OrderAggregateTests
         const string country = "fakeCountry";
         const string zipcode = "FakeZipCode";
         const int cardTypeId = 5;
-        const string cardNumber = "12";
-        const string cardSecurityNumber = "123";
-        const string cardHolderName = "FakeName";
-        DateTime cardExpiration = DateTime.UtcNow.AddYears(1);
 
         var fakeOrder = new Order(
             new Core.CustomerAggregate.IdentityId(IdentityExtensions.GenerateId()),
             "fakeName",
             new Address(street, city, state, country, zipcode),
-            cardTypeId,
-            cardNumber,
-            cardSecurityNumber,
-            cardHolderName,
-            cardExpiration);
+            cardTypeId);
 
         Assert.Single(fakeOrder.DomainEvents);
         Assert.IsType<OrderStartedDomainEvent>(fakeOrder.DomainEvents.First());

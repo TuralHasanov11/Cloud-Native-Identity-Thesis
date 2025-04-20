@@ -2,141 +2,114 @@
 
 namespace Ordering.IntegrationTests.Customers;
 
-public class CustomerRepositoryTests : IClassFixture<OrderingFactory>
+public class CustomerRepositoryTests : BaseIntegrationTest
 {
-    private readonly OrderingFactory _factory;
+    private readonly ICustomerRepository _customerRepository;
 
-    public CustomerRepositoryTests(OrderingFactory factory)
+    public CustomerRepositoryTests(OrderingFactory factory) : base(factory)
     {
-        _factory = factory;
+        _customerRepository = factory.Services.GetRequiredService<ICustomerRepository>();
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task CreateAsync_ShouldAddCustomer()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new CustomerRepository(dbContext);
         var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
         // Act
-        await repository.CreateAsync(customer);
-        await repository.SaveChangesAsync();
+        await _customerRepository.CreateAsync(customer);
+        await _customerRepository.SaveChangesAsync();
 
         // Assert
-        var createdCustomer = await dbContext.Customers.FindAsync(customer.Id);
+        var createdCustomer = await DbContext.Customers.FindAsync(customer.Id);
         Assert.NotNull(createdCustomer);
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task Delete_ShouldRemoveCustomer()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new CustomerRepository(dbContext);
         var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
-        await repository.CreateAsync(customer);
-        await repository.SaveChangesAsync();
+        await _customerRepository.CreateAsync(customer);
+        await _customerRepository.SaveChangesAsync();
 
         // Act
-        repository.Delete(customer);
-        await repository.SaveChangesAsync();
+        _customerRepository.Delete(customer);
+        await _customerRepository.SaveChangesAsync();
 
         // Assert
-        var deletedCustomer = await dbContext.Customers.FindAsync(customer.Id);
+        var deletedCustomer = await DbContext.Customers.FindAsync(customer.Id);
         Assert.Null(deletedCustomer);
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task ListAsync_ShouldReturnCustomers()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new CustomerRepository(dbContext);
-
         var customer1 = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
         var customer2 = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "Jane Doe");
 
-        await repository.CreateAsync(customer1);
-        await repository.CreateAsync(customer2);
-        await repository.SaveChangesAsync();
+        await _customerRepository.CreateAsync(customer1);
+        await _customerRepository.CreateAsync(customer2);
+        await _customerRepository.SaveChangesAsync();
 
         var specification = new GetCustomersSpecification();
 
         // Act
-        var customers = await repository.ListAsync(specification);
+        var customers = await _customerRepository.ListAsync(specification);
 
         // Assert
         Assert.Contains(customers, c => c.Id == customer1.Id);
         Assert.Contains(customers, c => c.Id == customer2.Id);
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task SingleOrDefaultAsync_ShouldReturnCustomer()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new CustomerRepository(dbContext);
         var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
-        await repository.CreateAsync(customer);
-        await repository.SaveChangesAsync();
+        await _customerRepository.CreateAsync(customer);
+        await _customerRepository.SaveChangesAsync();
         var specification = new GetCustomerByIdSpecification(customer.Id);
 
         // Act
-        var result = await repository.SingleOrDefaultAsync(specification);
+        var result = await _customerRepository.SingleOrDefaultAsync(specification);
 
         // Assert
         Assert.NotNull(result);
         Assert.Equal(customer.Id, result.Id);
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact]
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenCustomerDoesNotExist()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new CustomerRepository(dbContext);
         var specification = new GetCustomerByIdSpecification(new CustomerId(Guid.CreateVersion7()));
 
         // Act
-        var result = await repository.SingleOrDefaultAsync(specification);
+        var result = await _customerRepository.SingleOrDefaultAsync(specification);
 
         // Assert
         Assert.Null(result);
     }
 
-    [Fact(Skip = "Waiting")]
+    [Fact(Skip = "Not Ready")]
     public async Task Update_ShouldModifyCustomer()
     {
         // Arrange
-        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-        await dbContext.SeedDatabase();
-
-        var repository = new CustomerRepository(dbContext);
-        var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
-
-        await repository.CreateAsync(customer);
-        await repository.SaveChangesAsync();
+        var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "Jane Doe");
+        await _customerRepository.CreateAsync(customer);
+        await _customerRepository.SaveChangesAsync();
 
         // Act
-        customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "Jane Doe");
-        repository.Update(customer);
-        await repository.SaveChangesAsync();
+        _customerRepository.Update(customer);
+        await _customerRepository.SaveChangesAsync();
 
         // Assert
-        var updatedCustomer = await dbContext.Customers.FindAsync(customer.Id);
+        var updatedCustomer = await DbContext.Customers.FindAsync(customer.Id);
         Assert.NotNull(updatedCustomer);
         Assert.Equal("Jane Doe", updatedCustomer.Name);
     }

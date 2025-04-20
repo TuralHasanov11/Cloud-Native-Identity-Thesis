@@ -2,67 +2,124 @@ name: .NET
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     paths-ignore:
-    - ".github/workflows/main-ci.yml"
-    - '**/*.md'
+      - ".github/workflows/main-ci.yml"
+      - "**/*.md"
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
     paths-ignore:
-    - ".github/workflows/main-ci.yml"
-    - '**/*.md'
+      - ".github/workflows/main-ci.yml"
+      - "**/*.md"
 
 jobs:
   build:
-    name: Build & Test
+    name: Build
     runs-on: ${{ matrix.os }}
     strategy:
-     matrix:
-      dotnet-version: [9.0.x]
-      os: [ubuntu-latest, windows-2022]
+      matrix:
+        dotnet-version: [9.0.x]
+        os: [ubuntu-latest, windows-2022]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET ${{ matrix.dotnet-version }}
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ matrix.dotnet-version }}
-    - name: Display .NET version
-      run: dotnet --version
-    - name: Restore dependencies
-      run: dotnet restore ./CloudNativeIdentityThesis.sln
-    - name: Build
-      run: dotnet build ./CloudNativeIdentityThesis.sln --configuration Release /p:RunAnalyzers=true --no-restore
-    - name: Test
-      run: dotnet test ./CloudNativeIdentityThesis.sln --configuration Release --no-build --no-restore --verbosity normal
-    - uses: actions/upload-artifact@v4
+      - uses: actions/checkout@v4
+      - name: Setup .NET ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Display .NET version
+        run: dotnet --version
+      - name: Restore dependencies
+        run: dotnet restore ./CloudNativeIdentityThesis.sln
+      - name: Build
+        run: dotnet build ./CloudNativeIdentityThesis.sln --configuration Release /p:RunAnalyzers=true --no-restore
 
-  release:
+  test:
+    name: Test
     needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        dotnet-version: [9.0.x]
+        os: [ubuntu-latest, windows-2022]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Test
+        run: dotnet test ./CloudNativeIdentityThesis.sln --configuration Release --no-build --no-restore --verbosity normal
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      - name: Login to Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+      - name: Run Catalog Service API tests
+        run: |
+          postman collection run "10147868-85cb603f-5d6e-436e-9bdb-0a72dd810da5" -e "10147868-33c006ab-97b3-453a-b5af-9e668782d5e1"
+
+  stage:
+    name: Stage
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Login to DockerHub
-      run: echo "${{secrets.DOCKERHUB_PASSWORD}}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+      - name: Login to DockerHub
+        run: echo "${{secrets.DOCKERHUB_PASSWORD}}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-    - name: Build and push basket-api image
-      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/basket-api:latest -f ./src/Basket.Api/Dockerfile .
+      - name: Build and push basket-api image
+        run:
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/basket-api:latest -f ./src/Basket.Api/Dockerfile .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/basket-api:latest
 
-    - name: Build and push catalog-api image
-      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/catalog-api:latest -f ./src/Catalog.Api/Dockerfile .
+      - name: Build and push catalog-api image
+        run:
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/catalog-api:latest -f ./src/Catalog.Api/Dockerfile .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/catalog-api:latest
 
-    - name: Build and push ordering-api image
-      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/ordering-api:latest -f ./src/Ordering.Api/Dockerfile .
+      - name: Build and push ordering-api image
+        run:
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/ordering-api:latest -f ./src/Ordering.Api/Dockerfile .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/ordering-api:latest
 
-    - name: Build and push paymentprocessor image
-      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/paymentprocessor:latest -f ./src/PaymentProcessor.Api/Dockerfile .
+      - name: Build and push paymentprocessor image
+        run:
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/paymentprocessor:latest -f ./src/PaymentProcessor.Api/Dockerfile .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/paymentprocessor:latest
 
-    - name: Build and push orderprocessor image
-      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/orderprocessor:latest -f ./src/OrderProcessor.Api/Dockerfile .
+      - name: Build and push orderprocessor image
+        run:
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/orderprocessor:latest -f ./src/OrderProcessor.Api/Dockerfile .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/orderprocessor:latest
+
+      - name: Build and push webhooks-api image
+        run:
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/webhooks-api:latest -f ./src/Webhooks.Api/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/webhooks-api:latest
+
+      - name: Build and push webhooks-client image
+        run:
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/webhooks-client:latest -f ./src/Webhooks.Client/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/webhooks-client:latest
+
+      - name: Build and push webapp-bff image
+        run:
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/webapp-bff:latest -f ./src/WebApp.Bff/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/webapp-bff:latest
+
+      - name: Build and push webapp image
+        run:
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/thesis/webapp:latest -f ./src/WebApp/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/thesis/webapp:latest
+
+  release:
+    name: Release
+    needs: stage
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Release stage"

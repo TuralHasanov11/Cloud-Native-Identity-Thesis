@@ -1,4 +1,5 @@
 using Basket.Api.Extensions;
+using Basket.Api.Features;
 using Basket.Api.Features.Basket;
 using Serilog;
 using ServiceDefaults.Middleware;
@@ -16,7 +17,7 @@ try
     builder.Host.UseDefaultServiceProvider(config => config.ValidateOnBuild = true);
     builder.WebHost.UseKestrel(options => options.AddServerHeader = false);
 
-    builder.AddBasicServiceDefaults();
+    builder.AddServiceDefaults();
     builder.AddApplicationServices();
 
     builder.Services.AddGrpc();

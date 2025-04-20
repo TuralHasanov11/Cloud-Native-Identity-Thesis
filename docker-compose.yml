@@ -70,17 +70,17 @@ services:
     networks:
       - thesis-net
 
-  # orderprocessor:
-  #   image: ${DOCKER_REGISTRY-}orderprocessor
-  #   container_name: orderprocessor
-  #   build:
-  #     context: .
-  #     dockerfile: src/OrderProcessor/Dockerfile
-  #   depends_on:
-  #   - rabbitmq
-  #   - ordering.postgres
-  #  networks:
-  #    - thesis-net
+  orderprocessor:
+    image: ${DOCKER_REGISTRY-}orderprocessor
+    container_name: orderprocessor
+    build:
+      context: .
+      dockerfile: src/OrderProcessor/Dockerfile
+    depends_on:
+    - rabbitmq
+    - ordering.postgres
+    networks:
+     - thesis-net
 
   ordering.postgres:
     image: postgres:latest
@@ -186,11 +186,24 @@ services:
     networks:
       - thesis-net
 
+  webapp:
+    image: ${DOCKER_REGISTRY-}webapp
+    container_name: webapp
+    build:
+      context: .
+      dockerfile: src/WebApp/Dockerfile
+    ports:
+    - 5173:80
+    networks:
+      - thesis-net
+    environment:
+      VITE_API_URI: "https://webapp.bff:5113"
+
   papercut:
     image: changemakerstudiosus/papercut-smtp:latest
     container_name: "papercut"
     ports:
-      - "8080:80"
+      - "8083:80"
       - "25:25"
     networks:
       - thesis-net
@@ -246,6 +259,29 @@ services:
       - ./.containers/redis/data:/data
     networks:
       - thesis-net
+
+  # prometheus:
+  #   image: prom/prometheus
+  #   container_name: prometheus
+  #   command:
+  #     - '--config.file=/etc/prometheus/prometheus.yml'
+  #   ports:
+  #     - 9090:9090
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./prometheus:/etc/prometheus
+
+  # grafana:
+  #   image: grafana/grafana
+  #   container_name: grafana
+  #   ports:
+  #     - 3000:3000
+  #   restart: unless-stopped
+  #   environment:
+  #     - GF_SECURITY_ADMIN_USER=admin
+  #     - GF_SECURITY_ADMIN_PASSWORD=grafana
+  #   volumes:
+  #     - ./grafana/datasource:/etc/grafana/provisioning/datasources
 
 networks:
   thesis-net:
