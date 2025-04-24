@@ -38,7 +38,7 @@ const removeItem = () => {
                 <div class="text-xs text-gray-400 group-hover:text-gray-700 flex leading-none items-center">
                     <button title="Remove Item" aria-label="Remove Item" @click="removeItem" type="button"
                         class="flex items-center gap-1 hover:text-red-500 cursor-pointer">
-                        <UIcon name="ion:trash" class="hidden md:inline-block" size="12" />
+                        <i class="pi pi-trash hidden md:inline-block" size="12" />
                     </button>
                 </div>
             </div>

@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Identity.Web;
 
 namespace ServiceDefaults;
 
@@ -26,32 +29,50 @@ public static class AuthenticationExtensions
             return builder.Services;
         }
 
-        builder.Services.AddAuthentication()
-            .AddJwtBearer(options =>
-            {
-                options.Authority = enabledProvider.Authority;
-                options.Audience = identitySettings?.Audience;
-                options.RequireHttpsMetadata = false;
-                options.MapInboundClaims = false;
-                options.TokenValidationParameters.ValidIssuer = enabledProvider.Authority;
-                //options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Sub;
-                //options.TokenValidationParameters.RoleClaimType = JwtRegisteredClaimNames.Sub;
-                options.TokenValidationParameters.ValidateAudience = true;
-                options.TokenValidationParameters.ValidateIssuer = true;
-                options.TokenValidationParameters.ValidateLifetime = true;
-                options.TokenValidationParameters.ValidateIssuerSigningKey = true;
-                options.TokenValidationParameters.ValidateTokenReplay = true;
+        JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
-                if (builder.Environment.IsDevelopment())
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddMicrosoftIdentityWebApi(
+                options =>
                 {
-                    options.IncludeErrorDetails = true;
-                }
-            });
+                    builder.Configuration.Bind("AzureAdB2C", options);
+                    options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Sub;
+                }, 
+                options => 
+                { 
+                    builder.Configuration.Bind("AzureAdB2C", options); 
+                    options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Sub;
+                });
+
+        //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        //    .AddJwtBearer(options =>
+        //    {
+        //        options.Authority = enabledProvider.Authority;
+        //        options.Audience = identitySettings?.Audience;
+        //        options.RequireHttpsMetadata = false;
+        //        options.MapInboundClaims = false;
+        //        options.TokenValidationParameters.ValidIssuer = enabledProvider.Authority;
+        //        //options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Sub;
+        //        //options.TokenValidationParameters.RoleClaimType = JwtRegisteredClaimNames.Sub;
+        //        options.TokenValidationParameters.ValidateAudience = true;
+        //        options.TokenValidationParameters.ValidateIssuer = true;
+        //        options.TokenValidationParameters.ValidateLifetime = true;
+        //        options.TokenValidationParameters.ValidateIssuerSigningKey = true;
+        //        options.TokenValidationParameters.ValidateTokenReplay = true;
+
+        //        if (builder.Environment.IsDevelopment())
+        //        {
+        //            options.IncludeErrorDetails = true;
+        //        }
+        //    });
+
+        var defaultScopes = builder.Configuration["DefaultScopes"]?.Split(" ");
 
         builder.Services.AddAuthorization(options =>
         {
             options.DefaultPolicy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
+                .RequireScope(defaultScopes is not null ? defaultScopes : [])
                 .Build();
 
             options.FallbackPolicy = options.DefaultPolicy;

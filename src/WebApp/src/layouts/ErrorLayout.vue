@@ -27,13 +27,11 @@ onMounted(() => {
     <div class="error">
         <BaseHeader />
 
-        <UMain>
-            <UContainer>
-                <UPage>
-                    <BaseError :error="error" />
-                </UPage>
-            </UContainer>
-        </UMain>
+        <main>
+            <div class="container mx-auto">
+                <BaseError :error="error" />
+            </div>
+        </main>
 
         <BaseFooter />
     </div>

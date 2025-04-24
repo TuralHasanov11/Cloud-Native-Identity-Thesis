@@ -2,7 +2,6 @@
 import useBasket from '@/composables/useBasket';
 import useCheckout from '@/composables/useCheckout';
 import useIdentity from '@/composables/useIdentity';
-import DefaultLayout from '@/layouts/DefaultLayout.vue'
 
 import { computed, onBeforeMount, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -50,48 +49,46 @@ const payNow = async () => {
 </script>
 
 <template>
-  <DefaultLayout>
-    <main id="checkout" class="py-5">
-      <UContainer>
-        <div class="flex flex-col min-h-[600px]">
-          <template v-if="cart">
-            <div v-if="cartIsEmpty" class="flex flex-col items-center justify-center flex-1 mb-12">
-              <UIcon name="ion:cart-outline" size="156" class="opacity-25 mb-5" />
-              <h2 class="text-2xl font-bold mb-2">{{ $t('messages.shop.cartEmpty') }}</h2>
-              <span class="text-gray-400 mb-4">{{ $t('messages.shop.addProductsInYourCart') }}</span>
-              <RouterLink to="/products"
-                class="flex items-center justify-center gap-3 p-2 px-3 mt-4 font-semibold text-center text-white rounded-lg shadow-md bg-primary hover:bg-primary-dark">
-                {{ $t('messages.shop.browseOurProducts') }}
-              </RouterLink>
-            </div>
+  <main id="checkout" class="py-5">
+    <div class="container mx-auto">
+      <div class="flex flex-col min-h-[600px]">
+        <template v-if="cart">
+          <div v-if="cartIsEmpty" class="flex flex-col items-center justify-center flex-1 mb-12">
+            <i class="pi pi-shopping-cart opacity-25 mb-5" />
+            <h2 class="text-2xl font-bold mb-2">{{ $t('messages.shop.cartEmpty') }}</h2>
+            <span class="text-gray-400 mb-4">{{ $t('messages.shop.addProductsInYourCart') }}</span>
+            <RouterLink to="/products"
+              class="flex items-center justify-center gap-3 p-2 px-3 mt-4 font-semibold text-center text-white rounded-lg shadow-md bg-primary hover:bg-primary-dark">
+              {{ $t('messages.shop.browseOurProducts') }}
+            </RouterLink>
+          </div>
 
-            <form v-else class="container flex flex-wrap items-start gap-8 my-16 justify-evenly lg:gap-20"
-              @submit.prevent="payNow">
-              <div class="grid w-full max-w-2xl gap-8 checkout-form md:flex-1">
-                <!-- Customer details -->
-                <div v-if="isGuest">
-                  <h2 class="w-full mb-2 text-2xl font-semibold leading-none">Contact Information</h2>
-                  <p class="mt-1 text-sm text-gray-500">Already have an account? <a href="/my-account"
-                      class="text-primary text-semibold">Log in</a>.</p>
-                </div>
-
-                <div>
-                  <h2 class="w-full mb-3 text-2xl font-semibold">{{ $t('messages.billing.billingDetails') }}</h2>
-                  <BillingDetails v-if="user.address" v-model:address="user.address" />
-                </div>
-
+          <form v-else class="container flex flex-wrap items-start gap-8 my-16 justify-evenly lg:gap-20"
+            @submit.prevent="payNow">
+            <div class="grid w-full max-w-2xl gap-8 checkout-form md:flex-1">
+              <!-- Customer details -->
+              <div v-if="isGuest">
+                <h2 class="w-full mb-2 text-2xl font-semibold leading-none">Contact Information</h2>
+                <p class="mt-1 text-sm text-gray-500">Already have an account? <a href="/my-account"
+                    class="text-primary text-semibold">Log in</a>.</p>
               </div>
 
-              <OrderSummary>
-                <UButton type="submit" :disabled="isCheckoutDisabled">
-                  {{ buttonText }}
-                </UButton>
-              </OrderSummary>
-            </form>
-          </template>
-          <LoadingIcon v-else class="m-auto" />
-        </div>
-      </UContainer>
-    </main>
-  </DefaultLayout>
+              <div>
+                <h2 class="w-full mb-3 text-2xl font-semibold">{{ $t('messages.billing.billingDetails') }}</h2>
+                <BillingDetails v-if="user.address" v-model:address="user.address" />
+              </div>
+
+            </div>
+
+            <OrderSummary>
+              <UButton type="submit" :disabled="isCheckoutDisabled">
+                {{ buttonText }}
+              </UButton>
+            </OrderSummary>
+          </form>
+        </template>
+        <LoadingIcon v-else class="m-auto" />
+      </div>
+    </div>
+  </main>
 </template>

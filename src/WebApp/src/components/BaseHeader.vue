@@ -1,105 +1,125 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useRoute } from "vue-router";
-import BaseMenuTrigger from "./BaseMenuTrigger.vue";
 import useBasket from "@/composables/useBasket";
 import useIdentity from "@/composables/useIdentity";
-
-const route = useRoute();
+import type { MenuItem } from "primevue/menuitem";
+import { computed, ref } from "vue";
 
 const { getBasket } = useBasket();
 const { login, logout, user, isAuthenticated } = useIdentity();
 
 await getBasket();
 
-const items = computed(() => [
-  [
-    {
-      label: "Home",
-      to: "/",
+const items = computed<MenuItem[]>(() => [
+  {
+    label: "Home",
+    route: "/",
+    icon: "pi pi-home"
+  },
+  {
+    label: "Products",
+    route: "/products",
+    icon: "pi pi-microchip"
+  },
+  {
+    label: "Categories",
+    route: "/categories",
+    icon: "pi pi-building-columns"
+  },
+]);
+
+const userItems = computed<MenuItem[]>(() => [
+  {
+    label: user.value.name,
+    avatar: {
+      src: "https://github.com/benjamincanac.png",
     },
-    {
-      label: "Products",
-      to: "/products",
-      active: route.path.startsWith("/products"),
-    },
-    {
-      label: "Categories",
-      to: "/categories",
-      active: route.path.startsWith("/categories"),
-    },
-  ],
-  isAuthenticated.value
-    ? [
+    items: [
       {
-        label: user.value.name,
-        avatar: {
-          src: "https://github.com/benjamincanac.png",
-        },
-        children: [
-          {
-            label: 'Orders',
-            icon: 'i-lucide-user',
-            to: "/user/orders",
-          },
-          {
-            label: 'Profile',
-            icon: 'i-lucide-user',
-            to: "/user",
-          },
-          {
-            label: 'Logout',
-            icon: 'i-lucide-log-out',
-            onClick: () => {
-              logout()
-            }
-          }
-        ]
+        label: 'Orders',
+        icon: 'pi pi-book',
+        route: "/user/orders",
       },
       {
-        label: "Cart",
-        icon: "i-lucide-shopping-cart",
-        to: "/cart",
-      }
-    ]
-    : [
+        label: 'Profile',
+        icon: 'pi pi-user',
+        route: "/user",
+      },
       {
-        label: 'Sign in',
-        color: 'neutral',
-        variant: 'ghost',
-        icon: 'i-lucide-log-in',
-        onClick: () => {
-          login()
+        label: 'Logout',
+        icon: 'pi pi-sign-out',
+        command: () => {
+          logout()
         }
       }
     ]
+  },
+  {
+    label: "Cart",
+    icon: "pi pi-shopping-cart",
+    route: "/cart",
+  }
 ]);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const menu = ref<any>("menu");
+
+const toggle = (event: MouseEvent) => {
+  menu?.value?.toggle(event);
+};
 
 </script>
 
 <template>
-  <header class="sticky top-0 z-40 bg-white shadow-sm shadow-light-500">
-    <UContainer class="container flex items-center justify-between py-4">
-      <div class="flex items-center">
-        <BaseMenuTrigger class="lg:hidden" />
-        <BaseLogo class="md:w-[160px]" />
-      </div>
-      <UNavigationMenu highlight highlight-color="warning" content-orientation="vertical" :items="items"
-        class="border-(--ui-border) data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-48" />
-      <div class="flex justify-end items-center md:w-[160px] flex-1 ml-auto gap-4 md:gap-6">
-        <!-- <ProductSearch class="hidden sm:inline-flex max-w-[320px] w-[60%]" />
-        <SearchTrigger />
-        <div class="flex gap-4 items-center">
-          <SignInLink />
-          <CartTrigger />
-        </div> -->
-      </div>
-    </UContainer>
-    <!-- <Transition name="scale-y" mode="out-in">
-      <div class="container mb-3 -mt-1 sm:hidden" v-if="isShowingSearch">
-        <ProductSearch class="flex w-full" />
-      </div>
-    </Transition> -->
+  <header class="layout-topbar">
+    <Menubar :model="items">
+      <template #start>
+        <BaseLogo />
+      </template>
+      <template #item="{ item, props, hasSubmenu }">
+        <RouterLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+          <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+            <span :class="item.icon" />
+            <span class="ml-2">{{ item.label }}</span>
+          </a>
+        </RouterLink>
+        <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
+          <span :class="item.icon" />
+          <span>{{ item.label }}</span>
+          <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down" />
+        </a>
+      </template>
+      <template #end>
+        <div class="flex items-center gap-2">
+          <InputText placeholder="Search" type="text" class="w-32 sm:w-auto" />
+          <template v-if="isAuthenticated">
+            <Avatar :label="user.name[0]" image="https://github.com/benjamincanac.png" aria-haspopup="true"
+              aria-controls="user_menu" @click="toggle" icon="pi pi-user" class="cursor-pointer" v-ripple />
+            <Menu ref="menu" id="user_menu" :model="userItems" :popup="true">
+              <template #item="{ item, props }">
+                <RouterLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                  <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+                    <span :class="item.icon" />
+                    <span class="ml-2">{{ item.label }}</span>
+                  </a>
+                </RouterLink>
+                <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
+                  <span :class="item.icon" />
+                  <span class="ml-2">{{ item.label }}</span>
+                </a>
+              </template>
+            </Menu>
+          </template>
+          <template v-else>
+            <a v-bind="login" custom>
+              <span class="pi pi-sign-in" />
+              <span>Sign in</span>
+            </a>
+          </template>
+        </div>
+
+      </template>
+    </Menubar>
+
   </header>
 
 </template>

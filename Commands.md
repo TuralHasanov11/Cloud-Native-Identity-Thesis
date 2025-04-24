@@ -70,3 +70,13 @@ kubectl apply -f k8s/catalog-database-deployment.yaml
 ```
 
 
+### Azure
+#### Services
+rg-thesis Resource Group
+app-webappbff-web App Service
+asp-thesis App Service plan
+turalhasanovthesis AD B2c
+
+```sh
+
+```

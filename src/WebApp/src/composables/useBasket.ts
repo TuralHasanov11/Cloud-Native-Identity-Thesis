@@ -45,7 +45,7 @@ export default function useBasket() {
 
   async function deleteBasket(): Promise<boolean> {
     try {
-      await useBffFetch('/api/basket/basket').delete()
+      await useBffFetch('/api/basket').delete()
       cart.value = DEFAULT_CART
       return true
     } catch (error: unknown) {
@@ -64,7 +64,7 @@ export default function useBasket() {
         quantity: item.quantity,
       })) as BasketGrpcItem[]
 
-      await useBffFetch('/api/basket/basket').post({
+      await useBffFetch('/api/basket').post({
         items,
       })
 
@@ -103,6 +103,8 @@ export default function useBasket() {
       if (!isShowingCart.value) toggleCart(true)
     } catch (error: unknown) {
       console.error('Error adding item to cart:', error)
+      isUpdatingCart.value = false
+    } finally {
       isUpdatingCart.value = false
     }
   }

@@ -1,10 +1,24 @@
 ﻿
+using Microsoft.AspNetCore.WebUtilities;
+
 namespace WebApp.Bff.Features.Catalog;
 
 public class CatalogService(HttpClient httpClient) : ICatalogService
 {
-    public Task<IEnumerable<Product>> GetProducts(IEnumerable<string> ids)
+    public async Task<IEnumerable<Product>> GetProducts(IEnumerable<string> ids)
     {
-        throw new NotImplementedException();
+        if (!ids.Any())
+        {
+            return Product.Empty();
+        }
+
+        var builder = new UriBuilder(httpClient.BaseAddress + "api/products/by")
+        {
+            Query = string.Join("&", ids.Select(id => $"ids={Uri.EscapeDataString(id)}"))
+        };
+
+        var response = await httpClient.GetFromJsonAsync<IEnumerable<Product>>(builder.Uri);
+
+        return response ?? Product.Empty();
     }
 }
