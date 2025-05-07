@@ -4,7 +4,7 @@ namespace Catalog.Api.Features.Products;
 
 public static class DeleteById
 {
-    public static async Task<Results<NoContent, NotFound>> Handle(
+    public static async Task<Results<NoContent, NotFound, ForbidHttpResult>> Handle(
         IProductRepository productRepository,
         [Description("The id of the catalog item to delete")] Guid id,
         CancellationToken cancellationToken)

@@ -4,7 +4,7 @@ namespace Catalog.Api.Features.Products;
 
 public static class Create
 {
-    public static async Task<Results<Created, BadRequest<ProblemDetails>>> Handle(
+    public static async Task<Results<Created, BadRequest<ProblemDetails>, ForbidHttpResult>> Handle(
         IProductRepository productRepository,
         CreateProductRequest request,
         CancellationToken cancellationToken)

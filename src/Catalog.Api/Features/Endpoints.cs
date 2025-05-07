@@ -82,21 +82,21 @@ public static class Endpoints
             .WithTags("Brands");
 
         api.MapPost("products", Products.Create.Handle)
-            .AllowAnonymous()
+            .RequireAuthorization("RequireGroupAdmins")
             .WithName("CreateProduct")
             .WithSummary("Create a catalog product")
             .WithDescription("Create a new product in the catalog")
             .WithTags("Products");
 
         api.MapPut("products/{id:guid}", Products.Update.Handle)
-            .AllowAnonymous()
+            .RequireAuthorization("RequireGroupAdmins")
             .WithName("UpdateProduct")
             .WithSummary("Create or replace a catalog product")
             .WithDescription("Create or replace a catalog product")
             .WithTags("Products");
 
         api.MapDelete("products/{id:guid}", Products.DeleteById.Handle)
-            .AllowAnonymous()
+            .RequireAuthorization("RequireGroupAdmins")
             .WithName("DeleteProductById")
             .WithSummary("Delete catalog product")
             .WithDescription("Delete the specified catalog product")

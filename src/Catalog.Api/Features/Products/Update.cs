@@ -6,7 +6,7 @@ namespace Catalog.Api.Features.Products;
 
 public static class Update
 {
-    public static async Task<Results<NoContent, BadRequest<ProblemDetails>, NotFound<ProblemDetails>>> Handle(
+    public static async Task<Results<NoContent, BadRequest<ProblemDetails>, NotFound<ProblemDetails>, ForbidHttpResult>> Handle(
         IProductRepository productRepository,
         ICatalogIntegrationEventService catalogIntegrationEventService,
         Guid id,

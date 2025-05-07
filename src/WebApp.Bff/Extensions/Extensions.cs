@@ -2,6 +2,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using Google.Apis.Auth.AspNetCore3;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Http.Resilience;
@@ -13,6 +15,7 @@ using Polly;
 using ServiceDefaults.Identity;
 using WebApp.Bff.Features.Basket;
 using WebApp.Bff.Features.Catalog;
+using WebApp.Bff.Features.Identity;
 using Yarp.ReverseProxy.Transforms;
 
 namespace WebApp.Bff.Extensions;
@@ -31,19 +34,19 @@ public static class Extensions
            {
                context.AddRequestTransform(async request =>
                {
-                   if (azureScopes is not null)
-                   {
-                       ITokenAcquisition tokenAcquisition = context.Services.GetRequiredService<ITokenAcquisition>();
-                       var accessToken = await tokenAcquisition.GetAccessTokenForUserAsync(azureScopes.Values);
+                   //if (azureScopes is not null)
+                   //{
+                   //    ITokenAcquisition tokenAcquisition = context.Services.GetRequiredService<ITokenAcquisition>();
+                   //    var accessToken = await tokenAcquisition.GetAccessTokenForUserAsync(azureScopes.Values);
 
-                       Debug.WriteLine($"access token-{accessToken}");
+                   //    Debug.WriteLine($"access token-{accessToken}");
 
-                       if (accessToken is not null)
-                       {
-                           request.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-                           request.ProxyRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                       }
-                   }
+                   //    if (accessToken is not null)
+                   //    {
+                   //        request.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                   //        request.ProxyRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                   //    }
+                   //}
                });
            })
         .AddCorrelationId()
@@ -124,17 +127,30 @@ public static class Extensions
         var clientUrl = builder.Configuration.GetSection("ClientUrl").Get<string>();
         ArgumentNullException.ThrowIfNull(clientUrl);
 
-        var azureAdB2CInstance = builder.Configuration.GetSection($"{IdentityConstants.AzureAdB2CScheme}:Instance").Get<string>();
+        var azureAdB2CInstance = builder.Configuration
+            .GetSection($"{IdentityProviderSettings.AzureAdB2C}:Instance")
+            .Get<string>();
         ArgumentNullException.ThrowIfNull(azureAdB2CInstance, nameof(azureAdB2CInstance));
 
+        var awsCognitoInstance = builder.Configuration
+            .GetSection($"{IdentityProviderSettings.AWSCognito}:Authority")
+            .Get<string>();
+        ArgumentNullException.ThrowIfNull(awsCognitoInstance, nameof(awsCognitoInstance));
+
+        var googleCloudIdentityInstance = builder.Configuration
+            .GetSection($"{IdentityProviderSettings.GoogleCloudIdentity}:Authority")
+            .Get<string>();
+        ArgumentNullException.ThrowIfNull(googleCloudIdentityInstance, nameof(googleCloudIdentityInstance));
 
         builder.Services.AddCors(options =>
         {
             options.AddPolicy(name: Policies.DefaultCorsPolicy, policy =>
             {
                 policy.WithOrigins(
-                        azureAdB2CInstance,
                         clientUrl,
+                        azureAdB2CInstance,
+                        awsCognitoInstance,
+                        googleCloudIdentityInstance,
                         "http://webapp:5173",
                         "http://localhost:5173",
                         "http://webapp:5174",
@@ -150,48 +166,142 @@ public static class Extensions
     {
         builder.Services.AddInMemoryTokenCaches();
 
-        builder.Services.AddOptions<OpenIdConnectOptions>()
-            .BindConfiguration(IdentityConstants.AzureAdB2CScheme)
-            .ValidateOnStart()
-            .ValidateDataAnnotations();
-
-        var azureScopes = builder.Configuration.GetSection("AzureScopes").Get<Dictionary<string, string>>();
-
-        builder.Services.Configure<CookiePolicyOptions>(options =>
-        {
-            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-            options.CheckConsentNeeded = context => true;
-            options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
-            // Handling SameSite cookie according to https://learn.microsoft.com/aspnet/core/security/samesite?view=aspnetcore-3.1
-            options.HandleSameSiteCookieCompatibility();
-        });
-
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Add(JwtRegisteredClaimNames.Sub, ClaimTypes.NameIdentifier);
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Add("given_name", ClaimTypes.GivenName);
 
-        builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, IdentityConstants.AzureAdB2CScheme)
-            .EnableTokenAcquisitionToCallDownstreamApi(azureScopes?.Values)
-            .AddInMemoryTokenCaches();
+        // Azure
+        //AddAzureAdB2C(builder);
 
-        builder.Services.AddControllersWithViews()
-            .AddMicrosoftIdentityUI();
+        // AWS
+        //AddAWSCognito(builder);
 
-        builder.Services.AddAuthorization(policyBuilder =>
-        {
-            policyBuilder.DefaultPolicy = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .Build();
+        // GCP
+        AddGoogleCloudIdentity(builder);
 
-            policyBuilder.FallbackPolicy = policyBuilder.DefaultPolicy;
-        });
+        builder.Services.AddAuthorization();
 
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddTransient<IIdentityService, IdentityService>();
     }
 
+    private static void AddGoogleCloudIdentity(IHostApplicationBuilder builder)
+    {
+        var googleCloudIdentitySettings = builder.Configuration
+            .GetSection(IdentityProviderSettings.GoogleCloudIdentity);
+
+        builder.Services
+            .AddAuthentication(o =>
+            {
+                o.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+                o.DefaultForbidScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddGoogleOpenIdConnect(options =>
+            {
+                options.ClientId = googleCloudIdentitySettings["ClientId"];
+                options.ClientSecret = googleCloudIdentitySettings["ClientSecret"];
+                options.ResponseType = OpenIdConnectResponseType.Code;
+                options.SaveTokens = true;
+                options.GetClaimsFromUserInfoEndpoint = true;
+            });
+    }
+
+    private static void AddAzureAdB2C(IHostApplicationBuilder builder)
+    {
+        builder.Services.Configure<CookiePolicyOptions>(options =>
+        {
+            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+            options.CheckConsentNeeded = context => true;
+            options.MinimumSameSitePolicy = SameSiteMode.None;
+            // Handling SameSite cookie according to https://learn.microsoft.com/aspnet/core/security/samesite?view=aspnetcore-3.1
+            options.HandleSameSiteCookieCompatibility();
+        });
+
+        builder.Services.AddOptions<OpenIdConnectOptions>()
+            .BindConfiguration(IdentityProviderSettings.AzureAdB2C)
+            .ValidateOnStart()
+            .ValidateDataAnnotations();
+
+        var defaultScopes = builder.Configuration[$"{IdentityProviderSettings.AzureAdB2C}:Scopes"]
+            ?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+        builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, IdentityProviderSettings.AzureAdB2C)
+            .EnableTokenAcquisitionToCallDownstreamApi(defaultScopes)
+            .AddInMemoryTokenCaches();
+
+        builder.Services.AddControllersWithViews()
+            .AddMicrosoftIdentityUI();
+    }
+
+    private static void AddAWSCognito(IHostApplicationBuilder builder)
+    {
+        builder.Services.AddOptions<OpenIdConnectOptions>()
+            .BindConfiguration(IdentityProviderSettings.AWSCognito)
+            .ValidateOnStart()
+            .ValidateDataAnnotations();
+
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+        })
+        .AddCookie()
+        .AddOpenIdConnect(options =>
+        {
+            var oidcConfig = builder.Configuration.GetSection("AWSCognito");
+
+            options.Authority = oidcConfig["Authority"];
+            options.ClientId = oidcConfig["ClientId"];
+            options.ClientSecret = oidcConfig["ClientSecret"];
+            options.MetadataAddress = oidcConfig["MetadataAddress"];
+
+            var scopes = oidcConfig["Scopes"]?.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            options.Scope.Clear();
+            if (scopes is not null)
+            {
+                foreach (var scope in scopes)
+                {
+                    options.Scope.Add(scope);
+                }
+            }
+
+            options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            options.ResponseType = OpenIdConnectResponseType.Code;
+            options.UsePkce = true;
+
+            options.SaveTokens = true;
+            options.GetClaimsFromUserInfoEndpoint = true;
+
+            //options.MapInboundClaims = false;
+            //options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
+            //options.TokenValidationParameters.RoleClaimType = "roles";
+        });
+
+        builder.Services.ConfigureCookieOidcRefresh(CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
+    }
+
     private static void AddAIServices(this IHostApplicationBuilder _)
     {
 
+    }
+
+    public static IServiceCollection ConfigureCookieOidcRefresh(this IServiceCollection services, string cookieScheme, string oidcScheme)
+    {
+        services.AddSingleton<CookieOidcRefresher>();
+        services.AddOptions<CookieAuthenticationOptions>(cookieScheme).Configure<CookieOidcRefresher>((cookieOptions, refresher) =>
+        {
+            cookieOptions.Events.OnValidatePrincipal = context => refresher.ValidateOrRefreshCookieAsync(context, oidcScheme);
+        });
+        services.AddOptions<OpenIdConnectOptions>(oidcScheme).Configure(oidcOptions =>
+        {
+            // Request a refresh_token.
+            oidcOptions.Scope.Add(OpenIdConnectScope.OfflineAccess);
+            // Store the refresh_token.
+            oidcOptions.SaveTokens = true;
+        });
+        return services;
     }
 }

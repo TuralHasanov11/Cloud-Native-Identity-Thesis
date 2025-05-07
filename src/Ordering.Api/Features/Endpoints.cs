@@ -13,16 +13,13 @@ public static class Endpoints
             .WithTags("Orders");
 
         api.MapPut("cancel", Orders.Cancel.Handle)
-             // TODO: Uncomment when authentication is set up
-            //.RequireAuthorization(p => p.RequireRole(Roles.Customer))
             .WithName("CancelOrder")
             .WithSummary("Cancels an order")
             .WithDescription("Cancels an order.")
             .WithTags("Orders");
 
         api.MapPut("ship", Orders.Ship.Handle)
-             // TODO: Uncomment when authentication is set up
-                              //.RequireAuthorization(p => p.RequireRole(Roles.Operator))
+            .RequireAuthorization("RequireGroupAdmins")
             .WithName("ShipOrder")
             .WithSummary("Ships an order")
             .WithDescription("Ships an order.")
@@ -35,8 +32,6 @@ public static class Endpoints
             .WithTags("Orders");
 
         api.MapGet("user", Orders.ListByUser.Handle)
-             // TODO: Uncomment when authentication is set up
-                              //.RequireAuthorization(p => p.RequireRole(Roles.Customer))
             .WithName("ListOrdersByUser")
             .WithSummary("Lists orders by user")
             .WithDescription("Lists orders.")

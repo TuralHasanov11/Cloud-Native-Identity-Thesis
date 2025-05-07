@@ -71,16 +71,16 @@ internal static class OpenApiOptionsExtensions
             operation.Responses.TryAdd("401", new OpenApiResponse { Description = "Unauthorized" });
             operation.Responses.TryAdd("403", new OpenApiResponse { Description = "Forbidden" });
 
-            var oAuthScheme = new OpenApiSecurityScheme
+            var jwtBarerScheme = new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = JwtBearerDefaults.AuthenticationScheme }
             };
 
             operation.Security =
             [
                 new()
                 {
-                    [oAuthScheme] = scopes
+                    [jwtBarerScheme] = scopes
                 }
             ];
 
@@ -139,35 +139,36 @@ internal static class OpenApiOptionsExtensions
             OpenApiDocumentTransformerContext context,
             CancellationToken cancellationToken)
         {
-            var identitySettings = configuration.GetSection(IdentitySettings.SectionName).Get<IdentitySettings>();
+            var identitySettings = configuration.GetSection(IdentityProviderSettings.SectionName).Get<IdentityProviderSettings>();
 
             if (identitySettings is null)
             {
                 return Task.CompletedTask;
             }
 
-            var enabledProvider = identitySettings.EnabledProvider;
+            var enabledProvider = identitySettings.EnabledProviderName;
 
             if (enabledProvider is null)
             {
                 return Task.CompletedTask;
             }
 
-            var scopes = enabledProvider.Scopes;
+            //string[] scopes = [];
+
             var securityScheme = new OpenApiSecurityScheme
             {
                 Name = "Authorization",
                 Type = SecuritySchemeType.OAuth2,
                 Scheme = JwtBearerDefaults.AuthenticationScheme,
-                Flows = new OpenApiOAuthFlows()
-                {
-                    AuthorizationCode = new OpenApiOAuthFlow()
-                    {
-                        AuthorizationUrl = new Uri($"{enabledProvider.Authority}/connect/authorize"),
-                        TokenUrl = new Uri($"{enabledProvider.Authority}/connect/token"),
-                        Scopes = (IDictionary<string, string>)scopes,
-                    }
-                },
+                //Flows = new OpenApiOAuthFlows()
+                //{
+                //    AuthorizationCode = new OpenApiOAuthFlow()
+                //    {
+                //        AuthorizationUrl = new Uri($"{enabledProvider.Authority}/connect/authorize"),
+                //        TokenUrl = new Uri($"{enabledProvider.Authority}/connect/token"),
+                //        Scopes = (IDictionary<string, string>)scopes,
+                //    }
+                //},
                 Reference = new OpenApiReference
                 {
                     Id = JwtBearerDefaults.AuthenticationScheme,
@@ -178,7 +179,7 @@ internal static class OpenApiOptionsExtensions
                 Description = "JWT Authorization: Bearer {token}",
             };
             document.Components ??= new();
-            document.Components.SecuritySchemes.Add("oauth2", securityScheme);
+            document.Components.SecuritySchemes.Add(JwtBearerDefaults.AuthenticationScheme, securityScheme);
 
 
             return Task.CompletedTask;

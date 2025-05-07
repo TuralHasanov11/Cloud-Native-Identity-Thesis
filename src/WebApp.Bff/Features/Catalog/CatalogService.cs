@@ -1,7 +1,4 @@
-﻿
-using Microsoft.AspNetCore.WebUtilities;
-
-namespace WebApp.Bff.Features.Catalog;
+﻿namespace WebApp.Bff.Features.Catalog;
 
 public class CatalogService(HttpClient httpClient) : ICatalogService
 {
