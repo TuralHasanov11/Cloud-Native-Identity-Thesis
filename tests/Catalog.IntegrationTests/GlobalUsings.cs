@@ -1,14 +1,6 @@
-﻿global using Ardalis.Result;
-global using Catalog.Contracts.Abstractions;
-global using Catalog.Contracts.IntegrationEvents;
-global using Catalog.Core.CatalogAggregate;
+﻿global using Catalog.Core.CatalogAggregate;
 global using Catalog.Core.CatalogAggregate.Specifications;
 global using Catalog.Infrastructure.Data;
-global using Catalog.Infrastructure.Repositories;
 global using MassTransit;
-global using MediatR;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.DependencyInjection;
-global using Microsoft.Extensions.DependencyInjection.Extensions;
-global using Microsoft.Extensions.Logging;
-global using Outbox;

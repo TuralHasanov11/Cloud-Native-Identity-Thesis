@@ -1,11 +1,8 @@
-﻿using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.TokenCacheProviders.InMemory;

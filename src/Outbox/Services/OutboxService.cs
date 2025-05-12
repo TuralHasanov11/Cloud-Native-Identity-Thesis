@@ -27,7 +27,7 @@ public class OutboxService<TContext> : IOutboxService, IDisposable
             : [];
     }
 
-    public Task SaveEventAsync(IntegrationEvent message, IDbContextTransaction transaction)
+    public Task SaveEventAsync(IntegrationEvent message)
     {
         //ArgumentNullException.ThrowIfNull(transaction);
 

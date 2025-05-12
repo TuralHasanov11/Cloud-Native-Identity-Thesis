@@ -1,5 +1,4 @@
 ﻿using EventBus.Events;
-using MassTransit;
 using Ordering.Contracts.Abstractions;
 using Outbox.Services;
 
@@ -39,7 +38,7 @@ public class OrderingIntegrationEventService(
     {
         logger.LogEnqueuingIntegrationEventToRepository(evt.Id, evt);
 
-        await outboxService.SaveEventAsync(evt, orderingContext.GetCurrentTransaction());
+        await outboxService.SaveEventAsync(evt);
     }
 }
 

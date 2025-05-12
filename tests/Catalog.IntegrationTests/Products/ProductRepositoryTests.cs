@@ -69,7 +69,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
 
         // Assert
         var deletedProduct = await _repository.SingleOrDefaultAsync(
-            new GetProductByIdSpecification(product.Id), 
+            new GetProductByIdSpecification(product.Id),
             _cancellationTokenSource.Token);
 
         Assert.Null(deletedProduct);

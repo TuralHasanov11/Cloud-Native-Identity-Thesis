@@ -66,7 +66,7 @@ public static class AuthenticationExtensions
                 options.MapInboundClaims = jwtOptions.MapInboundClaims;
             });
 
-        builder.Services.AddSingleton<IAuthorizationPolicyProvider, BaseAuthorizationPolicyProvider>();
+        //builder.Services.AddSingleton<IAuthorizationPolicyProvider, BaseAuthorizationPolicyProvider>();
         builder.Services.AddSingleton<IAuthorizationHandler, GroupHandler>();
         builder.Services.AddAuthorization();
     }

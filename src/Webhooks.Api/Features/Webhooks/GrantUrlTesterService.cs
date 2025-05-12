@@ -1,6 +1,4 @@
-﻿using Webhooks.Core.WebhookAggregate;
-
-namespace Webhooks.Api.Features.Webhooks;
+﻿namespace Webhooks.Api.Features.Webhooks;
 
 public sealed class GrantUrlTesterService(IHttpClientFactory factory, ILogger<IGrantUrlTesterService> logger) : IGrantUrlTesterService
 {

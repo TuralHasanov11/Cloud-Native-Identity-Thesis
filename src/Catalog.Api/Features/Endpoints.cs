@@ -1,4 +1,7 @@
-﻿namespace Catalog.Api.Features;
+﻿using ServiceDefaults.Identity;
+using SharedKernel;
+
+namespace Catalog.Api.Features;
 
 public static class Endpoints
 {
@@ -82,21 +85,21 @@ public static class Endpoints
             .WithTags("Brands");
 
         api.MapPost("products", Products.Create.Handle)
-            .RequireAuthorization("RequireGroupAdmins")
+            .WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
             .WithName("CreateProduct")
             .WithSummary("Create a catalog product")
             .WithDescription("Create a new product in the catalog")
             .WithTags("Products");
 
         api.MapPut("products/{id:guid}", Products.Update.Handle)
-            .RequireAuthorization("RequireGroupAdmins")
+            .WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
             .WithName("UpdateProduct")
             .WithSummary("Create or replace a catalog product")
             .WithDescription("Create or replace a catalog product")
             .WithTags("Products");
 
         api.MapDelete("products/{id:guid}", Products.DeleteById.Handle)
-            .RequireAuthorization("RequireGroupAdmins")
+            .WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
             .WithName("DeleteProductById")
             .WithSummary("Delete catalog product")
             .WithDescription("Delete the specified catalog product")

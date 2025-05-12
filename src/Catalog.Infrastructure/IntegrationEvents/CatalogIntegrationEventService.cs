@@ -37,7 +37,7 @@ public sealed class CatalogIntegrationEventService(
         await ResilientTransaction.New(catalogDbContext).ExecuteAsync(async () =>
         {
             await catalogDbContext.SaveChangesAsync();
-            await outboxService.SaveEventAsync(message, catalogDbContext.Database.CurrentTransaction!);
+            await outboxService.SaveEventAsync(message);
         });
     }
 

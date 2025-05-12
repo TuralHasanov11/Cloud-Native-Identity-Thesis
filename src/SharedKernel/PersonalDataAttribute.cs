@@ -5,13 +5,13 @@ namespace SharedKernel;
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
 public sealed class EUIIDataAttribute : DataClassificationAttribute
 {
-    public EUIIDataAttribute() 
+    public EUIIDataAttribute()
         : base(ApplicationLoggingTaxonomy.EUIIDataClassification) { }
 }
 
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
 public sealed class EUPDataAttribute : DataClassificationAttribute
 {
-    public EUPDataAttribute() 
+    public EUPDataAttribute()
         : base(ApplicationLoggingTaxonomy.EUPDataClassification) { }
 }

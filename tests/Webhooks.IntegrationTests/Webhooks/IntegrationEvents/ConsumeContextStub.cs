@@ -1,8 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using MassTransit;
-using Microsoft.Extensions.Logging;
-using Webhooks.Contracts.IntegrationEvents;
-using Webhooks.Infrastructure.IntegrationEvents;
 
 namespace Webhooks.IntegrationTests.Webhooks.IntegrationEvents
 {

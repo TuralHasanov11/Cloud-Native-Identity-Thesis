@@ -2,7 +2,6 @@
 using System.Text.Json.Serialization;
 using Basket.Core.BasketAggregate;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 
 namespace Basket.Infrastructure.Repositories;

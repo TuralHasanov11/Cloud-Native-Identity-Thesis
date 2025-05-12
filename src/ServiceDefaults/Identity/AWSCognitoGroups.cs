@@ -2,12 +2,12 @@
 
 public sealed class AWSCognitoGroups
 {
-    public const string Admin = "Admin";
-    public const string Customer = "Customer";
+    public const string Admins = "Admins";
+    public const string Customers = "Customers";
 
     public static IEnumerable<string> All()
     {
-        yield return Admin;
-        yield return Customer;
+        yield return Admins;
+        yield return Customers;
     }
 }

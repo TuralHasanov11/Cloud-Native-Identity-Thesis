@@ -13,10 +13,10 @@ public class TestServerCallContext : ServerCallContext
 
     public Metadata ResponseHeaders { get; private set; }
 
-    private TestServerCallContext(Metadata requestHeaders, CancellationToken cancellationToken)
+    private TestServerCallContext(Metadata requestHeaders)
     {
         _requestHeaders = requestHeaders;
-        _cancellationToken = cancellationToken;
+        _cancellationToken = TestContext.Current.CancellationToken;
         _responseTrailers = new Metadata();
         _authContext = new AuthContext(string.Empty, new Dictionary<string, List<AuthProperty>>());
         _userState = new Dictionary<object, object>();
@@ -54,8 +54,8 @@ public class TestServerCallContext : ServerCallContext
     internal void SetUserState(object key, object value)
         => _userState[key] = value;
 
-    public static TestServerCallContext Create(Metadata _ = null, CancellationToken cancellationToken = default)
+    public static TestServerCallContext Create(Metadata _ = null)
     {
-        return new TestServerCallContext(requestHeaders: new Metadata(), cancellationToken);
+        return new TestServerCallContext(requestHeaders: new Metadata());
     }
 }

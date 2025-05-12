@@ -28,7 +28,7 @@ public class BaseAuthorizationPolicyProvider : IAuthorizationPolicyProvider
 
             var group = policyName[GroupPolicyPrefix.Length..];
 
-            policy.AddRequirements(new GroupRequirement(group));
+            policy.AddRequirements(new GroupRequirementAttribute(group));
             return Task.FromResult<AuthorizationPolicy?>(policy.Build());
         }
 

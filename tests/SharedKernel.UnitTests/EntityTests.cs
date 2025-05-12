@@ -2,7 +2,7 @@
 
 public class EntityTests
 {
-    private record TestDomainEvent(DateTime OccurredOnUtc): DomainEventBase(OccurredOnUtc);
+    private record TestDomainEvent(DateTime OccurredOnUtc) : DomainEventBase(OccurredOnUtc);
 
     private class TestEntity : HasDomainEventsBase
     {

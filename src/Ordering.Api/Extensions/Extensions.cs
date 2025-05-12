@@ -3,7 +3,6 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Options;
-using Ordering.Api.Features;
 using Ordering.Infrastructure.IntegrationEvents;
 using Ordering.Infrastructure.Repositories;
 using Outbox.Services;
@@ -57,7 +56,6 @@ public static class Extensions
             cfg.RegisterServicesFromAssemblies(Infrastructure.AssemblyReference.Assembly);
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             //cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
-            cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
         });
 
         builder.Services.AddValidatorsFromAssembly(Api.AssemblyReference.Assembly);
