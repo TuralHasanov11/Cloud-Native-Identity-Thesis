@@ -10,9 +10,12 @@ public class BaseIntegrationTest
 
     public HttpClient HttpClient { get; private set; } = default!;
 
+    private readonly IServiceScope _scope;
+
     protected BaseIntegrationTest(CatalogFactory factory)
     {
-        DbContext = factory.Services.GetRequiredService<CatalogDbContext>();
+        _scope = factory.Services.CreateScope();
+        DbContext = _scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
         HttpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false,

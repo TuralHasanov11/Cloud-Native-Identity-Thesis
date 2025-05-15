@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql;
+using Ordering.IntegrationTests;
 using Respawn;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
+
+//[assembly: AssemblyFixture(typeof(OrderingFactory))]
 
 namespace Ordering.IntegrationTests;
 
@@ -32,7 +35,7 @@ public class OrderingFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     public HttpClient HttpClient { get; private set; } = default!;
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await _dbContainer.StartAsync();
 
