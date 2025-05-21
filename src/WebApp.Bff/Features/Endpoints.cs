@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.Identity.Web;
 using ServiceDefaults.Identity;
 
 namespace WebApp.Bff.Features;
@@ -23,29 +24,57 @@ public static class Endpoints
             .WithSummary("Get the current user's information.")
             .WithDescription("Get the current user's information.")
             .WithTags("Identity")
-            .RequireAuthorization()
             .RequireRateLimiting("FixedRateLimitingPolicy");
 
-        //identityApi.MapGet("claims/azure", async (
-        //    IIdentityService identityService, 
-        //    ITokenAcquisition tokenAcquisition, 
-        //    IConfiguration configuration) =>
-        //{
-        //    var claims = identityService.GetUser()?.Claims;
+        identityApi.MapGet("claims/azure", async (
+            IIdentityService identityService,
+            IServiceScopeFactory serviceScopeFactory,
+            IConfiguration configuration) =>
+        {
+            using var scope = serviceScopeFactory.CreateScope();
 
-        //    var dictionary = claims?.ToDictionary(
-        //        x => x.Type,
-        //        x => x.Value,
-        //        StringComparer.OrdinalIgnoreCase)!;
+            ITokenAcquisition? tokenAcquisition = scope.ServiceProvider.GetService<ITokenAcquisition>();
 
-        //    var ordering_scope = configuration.GetValue<string>("AzureScopes:ordering_access")!;
-        //    var accessToken = await tokenAcquisition.GetAccessTokenForUserAsync([ordering_scope]);
-        //    dictionary["access_token"] = accessToken;
+            var claims = identityService.GetUser()?.Claims;
 
-        //    return Results.Ok(dictionary);
-        //});
+            var dictionary = claims?.ToDictionary(
+                x => x.Type,
+                x => x.Value,
+                StringComparer.OrdinalIgnoreCase)!;
+
+            var scopes = configuration[$"{IdentityProviderSettings.AzureAd}:Scopes"]
+                ?.Split(" ", StringSplitOptions.RemoveEmptyEntries) ?? [];
+
+            if (tokenAcquisition is not null)
+            {
+                var accessToken = await tokenAcquisition.GetAccessTokenForUserAsync(scopes);
+                dictionary["access_token"] = accessToken;
+            }
+
+            return Results.Ok(dictionary);
+        });
 
         identityApi.MapGet("claims/aws", async (
+            IHttpContextAccessor httpContextAccessor,
+            IIdentityService identityService,
+            IConfiguration configuration) =>
+        {
+            var claims = identityService.GetUser()?.Claims;
+
+            var dictionary = claims?.ToDictionary(
+                x => x.Type,
+                x => x.Value,
+                StringComparer.OrdinalIgnoreCase)!;
+
+            string? accessToken = await httpContextAccessor.HttpContext?.GetTokenAsync("access_token");
+
+            dictionary["access_token"] = accessToken;
+
+            return Results.Ok(dictionary);
+        });
+
+
+        identityApi.MapGet("claims/gcp", async (
             IHttpContextAccessor httpContextAccessor,
             IIdentityService identityService,
             IConfiguration configuration) =>
@@ -83,11 +112,11 @@ public static class Endpoints
 
         if (string.IsNullOrEmpty(returnUrl))
         {
-            returnUrl = new Uri(pathBase, UriKind.Absolute).AbsoluteUri;
+            returnUrl = pathBase;
         }
         else if (!Uri.IsWellFormedUriString(returnUrl, UriKind.Relative))
         {
-            returnUrl = new Uri(returnUrl, UriKind.Absolute).AbsoluteUri;
+            returnUrl = new Uri(returnUrl, UriKind.Absolute).AbsolutePath;
         }
         else if (returnUrl[0] != '/')
         {

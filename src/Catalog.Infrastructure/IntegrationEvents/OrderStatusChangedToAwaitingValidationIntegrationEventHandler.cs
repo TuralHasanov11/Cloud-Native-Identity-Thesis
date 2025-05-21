@@ -17,7 +17,7 @@ public class OrderStatusChangedToAwaitingValidationIntegrationEventHandler(
         foreach (var orderStockItem in context.Message.OrderStockItems)
         {
             var product = await productRepository.SingleOrDefaultAsync(
-                new GetProductByIdSpecification(new ProductId(orderStockItem.ProductId)));
+                new GetProductSpecification(new ProductId(orderStockItem.ProductId)));
 
             if (product == null)
             {

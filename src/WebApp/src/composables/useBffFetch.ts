@@ -22,7 +22,7 @@ const useBffFetch = createFetch({
         ctx.response?.status === HttpStatusCode.Unauthorized ||
         ctx.response?.status === HttpStatusCode.Forbidden
       ) {
-        // login('/') TODO: 
+        // login('/') TODO: handle
       }
 
       console.log(ctx.error)
