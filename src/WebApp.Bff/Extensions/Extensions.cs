@@ -14,6 +14,7 @@ using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.TokenCacheProviders.InMemory;
 using Microsoft.Identity.Web.UI;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 using Polly;
 using ServiceDefaults.Identity;
 using WebApp.Bff.Features.Basket;
@@ -141,7 +142,6 @@ public static class Extensions
                         azureAdInstance,
                         awsCognitoInstance,
                         googleCloudIdentityInstance,
-                        "https://turalhasanovthesis2.ciamlogin.com",
                         "http://webapp:5173",
                         "http://localhost:5173",
                         "http://webapp:5174",
@@ -243,11 +243,6 @@ public static class Extensions
 
     private static void AddAWSCognito(IHostApplicationBuilder builder)
     {
-        builder.Services.AddOptions<OpenIdConnectOptions>()
-            .BindConfiguration(IdentityProviderSettings.AWSCognito)
-            .ValidateOnStart()
-            .ValidateDataAnnotations();
-
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -257,7 +252,7 @@ public static class Extensions
         .AddCookie()
         .AddOpenIdConnect(options =>
         {
-            var oidcConfig = builder.Configuration.GetSection("AWSCognito");
+            var oidcConfig = builder.Configuration.GetSection(IdentityProviderSettings.AWSCognito);
 
             options.Authority = oidcConfig["Authority"];
             options.ClientId = oidcConfig["ClientId"];
@@ -274,19 +269,22 @@ public static class Extensions
                 }
             }
 
-            options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             options.ResponseType = OpenIdConnectResponseType.Code;
             options.UsePkce = true;
 
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = oidcConfig["Authority"],
+            };
             options.SaveTokens = true;
-            options.GetClaimsFromUserInfoEndpoint = true;
 
-            //options.MapInboundClaims = false;
-            //options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
+            options.MapInboundClaims = false;
+            options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
             //options.TokenValidationParameters.RoleClaimType = "roles";
         });
 
-        builder.Services.ConfigureCookieOidcRefresh(CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
+        //builder.Services.ConfigureCookieOidcRefresh(CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
     }
 
     private static void AddAIServices(this IHostApplicationBuilder _)
@@ -300,13 +298,6 @@ public static class Extensions
         services.AddOptions<CookieAuthenticationOptions>(cookieScheme).Configure<CookieOidcRefresher>((cookieOptions, refresher) =>
         {
             cookieOptions.Events.OnValidatePrincipal = context => refresher.ValidateOrRefreshCookieAsync(context, oidcScheme);
-        });
-        services.AddOptions<OpenIdConnectOptions>(oidcScheme).Configure(oidcOptions =>
-        {
-            // Request a refresh_token.
-            oidcOptions.Scope.Add(OpenIdConnectScope.OfflineAccess);
-            // Store the refresh_token.
-            oidcOptions.SaveTokens = true;
         });
         return services;
     }

@@ -92,8 +92,9 @@ const toggle = (event: MouseEvent) => {
         <div class="flex items-center gap-2">
           <InputText placeholder="Search" type="text" class="w-32 sm:w-auto" />
           <template v-if="isAuthenticated">
-            <Avatar :label="user.name[0]" image="https://github.com/benjamincanac.png" aria-haspopup="true"
-              aria-controls="user_menu" @click="toggle" icon="pi pi-user" class="cursor-pointer" v-ripple />
+            <Avatar :label="user.name?.length > 0 ? user.name[0] : ''" image="https://github.com/benjamincanac.png"
+              aria-haspopup="true" aria-controls="user_menu" @click="toggle" icon="pi pi-user" class="cursor-pointer"
+              v-ripple />
             <Menu ref="menu" id="user_menu" :model="userItems" :popup="true">
               <template #item="{ item, props }">
                 <RouterLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
