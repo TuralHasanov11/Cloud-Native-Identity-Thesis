@@ -4,7 +4,6 @@ public sealed class CreateOrderRequestValidator : AbstractValidator<CreateOrderR
 {
     public CreateOrderRequestValidator()
     {
-        RuleFor(x => x.UserId).NotEmpty();
         RuleFor(x => x.UserName).NotEmpty();
         RuleFor(x => x.City).NotEmpty();
         RuleFor(x => x.Street).NotEmpty();
@@ -12,7 +11,6 @@ public sealed class CreateOrderRequestValidator : AbstractValidator<CreateOrderR
         RuleFor(x => x.Country).NotEmpty();
         RuleFor(x => x.ZipCode).NotEmpty();
         RuleFor(x => x.CardTypeId).NotEmpty();
-        RuleFor(x => x.Customer).NotEmpty();
         RuleFor(x => x.Items).NotEmpty();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Ordering.Api.Features.Orders;
+﻿using ServiceDefaults.Identity;
+
+namespace Ordering.Api.Features.Orders;
 
 public static class Create
 {
@@ -7,17 +9,20 @@ public static class Create
         IOrderingIntegrationEventService orderingIntegrationEventService,
         CreateOrderRequest request,
         ILogger<CreateOrderRequest> logger,
+        IIdentityService identityService,
         CancellationToken cancellationToken)
     {
-        var orderStartedIntegrationEvent = new OrderStartedIntegrationEvent(request.UserId);
+        var userId = identityService.GetUser()!.GetUserId()!;
+
+        var orderStartedIntegrationEvent = new OrderStartedIntegrationEvent(userId);
         await orderingIntegrationEventService.AddAndSaveEventAsync(orderStartedIntegrationEvent);
 
         var order = new Order(
-            new IdentityId(request.UserId),
+            new IdentityId(userId),
             request.UserName,
             new Address(request.Street, request.City, request.State, request.Country, request.ZipCode),
             request.CardTypeId,
-            customerId: new CustomerId(request.Customer));
+            customerId: new CustomerId(Guid.Parse(userId)));
 
         foreach (var item in request.Items.ToOrderItemsDto())
         {

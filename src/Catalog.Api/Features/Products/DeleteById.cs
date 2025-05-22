@@ -10,7 +10,7 @@ public static class DeleteById
         CancellationToken cancellationToken)
     {
         var product = await productRepository.SingleOrDefaultAsync(
-            new GetProductByIdSpecification(new ProductId(id)),
+            new GetProductSpecification(new ProductId(id)),
             cancellationToken);
 
         if (product == null)

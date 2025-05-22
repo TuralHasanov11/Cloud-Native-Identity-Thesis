@@ -8,7 +8,7 @@ public static class GetById
         CancellationToken cancellationToken)
     {
         var product = await productRepository.SingleOrDefaultAsync(
-            new GetProductByIdSpecification(new ProductId(id)).WithBrand(),
+            new GetProductSpecification(new ProductId(id)).WithBrand(),
             cancellationToken);
 
         return product == null

@@ -2,7 +2,7 @@
 
 namespace Catalog.Core.CatalogAggregate.Specifications;
 
-public class GetProductByIdSpecification(ProductId Id) : Specification<Product>(p => p.Id == Id)
+public class GetProductSpecification(ProductId Id) : Specification<Product>(p => p.Id == Id)
 {
     public Specification<Product> WithBrand()
     {

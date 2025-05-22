@@ -36,7 +36,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
 
         // Assert
         var createdProduct = await _repository.SingleOrDefaultAsync(
-            new GetProductByIdSpecification(product.Id), _cancellationTokenSource.Token);
+            new GetProductSpecification(product.Id), _cancellationTokenSource.Token);
 
         Assert.NotNull(createdProduct);
     }
@@ -69,7 +69,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
 
         // Assert
         var deletedProduct = await _repository.SingleOrDefaultAsync(
-            new GetProductByIdSpecification(product.Id),
+            new GetProductSpecification(product.Id),
             _cancellationTokenSource.Token);
 
         Assert.Null(deletedProduct);
@@ -139,7 +139,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
 
         await _repository.CreateAsync(product, _cancellationTokenSource.Token);
         await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
-        var specification = new GetProductByIdSpecification(product.Id);
+        var specification = new GetProductSpecification(product.Id);
 
         // Act
         var result = await _repository.SingleOrDefaultAsync(specification, _cancellationTokenSource.Token);
@@ -153,7 +153,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenProductDoesNotExist()
     {
         // Arrange
-        var specification = new GetProductByIdSpecification(new ProductId(Guid.NewGuid()));
+        var specification = new GetProductSpecification(new ProductId(Guid.NewGuid()));
 
         // Act
         var result = await _repository.SingleOrDefaultAsync(specification, _cancellationTokenSource.Token);
@@ -199,7 +199,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
 
         // Assert
         var updatedProduct = await _repository.SingleOrDefaultAsync(
-            new GetProductByIdSpecification(product.Id),
+            new GetProductSpecification(product.Id),
             _cancellationTokenSource.Token);
 
         Assert.NotNull(updatedProduct);

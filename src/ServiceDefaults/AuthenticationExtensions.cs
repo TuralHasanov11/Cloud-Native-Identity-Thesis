@@ -25,16 +25,25 @@ public static class AuthenticationExtensions
 
         JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
-        if (identitySettings.EnabledProviderName == IdentityProviderSettings.AzureAdB2C)
+        if (identitySettings.EnabledProviderName == IdentityProviderSettings.AzureAd)
         {
-            AddAzureADB2C(builder);
+            AddMicrosoftEntraExternalId(builder);
         }
         else if (identitySettings.EnabledProviderName == IdentityProviderSettings.AWSCognito)
         {
             AddAWSCognito(builder);
         }
+        else if (identitySettings.EnabledProviderName == IdentityProviderSettings.GoogleCloudIdentity)
+        {
+            AddGoogleIdentityPlatform(builder);
+        }
 
         return builder.Services;
+    }
+
+    private static void AddGoogleIdentityPlatform(IHostApplicationBuilder _)
+    {
+        return;
     }
 
     private static void AddAWSCognito(IHostApplicationBuilder builder)
@@ -47,48 +56,62 @@ public static class AuthenticationExtensions
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                var jwtOptions = builder.Configuration.GetSection(IdentityProviderSettings.AWSCognito).Get<JwtBearerOptions>()!;
-
-                options.MetadataAddress = jwtOptions.MetadataAddress;
-                options.Authority = jwtOptions.Authority;
-                options.Audience = jwtOptions.Audience;
-                options.IncludeErrorDetails = jwtOptions.IncludeErrorDetails;
-                options.RequireHttpsMetadata = jwtOptions.RequireHttpsMetadata;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = jwtOptions.TokenValidationParameters.ValidateIssuer,
-                    ValidateAudience = jwtOptions.TokenValidationParameters.ValidateAudience,
-                    ValidateIssuerSigningKey = jwtOptions.TokenValidationParameters.ValidateIssuerSigningKey,
-                    ValidateLifetime = jwtOptions.TokenValidationParameters.ValidateLifetime,
-                    ValidIssuer = jwtOptions.Authority,
-                };
-
-                options.MapInboundClaims = jwtOptions.MapInboundClaims;
+                builder.Configuration.Bind(IdentityProviderSettings.AWSCognito, options);
             });
 
         //builder.Services.AddSingleton<IAuthorizationPolicyProvider, BaseAuthorizationPolicyProvider>();
         builder.Services.AddSingleton<IAuthorizationHandler, GroupHandler>();
-        builder.Services.AddAuthorization();
+
+        builder.Services.AddAuthorization(options =>
+        {
+            options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+
+            options.FallbackPolicy = options.DefaultPolicy;
+        });
     }
 
-    private static void AddAzureADB2C(IHostApplicationBuilder builder)
+    private static void AddMicrosoftEntraExternalId(IHostApplicationBuilder builder)
     {
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApi(
                 options =>
                 {
-                    builder.Configuration.Bind("AzureAdB2C", options);
-                    options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Sub;
+                    builder.Configuration.Bind(IdentityProviderSettings.AzureAd, options);
+                    //options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Sub;
+                    options.TokenValidationParameters.RoleClaimType = "roles";
                 },
                 options =>
                 {
-                    builder.Configuration.Bind("AzureAdB2C", options);
-                    options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Sub;
+                    builder.Configuration.Bind(IdentityProviderSettings.AzureAd, options);
+                    //options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Sub;
+                    options.TokenValidationParameters.RoleClaimType = "roles";
                 });
 
         builder.Services.AddSingleton<IAuthorizationPolicyProvider, BaseAuthorizationPolicyProvider>();
         builder.Services.AddSingleton<IAuthorizationHandler, GroupHandler>();
-        builder.Services.AddAuthorization();
+
+        builder.Services.AddAuthorization(options =>
+        {
+            options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+
+            options.FallbackPolicy = options.DefaultPolicy;
+
+            options.AddPolicy("RoleOrderAdmins", policy =>
+            {
+                policy.RequireScopeOrAppPermission(allowedScopeValues: ["Ordering.ReadWrite"], allowedAppPermissionValues: [])
+                    .RequireRole("Order.Admins");
+            });
+
+            options.AddPolicy("RoleCatalogAdmins", policy =>
+            {
+                policy.RequireScopeOrAppPermission(allowedScopeValues: ["Catalog.ReadWrite"], allowedAppPermissionValues: [])
+                    .RequireRole("Catalog.Admins");
+            });
+        });
     }
 }
 
@@ -96,7 +119,7 @@ public class IdentityProviderSettings : Dictionary<string, bool?>
 {
     public const string SectionName = "IdentityProviders";
 
-    public const string AzureAdB2C = "AzureAdB2C";
+    public const string AzureAd = "AzureAd";
     public const string AWSCognito = "AWSCognito";
     public const string GoogleCloudIdentity = "GoogleCloudIdentity";
 

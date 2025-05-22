@@ -1,6 +1,7 @@
 import type { BasketGrpcItem, BasketItem, Cart } from '@/types/basket'
 import { computed, ref, watch } from 'vue'
 import useBffFetch from './useBffFetch'
+import useIdentity from './useIdentity'
 
 export const DEFAULT_CART: Cart = {
   items: [],
@@ -31,6 +32,13 @@ export default function useBasket() {
   //   const paymentGateways = useState<PaymentGateways | null>('paymentGateways', () => null);
 
   async function getBasket(): Promise<void> {
+    const { isGuest } = useIdentity()
+
+    if (isGuest.value) {
+      cart.value = DEFAULT_CART
+      return
+    }
+
     try {
       const { data } = await useBffFetch('/api/basket').json<BasketItem[]>()
 
@@ -44,6 +52,13 @@ export default function useBasket() {
   }
 
   async function deleteBasket(): Promise<boolean> {
+    const { isGuest } = useIdentity()
+
+    if (isGuest.value) {
+      cart.value = DEFAULT_CART
+      return false
+    }
+
     try {
       await useBffFetch('/api/basket').delete()
       cart.value = DEFAULT_CART
@@ -57,6 +72,13 @@ export default function useBasket() {
   }
 
   async function updateBasket(): Promise<boolean> {
+    const { isGuest } = useIdentity()
+
+    if (isGuest.value) {
+      cart.value = DEFAULT_CART
+      return false
+    }
+
     try {
       console.log(cart.value)
       const items = cart.value.items.map((item) => ({
@@ -86,6 +108,13 @@ export default function useBasket() {
   }
 
   async function addToCart(item: BasketItem): Promise<void> {
+    const { isGuest } = useIdentity()
+
+    if (isGuest.value) {
+      cart.value = DEFAULT_CART
+      return
+    }
+
     isUpdatingCart.value = true
 
     try {
@@ -110,12 +139,26 @@ export default function useBasket() {
   }
 
   async function removeFromCart(productId: string) {
+    const { isGuest } = useIdentity()
+
+    if (isGuest.value) {
+      cart.value = DEFAULT_CART
+      return false
+    }
+
     isUpdatingCart.value = true
     cart.value.items = cart.value.items.filter((item) => item.productId !== productId)
     await updateBasket()
   }
 
   async function updateItemQuantity(productId: string, quantity: number): Promise<void> {
+    const { isGuest } = useIdentity()
+
+    if (isGuest.value) {
+      cart.value = DEFAULT_CART
+      return
+    }
+
     isUpdatingCart.value = true
 
     try {
@@ -141,6 +184,13 @@ export default function useBasket() {
   }
 
   async function emptyCart(): Promise<void> {
+    const { isGuest } = useIdentity()
+
+    if (isGuest.value) {
+      cart.value = DEFAULT_CART
+      return
+    }
+
     try {
       isUpdatingCart.value = true
 
