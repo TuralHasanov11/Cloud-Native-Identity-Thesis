@@ -16,14 +16,14 @@ public static class Endpoints
             .WithTags("Orders");
 
         api.MapPut("cancel", Orders.Cancel.Handle)
-            .RequireAuthorization("RoleAdmins")
+            .RequireAuthorization("RoleOrderAdmins")
             .WithName("CancelOrder")
             .WithSummary("Cancels an order")
             .WithDescription("Cancels an order.")
             .WithTags("Orders");
 
         api.MapPut("ship", Orders.Ship.Handle)
-            .RequireAuthorization("RoleAdmins")
+            .RequireAuthorization("RoleOrderAdmins")
             //.WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
             .WithName("ShipOrder")
             .WithSummary("Ships an order")

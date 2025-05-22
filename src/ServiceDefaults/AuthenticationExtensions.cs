@@ -100,10 +100,16 @@ public static class AuthenticationExtensions
 
             options.FallbackPolicy = options.DefaultPolicy;
 
-            options.AddPolicy("RoleAdmins", policy =>
+            options.AddPolicy("RoleOrderAdmins", policy =>
             {
                 policy.RequireScopeOrAppPermission(allowedScopeValues: ["Ordering.ReadWrite"], allowedAppPermissionValues: [])
                     .RequireRole("Order.Admins");
+            });
+
+            options.AddPolicy("RoleCatalogAdmins", policy =>
+            {
+                policy.RequireScopeOrAppPermission(allowedScopeValues: ["Catalog.ReadWrite"], allowedAppPermissionValues: [])
+                    .RequireRole("Catalog.Admins");
             });
         });
     }
