@@ -10,13 +10,13 @@ public static class UserInfo
     {
         var user = identityService.GetUser();
 
-        if (user is null)
+        if (user is not null && user.Identity?.IsAuthenticated == true)
         {
-            return TypedResults.Ok(UserInfoDto.Guest);
+            var userInfo = new UserInfoDto(user.GetUserId(), user.GetUserName(), AddressExtensions.ToAddress(user.GetAddress()));
+
+            return TypedResults.Ok(userInfo);
         }
 
-        var userInfo = new UserInfoDto(user.GetUserId(), user.GetUserName(), AddressExtensions.ToAddress(user.GetAddress()));
-
-        return TypedResults.Ok(userInfo);
+        return TypedResults.Ok(UserInfoDto.Guest);
     }
 }

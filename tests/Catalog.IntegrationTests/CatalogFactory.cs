@@ -1,12 +1,12 @@
-﻿using System.Data.Common;
+﻿using Catalog.IntegrationTests;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql;
-using Respawn;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
+
+[assembly: AssemblyFixture(typeof(CatalogFactory))]
 
 namespace Catalog.IntegrationTests;
 
@@ -19,10 +19,6 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
         .WithDatabase("catalog")
         .Build();
 
-    private DbConnection _dbConnection = default!;
-
-    private Respawner _respawner = default!;
-
     private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder()
         .WithImage("rabbitmq:4.0-management")
         .WithUsername("guest")
@@ -30,34 +26,19 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
         .WithPassword("guest")
         .Build();
 
-    public HttpClient HttpClient { get; private set; } = default!;
-
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await _dbContainer.StartAsync();
-
         await _rabbitMqContainer.StartAsync();
-
-        _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
-
-        HttpClient = CreateClient(new WebApplicationFactoryClientOptions
-        {
-            AllowAutoRedirect = false,
-        });
-
-        await InitializeRespawner();
     }
 
-    private async Task InitializeRespawner()
+    public new async Task DisposeAsync()
     {
-        await _dbConnection.OpenAsync();
-        _respawner = await Respawner.CreateAsync(
-            _dbConnection,
-            new RespawnerOptions
-            {
-                DbAdapter = DbAdapter.Postgres,
-                SchemasToInclude = ["public"]
-            });
+        await _dbContainer.StopAsync();
+        await _dbContainer.DisposeAsync();
+        await _rabbitMqContainer.StopAsync();
+        await _rabbitMqContainer.DisposeAsync();
+        await base.DisposeAsync();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -74,7 +55,7 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
             services.AddDbContext<CatalogDbContext>(
                 a => a.UseNpgsql(
-                    _dbContainer.GetConnectionString(), 
+                    _dbContainer.GetConnectionString(),
                     npgsqlOptionsAction => npgsqlOptionsAction.MigrationsHistoryTable(
                         HistoryRepository.DefaultTableName)));
 
@@ -102,20 +83,5 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
             //     });
             // });
         });
-    }
-
-    public async Task ResetDatabaseAsync()
-    {
-        await _respawner.ResetAsync(_dbConnection);
-    }
-
-
-    public new async Task DisposeAsync()
-    {
-        await _dbConnection.DisposeAsync();
-        await _dbContainer.StopAsync();
-        await _dbContainer.DisposeAsync();
-        await _rabbitMqContainer.StopAsync();
-        await _rabbitMqContainer.DisposeAsync();
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using Ordering.Api.Extensions;
 
 namespace Microsoft.AspNetCore.Hosting;
 

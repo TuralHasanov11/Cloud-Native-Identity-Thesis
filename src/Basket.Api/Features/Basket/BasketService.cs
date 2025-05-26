@@ -10,7 +10,7 @@ public class BasketService(
     IBasketRepository repository,
     ILogger<BasketService> logger) : GrpcBasket.BasketBase
 {
-    [AllowAnonymous]
+    [Authorize]
     public override async Task<CustomerBasketResponse> GetBasket(GetBasketRequest request, ServerCallContext context)
     {
         var userId = context.GetUserId();
@@ -30,7 +30,7 @@ public class BasketService(
         return data is not null ? MapToCustomerBasketResponse(data) : new();
     }
 
-    [AllowAnonymous] // TODO: Protect
+    [Authorize]
     public override async Task<CustomerBasketResponse> UpdateBasket(UpdateBasketRequest request, ServerCallContext context)
     {
         var userId = context.GetUserId();
@@ -55,7 +55,7 @@ public class BasketService(
         return MapToCustomerBasketResponse(response);
     }
 
-    [AllowAnonymous] // TODO: Protect
+    [Authorize]
     public override async Task<DeleteBasketResponse> DeleteBasket(DeleteBasketRequest request, ServerCallContext context)
     {
         var userId = context.GetUserId();

@@ -6,7 +6,7 @@ namespace Catalog.Api.Features.Products;
 
 public static class Update
 {
-    public static async Task<Results<NoContent, BadRequest<ProblemDetails>, NotFound<ProblemDetails>>> Handle(
+    public static async Task<Results<NoContent, BadRequest<ProblemDetails>, NotFound<ProblemDetails>, ForbidHttpResult>> Handle(
         IProductRepository productRepository,
         ICatalogIntegrationEventService catalogIntegrationEventService,
         Guid id,
@@ -14,7 +14,7 @@ public static class Update
         CancellationToken cancellationToken)
     {
         var product = await productRepository.SingleOrDefaultAsync(
-            new GetProductByIdSpecification(new ProductId(id)),
+            new GetProductSpecification(new ProductId(id)),
             cancellationToken);
 
         if (product == null)

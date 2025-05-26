@@ -1,4 +1,7 @@
-﻿namespace Ordering.Api.Features;
+﻿using Microsoft.Identity.Web;
+using ServiceDefaults.Identity;
+
+namespace Ordering.Api.Features;
 
 public static class Endpoints
 {
@@ -7,52 +10,45 @@ public static class Endpoints
         var api = app.MapGroup("api/orders");
 
         api.MapPost("", Orders.Create.Handle)
-            .AllowAnonymous()
             .WithName("CreateOrder")
             .WithSummary("Creates a new order")
             .WithDescription("Creates a new order.")
             .WithTags("Orders");
 
         api.MapPut("cancel", Orders.Cancel.Handle)
-            .AllowAnonymous() // TODO: Uncomment when authentication is set up
-                              //.RequireAuthorization(p => p.RequireRole(Roles.Customer))
+            .RequireAuthorization("RoleOrderAdmins")
             .WithName("CancelOrder")
             .WithSummary("Cancels an order")
             .WithDescription("Cancels an order.")
             .WithTags("Orders");
 
         api.MapPut("ship", Orders.Ship.Handle)
-            .AllowAnonymous() // TODO: Uncomment when authentication is set up
-                              //.RequireAuthorization(p => p.RequireRole(Roles.Operator))
+            .RequireAuthorization("RoleOrderAdmins")
+            //.WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
             .WithName("ShipOrder")
             .WithSummary("Ships an order")
             .WithDescription("Ships an order.")
             .WithTags("Orders");
 
         api.MapGet("{id:guid}", Orders.GetById.Handle)
-            .AllowAnonymous()
             .WithName("GetOrderById")
             .WithSummary("Gets an order by ID")
             .WithDescription("Gets an order by its unique identifier.")
             .WithTags("Orders");
 
         api.MapGet("user", Orders.ListByUser.Handle)
-            .AllowAnonymous() // TODO: Uncomment when authentication is set up
-                              //.RequireAuthorization(p => p.RequireRole(Roles.Customer))
             .WithName("ListOrdersByUser")
             .WithSummary("Lists orders by user")
             .WithDescription("Lists orders.")
             .WithTags("Orders");
 
         api.MapGet("card-types", CardTypes.List.Handle)
-            .AllowAnonymous()
             .WithName("ListCardTypes")
             .WithSummary("Lists card types")
             .WithDescription("Lists available card types.")
             .WithTags("Card Types");
 
         api.MapPost("draft", Orders.Draft.Handle)
-            .AllowAnonymous()
             .WithName("DraftOrder")
             .WithSummary("Creates a draft order")
             .WithDescription("Creates a draft order.")

@@ -1,27 +1,24 @@
-﻿namespace Catalog.IntegrationTests;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 
-[Collection(nameof(IntegrationTestCollection))]
-public class BaseIntegrationTest : IAsyncLifetime
+namespace Catalog.IntegrationTests;
+
+public class BaseIntegrationTest
 {
     protected const string ApiBaseUrl = "https://localhost:5103";
 
-    private readonly Func<Task> _resetDatabase;
-
     protected CatalogDbContext DbContext { get; }
+
+    public HttpClient HttpClient { get; private set; } = default!;
 
     private readonly IServiceScope _scope;
 
     protected BaseIntegrationTest(CatalogFactory factory)
     {
         _scope = factory.Services.CreateScope();
-        _resetDatabase = factory.ResetDatabaseAsync;
         DbContext = _scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+        HttpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false,
+        });
     }
-
-    public Task InitializeAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    public async Task DisposeAsync() => await _resetDatabase();
 }

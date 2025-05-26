@@ -11,7 +11,9 @@ const { isShowingCart } = useBasket();
     <div id="default-layout">
         <BaseHeader />
 
-        <slot />
+        <div class="layout-main-container">
+            <RouterView />
+        </div>
 
         <Transition name="slide-from-right">
             <AsyncCartSummary v-if="isShowingCart" />

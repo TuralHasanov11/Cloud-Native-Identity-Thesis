@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import useCustomer from '@/composables/useCustomer';
-import DefaultLayout from '@/layouts/DefaultLayout.vue'
 
 const { getOrders, orders } = useCustomer()
 
@@ -10,18 +9,22 @@ await getOrders()
 </script>
 
 <template>
-  <DefaultLayout>
-    <main id="user-orders">
-      <UContainer>
-        <UCard>
-          <template #header>
-            <h3>Orders</h3>
-          </template>
+  <main id="user-orders">
+    <div class="container mx-auto">
+      <Card>
+        <template #title>
+          Orders
+        </template>
 
-          <UTable :data="orders" class="flex-1" />
-
-        </UCard>
-      </UContainer>
-    </main>
-  </DefaultLayout>
+        <template #content>
+          <DataTable :value="orders" class="flex-1">
+            <Column field="orderNumber" header="Order Number"></Column>
+            <Column field="date" header="Date"></Column>
+            <Column field="status" header="Status"></Column>
+            <Column field="total" header="Total"></Column>
+          </DataTable>
+        </template>
+      </Card>
+    </div>
+  </main>
 </template>

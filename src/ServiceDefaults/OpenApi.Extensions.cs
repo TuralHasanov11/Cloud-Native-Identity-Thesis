@@ -43,22 +43,21 @@ public static partial class Extensions
         )
     {
         var openApiInfoOptions = builder.Configuration.GetSection("OpenApiInfo");
-        var identitySettings = builder.Configuration.GetSection(IdentitySettings.SectionName).Get<IdentitySettings>();
+        var identitySettings = builder.Configuration.GetSection(IdentityProviderSettings.SectionName).Get<IdentityProviderSettings>();
 
         if (identitySettings is null)
         {
             return builder;
         }
 
-        var enabledProvider = identitySettings.EnabledProvider;
+        var enabledProvider = identitySettings.EnabledProviderName;
 
         if (enabledProvider is null)
         {
             return builder;
         }
 
-        var scopes = enabledProvider.Scopes;
-
+        string[] scopes = []; // TODO: Replace with actual scopes based on the identity provider.
 
         if (openApiInfoOptions is null)
         {
@@ -76,7 +75,7 @@ public static partial class Extensions
                     builder.Services.AddOpenApi(description, options =>
                     {
                         options.ApplyApiVersionInfo(versionedOpenApiInfo)
-                            .ApplyAuthorizationChecks([.. scopes.Keys])
+                            .ApplyAuthorizationChecks(scopes)
                             .ApplySecuritySchemeDefinitions()
                             .ApplyOperationDeprecatedStatus()
                             .ApplyApiVersionDescription()

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import useBasket from '@/composables/useBasket';
 import type { BasketItem } from '@/types/basket';
-import { useDebounceFn } from '@vueuse/core';
 import { ref, watch } from 'vue';
 
 const { updateItemQuantity, isUpdatingCart, cart } = useBasket();
@@ -11,13 +10,6 @@ const { item } = defineProps<{
 }>();
 
 const quantity = ref<number>(item.quantity)
-
-const incrementQuantity = useDebounceFn(() => {
-    quantity.value++;
-}, 1000)
-const decrementQuantity = useDebounceFn(() => {
-    quantity.value--;
-}, 1000)
 
 watch(
     quantity,
@@ -40,31 +32,13 @@ const onFocusOut = () => {
 </script>
 
 <template>
-    <div class="flex rounded bg-white text-sm leading-none shadow-sm shadow-gray-200 isolate">
-        <button title="Decrease Quantity" aria-label="Decrease Quantity" @click="decrementQuantity" type="button"
-            class="focus:outline-none border-r w-6 h-6 border rounded-l border-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed"
-            :disabled="isUpdatingCart || quantity <= 0">
-            <UIcon name="ion:remove" size="14" />
-        </button>
-        <input v-model.number="quantity" type="number" min="0" aria-label="Quantity" @focusout="onFocusOut"
-            class="flex items-center justify-center w-8 px-2 text-right text-xs focus:outline-none border-y border-gray-300" />
-        <button title="Increase Quantity" aria-label="Increase Quantity" @click="incrementQuantity" type="button"
-            class="focus:outline-none border-l w-6 h-6 border rounded-r hover:bg-gray-50 border-gray-300 disabled:cursor-not-allowed disabled:bg-gray-100"
-            :disabled="isUpdatingCart">
-            <UIcon name="ion:add" size="14" />
-        </button>
-    </div>
+    <InputNumber v-model="quantity" showButtons buttonLayout="horizontal" :step="1" :min="0" :disabled="isUpdatingCart"
+        @blur="onFocusOut">
+        <template #incrementbutton>
+            <span class="pi pi-plus" />
+        </template>
+        <template #decrementbutton>
+            <span class="pi pi-minus" />
+        </template>
+    </InputNumber>
 </template>
-
-<style scoped>
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type='number'] {
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
-</style>

@@ -45,11 +45,10 @@ const goToOrder = (orderNumber: string): void => {
         </tbody>
       </table>
       <div class="text-center flex justify-center w-full mt-8">
-        <button type="button" class="flex items-center gap-1 text-sm leading-none hover:bg-gray-50 p-2 rounded"
-          @click="refresh">
+        <Button type="button" @click="refresh">
           <span>Reresh list</span>
-          <UIcon name="ion:refresh-outline" />
-        </button>
+          <i class="pi pi-refresh" />
+        </Button>
       </div>
     </div>
     <div v-else-if="orders && orders.length === 0"

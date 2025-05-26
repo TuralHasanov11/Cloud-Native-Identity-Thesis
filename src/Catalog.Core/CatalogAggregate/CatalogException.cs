@@ -20,5 +20,5 @@ public class BrandNameEmptyException : CatalogException
         : base("The brand name cannot be empty.") { }
 }
 
-public class BrandNameTooLongException(int actualLength, int allowedLength) 
+public class BrandNameTooLongException(int actualLength, int allowedLength)
     : CatalogException($"The brand name is too long. Actual length: {actualLength}, allowed length: {allowedLength}.");

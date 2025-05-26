@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.Text.Json;
-using Webhooks.Infrastructure.Services;
 
 namespace Webhooks.Api.Features.Webhooks;
 

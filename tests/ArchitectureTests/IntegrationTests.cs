@@ -1,6 +1,4 @@
-﻿using Xunit.Abstractions;
-
-namespace ArchitectureTests;
+﻿namespace ArchitectureTests;
 
 public class IntegrationTests(ITestOutputHelper testOutputHelper)
 {

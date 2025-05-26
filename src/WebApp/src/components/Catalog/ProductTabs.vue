@@ -17,5 +17,14 @@ const tabs = computed(() => [
 </script>
 
 <template>
-    <UTabs :unmount-on-hide="false" :items="tabs" class="w-full" />
+    <Tabs value="Description" class="w-full">
+        <TabList>
+            <Tab v-for="tab in tabs" :key="tab.label" :value="tab.content">{{ tab.label }}</Tab>
+        </TabList>
+        <TabPanels>
+            <TabPanel v-for="tab in tabs" :key="tab.content" :value="tab.content">
+                <p class="m-0">{{ tab.content }}</p>
+            </TabPanel>
+        </TabPanels>
+    </Tabs>
 </template>

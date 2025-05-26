@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Xunit.Abstractions;
 
 namespace ArchitectureTests;
 

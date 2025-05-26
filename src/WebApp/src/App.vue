@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onErrorCaptured, ref } from 'vue';
 import { RouterView } from 'vue-router'
-import BaseError from '@/components/BaseError.vue';
 
 const error = ref<Error | null>(null);
 
@@ -16,18 +15,14 @@ onErrorCaptured((error) => {
 
   <Suspense>
     <div v-if="!error" class="app">
-      <UApp>
-        <RouterView />
-      </UApp>
+      <RouterView />
     </div>
     <div v-else>
       <BaseError :error="error" />
     </div>
 
     <template #fallback>
-      <UApp>
-        Loading
-      </UApp>
+      Loading
     </template>
   </Suspense>
 </template>

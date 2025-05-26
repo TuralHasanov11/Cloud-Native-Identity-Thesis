@@ -69,7 +69,7 @@ public class CustomerTests
         var alias = "Visa";
         var orderId = new OrderId(Guid.CreateVersion7());
 
-        var existingPaymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias,orderId);
+        var existingPaymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias, orderId);
 
         // Act
         var paymentMethod = customer.VerifyOrAddPaymentMethod(cardTypeId, alias, orderId);

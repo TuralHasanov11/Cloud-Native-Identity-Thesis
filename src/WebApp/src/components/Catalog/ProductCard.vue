@@ -20,8 +20,7 @@ const { isLoading: isImageLoading } = useImage({ src: FALLBACK_IMG })
   <div class="relative group">
     <RouterLink :to="`/products/${decodeURIComponent(product.id)}`" :title="product.name">
       <SaleBadge :product class="absolute top-2 right-2" />
-      <USkeleton v-if="isImageLoading" class="rounded-full" :width="imgWidth" :height="imgHeight" />
-      <img v-else :width="imgWidth" :height="imgHeight" :src="FALLBACK_IMG" :alt="product.name" :title="product.name"
+      <img :width="imgWidth" :height="imgHeight" :src="FALLBACK_IMG" :alt="product.name" :title="product.name"
         :loading="index <= 3 ? 'eager' : 'lazy'" :sizes="`sm:${imgWidth / 2}px md:${imgWidth}px`"
         class="rounded-lg object-top object-cover w-full aspect-9/8" placeholder-class="blur-xl" />
     </RouterLink>

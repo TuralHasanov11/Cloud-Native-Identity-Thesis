@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Webhooks.Core.WebhookAggregate;
 
 namespace Webhooks.Api.Features.Webhooks;
 

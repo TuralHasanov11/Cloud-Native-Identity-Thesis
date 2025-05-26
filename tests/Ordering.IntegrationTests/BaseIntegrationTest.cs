@@ -16,10 +16,15 @@ public class BaseIntegrationTest : IAsyncLifetime
         DbContext = _scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
     }
 
-    public Task InitializeAsync()
+    public ValueTask InitializeAsync()
     {
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
-    public async Task DisposeAsync() => await _resetDatabase();
+    public async ValueTask DisposeAsync()
+    {
+        await _resetDatabase();
+        _scope.Dispose();
+        GC.SuppressFinalize(this);
+    }
 }

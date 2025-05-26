@@ -9,6 +9,7 @@
   <ItemGroup>
 	<PackageReference Include="Ardalis.Result" />
 	<PackageReference Include="MediatR" />
+	<PackageReference Include="Microsoft.AspNetCore.Authorization" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore" />
 	<PackageReference Include="Microsoft.Extensions.AuditReports" />
 	<PackageReference Include="Microsoft.Extensions.Compliance.Redaction" />

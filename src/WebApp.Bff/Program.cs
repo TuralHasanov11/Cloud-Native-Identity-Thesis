@@ -35,6 +35,10 @@ try
 
     app.UseMiddleware<ContentTypeOptionsMiddleware>();
 
+    // Add the Microsoft Identity Web cookie policy
+    app.UseCookiePolicy();
+    app.UseRouting();
+
     app.UseCors(Policies.DefaultCorsPolicy);
 
     app.UseAuthentication();

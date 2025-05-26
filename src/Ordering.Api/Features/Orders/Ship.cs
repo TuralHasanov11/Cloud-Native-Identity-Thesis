@@ -1,6 +1,4 @@
-﻿using Ordering.Core.OrderAggregate.Specifications;
-
-namespace Ordering.Api.Features.Orders;
+﻿namespace Ordering.Api.Features.Orders;
 
 public static class Ship
 {

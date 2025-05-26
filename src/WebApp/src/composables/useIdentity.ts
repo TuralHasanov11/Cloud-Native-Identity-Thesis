@@ -6,8 +6,8 @@ export default function useIdentity() {
   const identityStore = useIdentityStore()
 
   const user = computed<User>(() => identityStore.user)
-  const isAuthenticated = computed<boolean>(() => user.value.id !== GUEST_USER.id)
-  const isGuest = computed<boolean>(() => user.value.id === GUEST_USER.id)
+  const isAuthenticated = computed<boolean>(() => user.value && user.value.id !== GUEST_USER.id)
+  const isGuest = computed<boolean>(() => !user.value || user.value.id === GUEST_USER.id)
 
   function hasRole(roles: string[]): boolean {
     return user.value?.roles?.some((r) => roles.includes(r)) ?? false

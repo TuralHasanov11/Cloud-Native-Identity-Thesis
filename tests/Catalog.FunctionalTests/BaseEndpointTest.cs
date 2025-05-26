@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-
-namespace Catalog.FunctionalTests;
+﻿namespace Catalog.FunctionalTests;
 
 [Collection(nameof(EndpointTestCollection))]
 public class BaseEndpointTest : IAsyncLifetime

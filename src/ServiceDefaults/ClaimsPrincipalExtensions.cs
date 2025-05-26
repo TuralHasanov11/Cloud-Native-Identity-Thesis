@@ -6,10 +6,10 @@ namespace ServiceDefaults;
 public static class ClaimsPrincipalExtensions
 {
     public static string? GetUserId(this ClaimsPrincipal principal)
-        => principal.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? "66d89b0b-eaae-4853-90c3-238d4531bd1a";
+        => principal.FindFirstValue("oid") ?? principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
-    public static string? GetUserName(this ClaimsPrincipal principal) =>
-        principal.FindFirstValue(JwtRegisteredClaimNames.Name) ?? "Jon Snow";
+    public static string? GetUserName(this ClaimsPrincipal principal) 
+        => principal.FindFirstValue("cognito:username") ?? principal.FindFirstValue(JwtRegisteredClaimNames.Name);
 
     public static Dictionary<string, string> GetAddress(this ClaimsPrincipal principal)
     {

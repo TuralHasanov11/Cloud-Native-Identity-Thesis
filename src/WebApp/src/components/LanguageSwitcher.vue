@@ -1,27 +1,23 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import type { SelectChangeEvent } from 'primevue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n'
 
 const { locale } = useI18n();
+const currentLocale = ref(locale.value);
 
-const locales = [
+const locales = ref([
   { code: 'en', name: 'English' },
   { code: 'de', name: 'Deutsch' },
-]
+])
 
-const languages = computed(() => locales.map((l) => {
-  return {
-    label: l.name,
-    name: l.code,
-  };
-}));
-
-function onChangeLanguage(payload: Event) {
-  console.log(payload);
+function onChangeLanguage(payload: SelectChangeEvent) {
+  locale.value = payload.value.code as string;
 }
 
 </script>
 
 <template>
-  <USelect :items="languages" v-model="locale" class="w-48 mb-5" @change="onChangeLanguage" />
+  <Select :options="locales" optionLabel="name" variant="filled" v-model="currentLocale" class="w-48"
+    @change="onChangeLanguage" />
 </template>

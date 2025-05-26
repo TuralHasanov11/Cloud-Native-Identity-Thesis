@@ -1,7 +1,6 @@
 ﻿namespace Ordering.Api.Features.Orders;
 
 public sealed record CreateOrderRequest(
-    string UserId,
     string UserName,
     string City,
     string Street,
@@ -9,5 +8,4 @@ public sealed record CreateOrderRequest(
     string Country,
     string ZipCode,
     int CardTypeId,
-    Guid Customer,
     IReadOnlyCollection<BasketItemDto> Items);

@@ -1,5 +1,4 @@
 using Basket.Api.Extensions;
-using Basket.Api.Features;
 using Basket.Api.Features.Basket;
 using Serilog;
 using ServiceDefaults.Middleware;
