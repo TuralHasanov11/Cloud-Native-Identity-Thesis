@@ -15,14 +15,14 @@ public class OrderingIntegrationEventService(
     {
         var pendingLogEvents = await outboxService.RetrieveEventLogsPendingToPublishAsync(transactionId);
 
-        foreach (var logEvt in pendingLogEvents)
+        await Parallel.ForEachAsync(pendingLogEvents, async (logEvt, cancellationToken) =>
         {
             logger.LogPublishingIntegrationEvent(logEvt.Id, logEvt.IntegrationEvent);
 
             try
             {
                 await outboxService.MarkEventAsInProgressAsync(logEvt.Id);
-                await eventBus.Publish(logEvt.IntegrationEvent);
+                await eventBus.Publish(logEvt.IntegrationEvent, cancellationToken);
                 await outboxService.MarkEventAsPublishedAsync(logEvt.Id);
             }
             catch (Exception ex)
@@ -31,7 +31,7 @@ public class OrderingIntegrationEventService(
 
                 await outboxService.MarkEventAsFailedAsync(logEvt.Id);
             }
-        }
+        });
     }
 
     public async Task AddAndSaveEventAsync(IntegrationEvent evt)

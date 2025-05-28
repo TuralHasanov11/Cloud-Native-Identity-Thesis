@@ -26,4 +26,6 @@ public abstract class EntityBase<TId> : HasDomainEventsBase
     public TId Id { get; }
 
     public byte[]? RowVersion { get; }
+
+    public string RowVersionValue => RowVersion is not null ? Convert.ToBase64String(RowVersion) : string.Empty;
 }

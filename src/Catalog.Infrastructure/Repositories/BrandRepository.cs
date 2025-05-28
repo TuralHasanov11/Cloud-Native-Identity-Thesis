@@ -29,6 +29,7 @@ public class BrandRepository(CatalogDbContext dbContext) : IBrandRepository
     {
         return await dbContext.Brands
             .GetQuery(specification)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
 
@@ -40,6 +41,7 @@ public class BrandRepository(CatalogDbContext dbContext) : IBrandRepository
     {
         return await dbContext.Brands
             .GetQuery(specification)
+            .AsNoTracking()
             .Select(mapper)
             .ToListAsync(cancellationToken);
     }

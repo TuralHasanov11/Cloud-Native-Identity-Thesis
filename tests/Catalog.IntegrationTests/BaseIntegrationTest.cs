@@ -15,7 +15,7 @@ public class BaseIntegrationTest
     protected BaseIntegrationTest(CatalogFactory factory)
     {
         _scope = factory.Services.CreateScope();
-        DbContext = _scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+        DbContext = factory.Services.GetRequiredService<CatalogDbContext>();
         HttpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false,

@@ -41,6 +41,7 @@ dotnet ef migrations add <migration_name> --project ../<TargetService> --startup
 
 ```sh	
 dotnet ef migrations add <migration_name> --output-dir Data/Migrations
+dotnet ef migrations remove --output-dir Data/Migrations
 ```
 
 ### Format
@@ -51,6 +52,7 @@ dotnet format ./CloudNativeIdentityThesis.sln
 ### Testing
 ```sh
 dotnet test --filter <ServiceName>.UnitTests --no-build --verbosity normal
+dotnet test –collect:”XPlat Code Coverage”
 ```
 
 ### Kubernetes
