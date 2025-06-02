@@ -9,7 +9,7 @@ using Scalar.AspNetCore;
 
 namespace ServiceDefaults;
 
-public static partial class Extensions
+public static partial class OpenApiExtensions
 {
     public static IApplicationBuilder UseDefaultOpenApi(this WebApplication app)
     {
@@ -75,11 +75,8 @@ public static partial class Extensions
                     builder.Services.AddOpenApi(description, options =>
                     {
                         options.ApplyApiVersionInfo(versionedOpenApiInfo)
-                            .ApplyAuthorizationChecks(scopes)
-                            .ApplySecuritySchemeDefinitions()
-                            .ApplyOperationDeprecatedStatus()
-                            .ApplyApiVersionDescription()
-                            .ApplySchemaNullableFalse();
+                            .ApplySecuritySchemeDefinitions(scopes)
+                            .ApplyOperationDeprecatedStatus();
                     });
                 }
             }

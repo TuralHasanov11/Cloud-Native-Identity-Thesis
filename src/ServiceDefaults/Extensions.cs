@@ -23,7 +23,7 @@ using ServiceDefaults.Middleware;
 
 namespace ServiceDefaults;
 
-public static partial class Extensions
+public static partial class OpenApiExtensions
 {
     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
     {

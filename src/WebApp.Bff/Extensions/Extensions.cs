@@ -1,14 +1,7 @@
-﻿using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
-using System.Security.Claims;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Google.Apis.Auth.AspNetCore3;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.TokenCacheProviders.InMemory;
@@ -20,7 +13,6 @@ using ServiceDefaults.Identity;
 using WebApp.Bff.Features.Basket;
 using WebApp.Bff.Features.Catalog;
 using WebApp.Bff.Features.Identity;
-using Yarp.ReverseProxy.Transforms;
 
 namespace WebApp.Bff.Extensions;
 
@@ -31,22 +23,16 @@ public static class Extensions
         builder.AddAuthenticationServices();
 
         builder.Services.AddReverseProxy()
-           .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
-           .AddTransforms(context =>
-           {
-               context.AddRequestTransform(async request =>
-               {
-                   await request.AddAccessTokenAsync(context);
-               });
-           })
-        .AddCorrelationId()
-        .ConfigureHttpClient((context, handler) =>
-        {
-            if (builder.Configuration.GetValue<bool>("ReverseProxy:HttpClient:DangerousAcceptAnyServerCertificate"))
+            .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+            .AddTransforms<JwtTransformProvider>()
+            .AddTransforms<CorrelationIdTransformProvider>()
+            .ConfigureHttpClient((context, handler) =>
             {
-                handler.SslOptions.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
-            }
-        });
+                if (builder.Configuration.GetValue<bool>("ReverseProxy:HttpClient:DangerousAcceptAnyServerCertificate"))
+                {
+                    handler.SslOptions.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+                }
+            });
 
         AddCors(builder);
 
@@ -111,7 +97,7 @@ public static class Extensions
         //    .AddAuthToken();
     }
 
-    
+
 
     private static void AddCors(IHostApplicationBuilder builder)
     {

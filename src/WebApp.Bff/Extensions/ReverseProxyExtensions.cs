@@ -7,73 +7,96 @@ using Yarp.ReverseProxy.Transforms.Builder;
 
 namespace WebApp.Bff.Extensions;
 
-internal static class ReverseProxyExtensions
+public class CorrelationIdTransformProvider : ITransformProvider
 {
     private const string CorrelationIdHeaderName = "X-Correlation-Id";
 
-    public static IReverseProxyBuilder AddCorrelationId(this IReverseProxyBuilder builder)
+    public void Apply(TransformBuilderContext context)
     {
-        builder.AddTransforms(transform =>
+        context.AddRequestTransform(t =>
         {
-            transform.AddRequestTransform(t =>
+            if (t.ProxyRequest.Headers.Any(h => h.Key == CorrelationIdHeaderName))
             {
-                if (t.ProxyRequest.Headers.Any(h => h.Key == CorrelationIdHeaderName))
-                {
-                    return ValueTask.CompletedTask;
-                }
-
-                var correlationId = Guid.CreateVersion7().ToString("N");
-                t.ProxyRequest.Headers.Add(CorrelationIdHeaderName, correlationId);
-
                 return ValueTask.CompletedTask;
-            });
-        });
+            }
 
-        return builder;
+            var correlationId = Guid.CreateVersion7().ToString("N");
+            t.ProxyRequest.Headers.Add(CorrelationIdHeaderName, correlationId);
+
+            return ValueTask.CompletedTask;
+        });
     }
 
-    public static async Task AddAccessTokenAsync(this RequestTransformContext request, TransformBuilderContext context)
+    public void ValidateCluster(TransformClusterValidationContext context)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ValidateRoute(TransformRouteValidationContext context)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+
+public class JwtTransformProvider : ITransformProvider
+{
+    public void Apply(TransformBuilderContext context)
     {
         ITokenAcquisition? tokenAcquisition = context.Services.GetService<ITokenAcquisition>();
         IConfiguration configuration = context.Services.GetRequiredService<IConfiguration>();
 
-        string accessToken;
-
-        // Azure
-        if (tokenAcquisition is not null)
+        context.AddRequestTransform(async transformContext =>
         {
-            var scopes = configuration[$"{IdentityProviderSettings.AzureAd}:Scopes"]?.Split(" ", StringSplitOptions.RemoveEmptyEntries) ?? [];
+            string accessToken;
 
-            try
+            // Azure
+            if (tokenAcquisition is not null)
             {
-                accessToken = await tokenAcquisition.GetAccessTokenForUserAsync(scopes);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"No access token: {ex.Message}");
-                return;
-            }
-        }
-        else
-        {
-            try
-            {
-                accessToken = await request.HttpContext!.GetTokenAsync("access_token");
+                var scopes = configuration[$"{IdentityProviderSettings.AzureAd}:Scopes"]?.Split(" ", StringSplitOptions.RemoveEmptyEntries) ?? [];
 
+                try
+                {
+                    accessToken = await tokenAcquisition.GetAccessTokenForUserAsync(scopes);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"No access token: {ex.Message}");
+                    return;
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine($"No access token: {ex.Message}");
-                return;
+                try
+                {
+                    accessToken = await transformContext.HttpContext.GetTokenAsync("access_token");
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"No access token: {ex.Message}");
+                    return;
+                }
             }
-        }
 
-        Debug.WriteLine($"access token: {accessToken}");
+            Debug.WriteLine($"access token: {accessToken}");
 
-        if (accessToken is not null)
-        {
-            request.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            request.ProxyRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        }
+            if (accessToken is not null)
+            {
+                transformContext.ProxyRequest.Headers.Authorization
+                = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                transformContext.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                transformContext.ProxyRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            }
+        });
+    }
+
+    public void ValidateCluster(TransformClusterValidationContext context)
+    {
+    }
+
+    public void ValidateRoute(TransformRouteValidationContext context)
+    {
     }
 }
