@@ -3,7 +3,6 @@ export interface Cart {
 }
 
 export type BasketItem = {
-  id: string
   productId: string
   productName: string
   unitPrice: number

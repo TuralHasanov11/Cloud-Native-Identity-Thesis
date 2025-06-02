@@ -1,10 +1,11 @@
-﻿using WebApp.Bff.Features.Catalog;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using WebApp.Bff.Features.Catalog;
 
 namespace WebApp.Bff.Features.Basket;
 
 public static class GetByUser
 {
-    public static async Task<IResult> Handle(
+    public static async Task<Results<Ok<IEnumerable<BasketItem>>, ProblemHttpResult>> Handle(
         ICatalogService catalogService,
         BasketService basketService,
         CancellationToken _)
@@ -15,7 +16,7 @@ public static class GetByUser
 
             if (basket is null)
             {
-                return Results.NotFound();
+                return TypedResults.Ok(BasketItem.Empty());
             }
 
             var productIds = basket
@@ -24,11 +25,24 @@ public static class GetByUser
 
             var products = await catalogService.GetProducts(productIds);
 
-            return Results.Ok(products);
+            var items = basket.Select(b => new
+            {
+                b.ProductId,
+                b.Quantity,
+                Product = products.First(p => p.Id.ToString() == b.ProductId)
+            })
+                .Where(x => x.Product is not null)
+                .Select(x => new BasketItem(
+                    Guid.Parse(x.ProductId),
+                    x.Product.Name,
+                    x.Product.Price,
+                    x.Quantity));
+
+            return TypedResults.Ok(items);
         }
         catch (Exception ex)
         {
-            return Results.Problem(ex.Message);
+            return TypedResults.Problem(ex.Message);
         }
     }
 }

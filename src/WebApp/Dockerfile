@@ -17,7 +17,7 @@ RUN npm install && npm cache clean --force
 COPY ./src/WebApp/ /app/
 
 # Build the application
-RUN npm run build
+RUN npm run build-only
 
 # Use the lightweight Nginx image from the previous stage for the nginx container
 FROM nginx:stable-alpine as production

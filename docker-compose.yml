@@ -114,56 +114,56 @@ services:
     networks:
       - thesis-net
 
-  webhooks.api:
-    image: ${DOCKER_REGISTRY-}webhooks-api
-    container_name: webhooks.api
-    build:
-      context: .
-      dockerfile: src/Webhooks.Api/Dockerfile
-    ports:
-    - "5108:5108"
-    - "5109:5109"
-    environment:
-    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
-    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
-    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
-    depends_on:
-    - rabbitmq
-    - webhooks.postgres
-    networks:
-      - thesis-net
+  # webhooks.api:
+  #   image: ${DOCKER_REGISTRY-}webhooks-api
+  #   container_name: webhooks.api
+  #   build:
+  #     context: .
+  #     dockerfile: src/Webhooks.Api/Dockerfile
+  #   ports:
+  #   - "5108:5108"
+  #   - "5109:5109"
+  #   environment:
+  #   - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+  #   - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+  #   - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+  #   depends_on:
+  #   - rabbitmq
+  #   - webhooks.postgres
+  #   networks:
+  #     - thesis-net
 
-  webhooks.postgres:
-    image: postgres:latest
-    container_name: webhooks.postgres
-    environment:
-      - POSTGRES_DB=webhooks
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    volumes:
-      - ./.containers/webhooks-postgres:/var/lib/postgresql/data
-    ports:
-      - "54323:5432"
-    networks:
-      - thesis-net
+  # webhooks.postgres:
+  #   image: postgres:latest
+  #   container_name: webhooks.postgres
+  #   environment:
+  #     - POSTGRES_DB=webhooks
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #   volumes:
+  #     - ./.containers/webhooks-postgres:/var/lib/postgresql/data
+  #   ports:
+  #     - "54323:5432"
+  #   networks:
+  #     - thesis-net
 
-  webhooks.client:
-    image: ${DOCKER_REGISTRY-}webhooks-client
-    container_name: webhooks.client
-    build:
-      context: .
-      dockerfile: src/Webhooks.Client/Dockerfile
-    ports:
-    - "5110:5110"
-    - "5111:5111"
-    environment:
-    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
-    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
-    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
-    depends_on:
-    - webhooks.api
-    networks:
-      - thesis-net
+  # webhooks.client:
+  #   image: ${DOCKER_REGISTRY-}webhooks-client
+  #   container_name: webhooks.client
+  #   build:
+  #     context: .
+  #     dockerfile: src/Webhooks.Client/Dockerfile
+  #   ports:
+  #   - "5110:5110"
+  #   - "5111:5111"
+  #   environment:
+  #   - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+  #   - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+  #   - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+  #   depends_on:
+  #   - webhooks.api
+  #   networks:
+  #     - thesis-net
 
   webapp.bff:
     image: ${DOCKER_REGISTRY-}webapp-bff
@@ -201,14 +201,14 @@ services:
     environment:
       VITE_API_URI: "https://webapp.bff:5113"
 
-  papercut:
-    image: changemakerstudiosus/papercut-smtp:latest
-    container_name: "papercut"
-    ports:
-      - "8083:80"
-      - "25:25"
-    networks:
-      - thesis-net
+  # papercut:
+  #   image: changemakerstudiosus/papercut-smtp:latest
+  #   container_name: "papercut"
+  #   ports:
+  #     - "8083:80"
+  #     - "25:25"
+  #   networks:
+  #     - thesis-net
 
   seq:
     image: datalust/seq:latest

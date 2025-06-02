@@ -3,6 +3,7 @@ using Catalog.Contracts.Abstractions;
 using Catalog.Infrastructure.IntegrationEvents;
 using Catalog.Infrastructure.Repositories;
 using EventBus.Extensions;
+using FluentValidation;
 using Hangfire;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,8 @@ public static class Extensions
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
+        builder.Services.AddValidatorsFromAssembly(AssemblyReference.Assembly);
+
         builder.AddDefaultAuthentication();
 
         builder.AddAudit();

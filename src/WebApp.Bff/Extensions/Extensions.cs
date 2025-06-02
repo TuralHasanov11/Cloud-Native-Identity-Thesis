@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using FluentValidation;
 using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -20,6 +21,8 @@ public static class Extensions
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
+        builder.Services.AddValidatorsFromAssembly(AssemblyReference.Assembly);
+
         builder.AddAuthenticationServices();
 
         builder.Services.AddReverseProxy()
@@ -36,15 +39,15 @@ public static class Extensions
 
         AddCors(builder);
 
-        builder.Services.AddResiliencePipeline<string, IEnumerable<Product>>(
+        builder.Services.AddResiliencePipeline<string, IEnumerable<BasketItem>>(
             "catalog-service-fallback",
             pipelineBuilder =>
             {
-                pipelineBuilder.AddFallback(new Polly.Fallback.FallbackStrategyOptions<IEnumerable<Product>>
+                pipelineBuilder.AddFallback(new Polly.Fallback.FallbackStrategyOptions<IEnumerable<BasketItem>>
                 {
                     FallbackAction = _ =>
                     {
-                        return Outcome.FromResultAsValueTask(Product.Empty());
+                        return Outcome.FromResultAsValueTask(BasketItem.Empty());
                     }
                 });
             });

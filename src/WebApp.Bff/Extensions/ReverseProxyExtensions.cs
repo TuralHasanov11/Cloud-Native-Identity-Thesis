@@ -29,12 +29,12 @@ public class CorrelationIdTransformProvider : ITransformProvider
 
     public void ValidateCluster(TransformClusterValidationContext context)
     {
-        throw new NotImplementedException();
+        return;
     }
 
     public void ValidateRoute(TransformRouteValidationContext context)
     {
-        throw new NotImplementedException();
+        return;
     }
 }
 

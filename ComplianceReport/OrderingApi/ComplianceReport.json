@@ -11,13 +11,13 @@
                         {
                             "Name": "logger",
                             "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.CreateOrderRequest>",
-                            "File": "D:\\FH Dortmund\\Thesis\\Project\\CloudNativeIdentityThesis\\src\\Ordering.Api\\Features\\Orders\\Create.cs",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\Create.cs",
                             "Line": "51"
                         },
                         {
                             "Name": "order",
                             "Type": "Ordering.Core.OrderAggregate.Order",
-                            "File": "D:\\FH Dortmund\\Thesis\\Project\\CloudNativeIdentityThesis\\src\\Ordering.Api\\Features\\Orders\\Create.cs",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\Create.cs",
                             "Line": "51"
                         }
                     ]

@@ -3,9 +3,11 @@ import useBasket from "@/composables/useBasket";
 import useIdentity from "@/composables/useIdentity";
 import type { MenuItem } from "primevue/menuitem";
 import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
 
 const { getBasket } = useBasket();
 const { login, logout, user, isAuthenticated } = useIdentity();
+const route = useRoute();
 
 await getBasket();
 
@@ -111,9 +113,9 @@ const toggle = (event: MouseEvent) => {
             </Menu>
           </template>
           <template v-else>
-            <a v-bind="login" custom>
+            <a @click="() => login(route.path)" style="cursor: pointer;" v-ripple custom>
               <span class="pi pi-sign-in" />
-              <span>Sign in</span>
+              <span class="ml-2">{{ $t('messages.identity.signIn') }}</span>
             </a>
           </template>
         </div>

@@ -103,6 +103,22 @@ public static class Endpoints
             .RequireAuthorization()
             .RequireRateLimiting("FixedRateLimitingPolicy");
 
+        basketApi.MapPost("", Basket.UpdateByUser.Handle)
+            .WithName("UpdateBasketByUser")
+            .WithSummary("Update the current user's basket.")
+            .WithDescription("Update the current user's basket.")
+            .WithTags("Basket")
+            .RequireAuthorization()
+            .RequireRateLimiting("FixedRateLimitingPolicy");
+
+        basketApi.MapDelete("", Basket.DeleteByUser.Handle)
+            .WithName("DeleteBasketByUser")
+            .WithSummary("Delete the current user's basket.")
+            .WithDescription("Delete the current user's basket.")
+            .WithTags("Basket")
+            .RequireAuthorization()
+            .RequireRateLimiting("FixedRateLimitingPolicy");
+
         return app;
     }
 

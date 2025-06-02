@@ -187,6 +187,10 @@ app.use(
             general: 'Something went wrong',
             noOrder: 'We could not find your order. Please try again later.',
           },
+          identity: {
+            signIn: 'Sign In',
+            signUp: 'Sign Up',
+          },
         },
       },
       de: {
@@ -358,6 +362,10 @@ app.use(
             general: 'Etwas ist schief gelaufen',
             noOrder:
               'Wir konnten Ihre Bestellung nicht finden. Bitte versuchen Sie es später noch einmal.',
+          },
+          identity: {
+            signIn: 'Anmelden',
+            signUp: 'Registrieren',
           },
         },
       },

@@ -2,6 +2,7 @@
 import useBasket from '@/composables/useBasket';
 import useCatalog from '@/composables/useCatalog';
 import { useHelpers } from '@/composables/useHelpers';
+import useIdentity from '@/composables/useIdentity';
 
 import type { BasketItem } from '@/types/basket';
 import { StockStatusEnum, type Product } from '@/types/catalog';
@@ -12,6 +13,7 @@ const route = useRoute();
 const { addToCart, isUpdatingCart } = useBasket();
 const { product, getProductById } = useCatalog()
 const { FALLBACK_IMG } = useHelpers();
+const { isAuthenticated } = useIdentity();
 
 const slug = route.params.slug as string;
 const selectProductInput = computed<BasketItem>(() => ({
@@ -76,14 +78,16 @@ const disabledAddToCart = computed(() => {
 
             <hr>
 
-            <form @submit.prevent="addToCart(selectProductInput)">
-              <div
-                class="fixed bottom-0 left-0 z-10 flex items-center w-full gap-4 p-4 mt-12 md:static md:bg-transparent bg-opacity-90 md:p-0">
-                <InputNumber v-model="quantity" type="number" :min="1" aria-label="Quantity" />
+            <template v-if="isAuthenticated">
+              <form @submit.prevent="addToCart(selectProductInput)">
+                <div
+                  class="fixed bottom-0 left-0 z-10 flex items-center w-full gap-4 p-4 mt-12 md:static md:bg-transparent bg-opacity-90 md:p-0">
+                  <InputNumber v-model="quantity" type="number" :min="1" aria-label="Quantity" />
 
-                <AddToCartButton class="flex-1 w-full md:max-w-xs" :disabled="disabledAddToCart" />
-              </div>
-            </form>
+                  <AddToCartButton class="flex-1 w-full md:max-w-xs" :disabled="disabledAddToCart" />
+                </div>
+              </form>
+            </template>
 
             <div v-if="product.categories">
               <div class="grid gap-2 my-8 text-sm">

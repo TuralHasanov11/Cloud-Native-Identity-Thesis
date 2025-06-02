@@ -51,7 +51,6 @@ export default function useCheckout() {
           productName: item.productName,
           unitPrice: item.unitPrice,
           oldUnitPrice: item.oldUnitPrice || 0,
-          id: item.id,
           pictureUrl: item.pictureUrl,
         })),
         cardTypeId: checkoutInfo.cardTypeId,

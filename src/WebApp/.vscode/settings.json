@@ -16,6 +16,8 @@
   "tailwindCSS.classAttributes": ["class", "ui"],
   "tailwindCSS.experimental.classRegex": [["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]],
   "[dockerfile]": {
-    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
-  }
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
+  },
+  "i18n-ally.localesPaths": ["src/locales"],
+  "i18n-ally.keystyle": "nested"
 }
