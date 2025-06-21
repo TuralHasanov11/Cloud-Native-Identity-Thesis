@@ -165,47 +165,6 @@ services:
   #   networks:
   #     - thesis-net
 
-  webapp.bff:
-    image: ${DOCKER_REGISTRY-}webapp-bff
-    container_name: webapp.bff
-    build:
-      context: .
-      dockerfile: src/WebApp.Bff/Dockerfile
-    ports:
-    - "5112:5112"
-    - "5113:5113"
-    environment:
-    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
-    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
-    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
-    depends_on:
-    - basket.api
-    - catalog.api
-    - ordering.api
-    - paymentprocessor
-    networks:
-      - thesis-net
-
-  # webapp:
-  #   image: ${DOCKER_REGISTRY-}webapp
-  #   container_name: webapp
-  #   build:
-  #     context: .
-  #     dockerfile: src/WebApp/Dockerfile
-  #   ports:
-  #   - 5173:80
-  #   networks:
-  #     - thesis-net
-  #   depends_on:
-  #     - webapp.bff
-  #   environment:
-  #     VITE_API_URI: "https://webapp.bff:5113"
-    # volumes:
-    # - ./src/WebApp:/app
-    # - /app/node_modules
-    # - .:/app
-    # command: "npm run dev -- --host --port 3000"
-
   # papercut:
   #   image: changemakerstudiosus/papercut-smtp:latest
   #   container_name: "papercut"
@@ -289,6 +248,29 @@ services:
   #     - GF_SECURITY_ADMIN_PASSWORD=grafana
   #   volumes:
   #     - ./grafana/datasource:/etc/grafana/provisioning/datasources
+
+  webapp.server:
+    image: ${DOCKER_REGISTRY-}webappserver
+    build:
+      context: .
+      dockerfile: src/WebApp/WebApp.Server/Dockerfile
+    container_name: webapp.server
+    ports:
+    - "5112:5112"
+    - "5113:5113"
+    environment:
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://seq:5341/ingest/otlp/v1/traces
+    - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    - OTEL_EXPORTER_OTLP_HEADERS="X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    depends_on:
+    - basket.api
+    - catalog.api
+    - ordering.api
+    - paymentprocessor
+    networks:
+      - thesis-net
+
+
 
 networks:
   thesis-net:

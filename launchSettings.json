@@ -4,7 +4,7 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "composeLaunchAction": "LaunchBrowser",
-      "composeLaunchServiceName": "webapp.bff",
+      "composeLaunchServiceName": "webapp.server",
       "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
       "serviceActions": {
         "basket.api": "StartDebugging",
@@ -18,7 +18,7 @@
         "rabbitmq": "StartWithoutDebugging",
         "redis": "StartWithoutDebugging",
         "seq": "StartWithoutDebugging",
-        "webapp.bff": "StartDebugging"
+        "webapp.server": "StartDebugging"
       }
     }
   }
