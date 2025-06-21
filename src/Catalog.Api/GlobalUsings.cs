@@ -4,3 +4,4 @@ global using Catalog.Core.CatalogAggregate.Specifications;
 global using Catalog.Infrastructure.Data;
 global using Microsoft.AspNetCore.Http.HttpResults;
 global using ServiceDefaults;
+global using SharedKernel;

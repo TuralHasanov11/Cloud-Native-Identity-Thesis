@@ -1,4 +1,4 @@
-﻿namespace WebApp.Bff.Features;
+﻿namespace SharedKernel;
 
 public class PaginatedItems<TEntity, TCursor>(
     TCursor pageCursor,
@@ -8,7 +8,7 @@ public class PaginatedItems<TEntity, TCursor>(
     where TEntity : class
     where TCursor : IEquatable<TCursor>, IComparable<TCursor>
 {
-    public TCursor PageCursor { get; } = pageCursor;
+    public TCursor? PageCursor { get; } = pageCursor;
 
     public int PageSize { get; } = pageSize;
 

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-
-namespace Catalog.IntegrationTests;
+﻿namespace Catalog.IntegrationTests;
 
 public class BaseIntegrationTest
 {

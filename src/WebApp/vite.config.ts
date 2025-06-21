@@ -28,5 +28,6 @@ export default defineConfig({
     //   cert: fs.readFileSync(path.resolve(__dirname, 'cert/webapp.pem')),
     // },
     // port: 5002,
+    // allowedHosts: ['webapp'],
   },
 })

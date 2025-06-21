@@ -7,7 +7,7 @@ namespace WebApp.Bff.Features.Basket;
 
 public static class UpdateByUser
 {
-    public static async Task<Results<Ok<IEnumerable<BasketQuantity>>, Conflict<string>, ProblemHttpResult>> Handle(
+    public static async Task<Results<Ok<IEnumerable<BasketItem>>, Conflict<string>, ProblemHttpResult>> Handle(
         ICatalogService catalogService,
         BasketService basketService,
         UpdateBasketByUserRequest request)
@@ -27,7 +27,20 @@ public static class UpdateByUser
 
             var items = await basketService.UpdateBasketAsync(request.Items);
 
-            return TypedResults.Ok(items);
+            var result = items.Select(b => new
+            {
+                b.ProductId,
+                b.Quantity,
+                Product = products.First(p => p.Id.ToString() == b.ProductId)
+            })
+                .Where(x => x.Product is not null)
+                .Select(x => new BasketItem(
+                    Guid.Parse(x.ProductId),
+                    x.Product.Name,
+                    x.Product.Price,
+                    x.Quantity));
+
+            return TypedResults.Ok(result);
         }
         catch (Exception ex)
         {

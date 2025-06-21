@@ -13,7 +13,7 @@ public static class Endpoints
             .AllowAnonymous()
             .WithName("ListProducts")
             .WithSummary("List catalog products")
-            .WithDescription("Get a paginated list of products in the catalog.")
+            .WithDescription("Get a list of products in the catalog.")
             .WithTags("Products");
 
         api.MapGet("products/by", Products.ListByIds.Handle)
@@ -34,14 +34,8 @@ public static class Endpoints
             .AllowAnonymous()
             .WithName("ListProductsByName")
             .WithSummary("Get catalog products by name")
-            .WithDescription("Get a paginated list of catalog products with the specified name.")
+            .WithDescription("Get a list of catalog products with the specified name.")
             .WithTags("Products");
-
-        ////api.MapGet("/products/{id:int}/pic", GetItemPictureById)
-        ////    .WithName("GetItemPicture")
-        ////    .WithSummary("Get catalog product picture")
-        ////    .WithDescription("Get the picture for a catalog product")
-        ////    .WithTags("Items");
 
         //// Routes for resolving catalog products using AI.
         ////v1.MapGet("/products/withsemanticrelevance/{text:minlength(1)}", GetItemsBySemanticRelevanceV1)

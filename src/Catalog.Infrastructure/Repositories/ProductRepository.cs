@@ -49,22 +49,6 @@ public class ProductRepository(CatalogDbContext dbContext) : IProductRepository
             .ToListAsync(cancellationToken);
     }
 
-    //public async Task<(IEnumerable<TResponse>, long)> ListAsync<TResponse>(
-    //    Specification<Product> specification,
-    //    Expression<Func<Product, TResponse>> mapper,
-    //    ProductId pageCursor,
-    //    int pageSize = 10,
-    //    CancellationToken cancellationToken = default)
-    //    where TResponse : class
-    //{
-    //    var (dataTask, countTask) = dbContext.Products.GetQuery(specification)
-    //        .OrderBy(p => p.Id)
-    //        .Select(mapper)
-    //        .Paginate(pageCursor, field: p => p.Id, pageSize, cancellationToken);
-
-    //    return (await dataTask, await countTask);
-    //}
-
     public async Task<IEnumerable<TResponse>> ListAsync<TResponse>(
         Specification<Product> specification,
         Expression<Func<Product, TResponse>> mapper,

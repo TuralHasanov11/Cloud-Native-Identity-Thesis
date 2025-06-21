@@ -131,10 +131,7 @@ public static class Extensions
                         azureAdInstance,
                         awsCognitoInstance,
                         googleCloudIdentityInstance,
-                        "http://webapp:5173",
-                        "http://localhost:5173",
-                        "http://webapp:5174",
-                        "http://localhost:5174")
+                        "http://localhost:5173")
                     .AllowCredentials()
                     .AllowAnyMethod()
                     .AllowAnyHeader();

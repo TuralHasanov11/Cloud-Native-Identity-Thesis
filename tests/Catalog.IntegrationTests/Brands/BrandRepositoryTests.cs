@@ -3,13 +3,12 @@
 public class BrandRepositoryTests : BaseIntegrationTest
 {
     private readonly IBrandRepository _repository;
-    private readonly CancellationToken _cancellationToken;
+    private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
     public BrandRepositoryTests(CatalogFactory factory)
         : base(factory)
     {
         _repository = factory.Services.GetRequiredService<IBrandRepository>();
-        _cancellationToken = TestContext.Current.CancellationToken;
     }
 
     [Fact]

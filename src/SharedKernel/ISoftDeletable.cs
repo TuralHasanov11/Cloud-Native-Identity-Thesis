@@ -6,5 +6,9 @@ public interface ISoftDeletable
 
     DateTime DeletedOnUtc { get; set; }
 
-    void Delete();
+    void Delete()
+    {
+        IsDeleted = true;
+        DeletedOnUtc = DateTime.UtcNow;
+    }
 }

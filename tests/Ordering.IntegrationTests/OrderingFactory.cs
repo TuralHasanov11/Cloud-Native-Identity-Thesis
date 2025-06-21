@@ -1,15 +1,12 @@
-﻿using System.Data.Common;
+﻿using DotNet.Testcontainers.Builders;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Ordering.IntegrationTests;
-using Respawn;
 using Testcontainers.PostgreSql;
-using Testcontainers.RabbitMq;
 
-//[assembly: AssemblyFixture(typeof(OrderingFactory))]
+[assembly: AssemblyFixture(typeof(OrderingFactory))]
 
 namespace Ordering.IntegrationTests;
 
@@ -20,66 +17,37 @@ public class OrderingFactory : WebApplicationFactory<Program>, IAsyncLifetime
         .WithUsername("postgres")
         .WithPassword("postgres")
         .WithDatabase("ordering")
+        .WithWaitStrategy(Wait.ForUnixContainer())
         .Build();
 
-    private DbConnection _dbConnection = default!;
-
-    private Respawner _respawner = default!;
-
-    private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder()
-        .WithImage("rabbitmq:4.0-management")
-        .WithUsername("guest")
-        .WithHostname("rabbitmq")
-        .WithPassword("guest")
-        .Build();
+    //private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder()
+    //    .WithImage("rabbitmq:4.0-management")
+    //    .WithUsername("guest")
+    //    .WithHostname("rabbitmq")
+    //    .WithPassword("guest")
+    //    .Build();
 
     public HttpClient HttpClient { get; private set; } = default!;
 
     public async ValueTask InitializeAsync()
     {
         await _dbContainer.StartAsync();
-
-        await _rabbitMqContainer.StartAsync();
-
-        _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
-
-        HttpClient = CreateClient(new WebApplicationFactoryClientOptions
-        {
-            AllowAutoRedirect = false,
-        });
-
-        await InitializeRespawner();
-    }
-
-    private async Task InitializeRespawner()
-    {
-        await _dbConnection.OpenAsync();
-        _respawner = await Respawner.CreateAsync(
-            _dbConnection,
-            new RespawnerOptions
-            {
-                DbAdapter = DbAdapter.Postgres,
-                SchemasToInclude = ["public"]
-            });
+        //await _rabbitMqContainer.StartAsync();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureTestServices(services =>
         {
-            var descriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<OrderingDbContext>));
+            services.RemoveAll<DbContextOptions<OrderingDbContext>>();
 
-            if (descriptor is not null)
+            services.AddDbContextPool<OrderingDbContext>((sp, options) =>
             {
-                services.Remove(descriptor);
-            }
-
-            services.AddDbContext<OrderingDbContext>(
-                a => a.UseNpgsql(
+                options.UseNpgsql(
                     _dbContainer.GetConnectionString(),
                     npgsqlOptionsAction => npgsqlOptionsAction.MigrationsHistoryTable(
-                        HistoryRepository.DefaultTableName)));
+                        HistoryRepository.DefaultTableName));
+            });
 
             //services.AddMassTransitTestHarness(x =>
             // {
@@ -107,18 +75,12 @@ public class OrderingFactory : WebApplicationFactory<Program>, IAsyncLifetime
         });
     }
 
-    public async Task ResetDatabaseAsync()
-    {
-        await _respawner.ResetAsync(_dbConnection);
-    }
-
-
     public new async Task DisposeAsync()
     {
-        await _dbConnection.DisposeAsync();
         await _dbContainer.StopAsync();
         await _dbContainer.DisposeAsync();
-        await _rabbitMqContainer.StopAsync();
-        await _rabbitMqContainer.DisposeAsync();
+        //await _rabbitMqContainer.StopAsync();
+        //await _rabbitMqContainer.DisposeAsync();
+        await base.DisposeAsync();
     }
 }

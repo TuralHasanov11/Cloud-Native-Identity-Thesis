@@ -8,7 +8,8 @@ public class WebhookSubscriptionRepositoryTests : BaseIntegrationTest
     private readonly IWebhookSubscriptionRepository _repository;
     private static readonly CancellationTokenSource _cancellationTokenSource = new(TimeSpan.FromSeconds(30));
 
-    public WebhookSubscriptionRepositoryTests(WebhooksFactory factory) : base(factory)
+    public WebhookSubscriptionRepositoryTests(WebhooksFactory factory)
+        : base(factory)
     {
         _repository = factory.Services.GetRequiredService<IWebhookSubscriptionRepository>();
     }

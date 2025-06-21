@@ -1,30 +1,17 @@
 ﻿namespace Ordering.IntegrationTests;
 
-[Collection(nameof(IntegrationTestCollection))]
-public class BaseIntegrationTest : IAsyncLifetime
+public class BaseIntegrationTest
 {
-    private readonly Func<Task> _resetDatabase;
-
     protected OrderingDbContext DbContext { get; }
 
-    private readonly IServiceScope _scope;
+    public HttpClient HttpClient { get; private set; } = default!;
 
     protected BaseIntegrationTest(OrderingFactory factory)
     {
-        _scope = factory.Services.CreateScope();
-        _resetDatabase = factory.ResetDatabaseAsync;
-        DbContext = _scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
-    }
-
-    public ValueTask InitializeAsync()
-    {
-        return ValueTask.CompletedTask;
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await _resetDatabase();
-        _scope.Dispose();
-        GC.SuppressFinalize(this);
+        DbContext = factory.Services.GetRequiredService<OrderingDbContext>();
+        HttpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false,
+        });
     }
 }

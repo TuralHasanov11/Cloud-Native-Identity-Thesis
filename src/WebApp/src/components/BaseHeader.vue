@@ -2,14 +2,19 @@
 import useBasket from "@/composables/useBasket";
 import useIdentity from "@/composables/useIdentity";
 import type { MenuItem } from "primevue/menuitem";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const { getBasket } = useBasket();
 const { login, logout, user, isAuthenticated } = useIdentity();
 const route = useRoute();
 
-await getBasket();
+watch(isAuthenticated, async (newValue) => {
+  console.log("isAuthenticated changed:", newValue);
+  if (newValue) {
+    await getBasket();
+  }
+}, { immediate: true });
 
 const items = computed<MenuItem[]>(() => [
   {
@@ -37,6 +42,11 @@ const userItems = computed<MenuItem[]>(() => [
     },
     items: [
       {
+        label: "Cart",
+        icon: "pi pi-shopping-cart",
+        route: "/cart",
+      },
+      {
         label: 'Orders',
         icon: 'pi pi-book',
         route: "/user/orders",
@@ -55,11 +65,7 @@ const userItems = computed<MenuItem[]>(() => [
       }
     ]
   },
-  {
-    label: "Cart",
-    icon: "pi pi-shopping-cart",
-    route: "/cart",
-  }
+
 ]);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

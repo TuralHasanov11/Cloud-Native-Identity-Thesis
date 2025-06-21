@@ -1,12 +1,10 @@
 ﻿using Catalog.IntegrationTests;
 using DotNet.Testcontainers.Builders;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Testcontainers.PostgreSql;
-using Testcontainers.RabbitMq;
 
 [assembly: AssemblyFixture(typeof(CatalogFactory))]
 
@@ -22,26 +20,27 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
         .WithWaitStrategy(Wait.ForUnixContainer())
         .Build();
 
-    private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder()
-        .WithImage("rabbitmq:4.0-management")
-        .WithUsername("guest")
-        .WithHostname("rabbitmq")
-        .WithPassword("guest")
-        .WithWaitStrategy(Wait.ForUnixContainer())
-        .Build();
+    //private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder()
+    //    .WithImage("rabbitmq:4.0-management")
+    //    .WithUsername("guest")
+    //    .WithHostname("rabbitmq")
+    //    .WithPassword("guest")
+    //    .WithWaitStrategy(Wait.ForUnixContainer())
+    //    .Build();
 
     public async ValueTask InitializeAsync()
     {
         await _dbContainer.StartAsync();
-        await _rabbitMqContainer.StartAsync();
+        //await _rabbitMqContainer.StartAsync();
     }
 
     public new async Task DisposeAsync()
     {
-        //await _dbContainer.StopAsync();
+        await _dbContainer.StopAsync();
         await _dbContainer.DisposeAsync();
         //await _rabbitMqContainer.StopAsync();
-        await _rabbitMqContainer.DisposeAsync();
+        //await _rabbitMqContainer.DisposeAsync();
+        await base.DisposeAsync();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -50,11 +49,13 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
         {
             services.RemoveAll<DbContextOptions<CatalogDbContext>>();
 
-            services.AddDbContext<CatalogDbContext>(
-                a => a.UseNpgsql(
+            services.AddDbContextPool<CatalogDbContext>((sp, options) =>
+            {
+                options.UseNpgsql(
                     _dbContainer.GetConnectionString(),
                     npgsqlOptionsAction => npgsqlOptionsAction.MigrationsHistoryTable(
-                        HistoryRepository.DefaultTableName)));
+                        HistoryRepository.DefaultTableName));
+            });
 
             //services.AddMassTransitTestHarness(x =>
             // {

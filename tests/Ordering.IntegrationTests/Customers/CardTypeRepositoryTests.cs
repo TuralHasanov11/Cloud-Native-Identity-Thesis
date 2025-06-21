@@ -5,8 +5,10 @@ namespace Ordering.IntegrationTests.Customers;
 public class CardTypeRepositoryTests : BaseIntegrationTest
 {
     private readonly ICardTypeRepository _cardTypeRepository;
+    private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
-    public CardTypeRepositoryTests(OrderingFactory factory) : base(factory)
+    public CardTypeRepositoryTests(OrderingFactory factory) 
+        : base(factory)
     {
         _cardTypeRepository = factory.Services.GetRequiredService<ICardTypeRepository>();
     }
@@ -18,11 +20,11 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
         var cardType = CardType.Create("Visa");
 
         // Act
-        await _cardTypeRepository.CreateAsync(cardType);
-        await _cardTypeRepository.SaveChangesAsync();
+        await _cardTypeRepository.CreateAsync(cardType, _cancellationToken);
+        await _cardTypeRepository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var createdCardType = await DbContext.CardTypes.FindAsync(cardType.Id);
+        var createdCardType = await DbContext.CardTypes.FirstOrDefaultAsync(c => c.Id == cardType.Id, _cancellationToken);
         Assert.NotNull(createdCardType);
     }
 
@@ -31,15 +33,15 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
     {
         // Arrange
         var cardType = CardType.Create("Visa2");
-        await DbContext.CardTypes.AddAsync(cardType);
-        await DbContext.SaveChangesAsync();
+        await DbContext.CardTypes.AddAsync(cardType, _cancellationToken);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
         // Act
         _cardTypeRepository.Delete(cardType);
-        await _cardTypeRepository.SaveChangesAsync();
+        await _cardTypeRepository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var deletedCardType = await DbContext.CardTypes.Where(c => c.Name == cardType.Name).FirstOrDefaultAsync();
+        var deletedCardType = await DbContext.CardTypes.Where(c => c.Name == cardType.Name).FirstOrDefaultAsync(_cancellationToken);
         Assert.Null(deletedCardType);
     }
 
@@ -50,16 +52,15 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
         var cardType1 = CardType.Create("Visa1");
         var cardType2 = CardType.Create("MasterCard1");
 
-        await _cardTypeRepository.CreateAsync(cardType1);
-        await _cardTypeRepository.CreateAsync(cardType2);
-        await _cardTypeRepository.SaveChangesAsync();
+        await DbContext.CardTypes.AddRangeAsync([cardType1, cardType2], _cancellationToken);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
         // Act
-        var cardTypes = await _cardTypeRepository.ListAsync();
+        var cardTypes = await _cardTypeRepository.ListAsync(_cancellationToken);
 
         // Assert
-        Assert.Contains(cardTypes, ct => ct.Name == "Visa1");
-        Assert.Contains(cardTypes, ct => ct.Name == "MasterCard1");
+        Assert.Contains(cardTypes, ct => ct.Name == cardType1.Name);
+        Assert.Contains(cardTypes, ct => ct.Name == cardType2.Name);
     }
 
     [Fact]
@@ -68,16 +69,16 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
         // Arrange
         var cardType = CardType.Create("Visa5");
 
-        await _cardTypeRepository.CreateAsync(cardType);
-        await _cardTypeRepository.SaveChangesAsync();
-        var specification = new GetCardTypeSpecification(cardType.Id);
+        await DbContext.CardTypes.AddAsync(cardType, _cancellationToken);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
         // Act
-        var result = await _cardTypeRepository.SingleOrDefaultAsync(specification);
+        var specification = new GetCardTypeSpecification(cardType.Id);
+        var result = await _cardTypeRepository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("Visa5", result.Name);
+        Assert.Equal(cardType.Name, result.Name);
     }
 
     [Fact]
@@ -85,13 +86,14 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
     {
         // Arrange
         var cardType = CardType.Create("Visa3");
-        await _cardTypeRepository.CreateAsync(cardType);
-        await _cardTypeRepository.SaveChangesAsync();
 
-        var specification = new GetCardTypeSpecification(100);
+        await DbContext.CardTypes.AddAsync(cardType, _cancellationToken);
+        await DbContext.SaveChangesAsync(_cancellationToken);
+
 
         // Act
-        var result = await _cardTypeRepository.SingleOrDefaultAsync(specification);
+        var specification = new GetCardTypeSpecification(100);
+        var result = await _cardTypeRepository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         // Assert
         Assert.Null(result);
@@ -102,16 +104,18 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
     {
         // Arrange
         var cardType = CardType.Create("MasterCard3");
-        await _cardTypeRepository.CreateAsync(cardType);
-        await _cardTypeRepository.SaveChangesAsync();
+        await DbContext.CardTypes.AddAsync(cardType, _cancellationToken);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
         // Act
+        const string newName = "MasterCardUpdated";
+        cardType.UpdateName(newName);
         _cardTypeRepository.Update(cardType);
-        await _cardTypeRepository.SaveChangesAsync();
+        await _cardTypeRepository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var updatedCardType = await DbContext.CardTypes.FindAsync(cardType.Id);
+        var updatedCardType = await DbContext.CardTypes.FirstOrDefaultAsync(c => c.Id == cardType.Id, _cancellationToken);
         Assert.NotNull(updatedCardType);
-        Assert.Equal("MasterCard3", updatedCardType.Name);
+        Assert.Equal(newName, updatedCardType.Name);
     }
 }

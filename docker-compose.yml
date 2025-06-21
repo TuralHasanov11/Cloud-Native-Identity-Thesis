@@ -186,20 +186,25 @@ services:
     networks:
       - thesis-net
 
-  webapp:
-    image: ${DOCKER_REGISTRY-}webapp
-    container_name: webapp
-    build:
-      context: .
-      dockerfile: src/WebApp/Dockerfile
-    ports:
-    - 5173:80
-    networks:
-      - thesis-net
-    depends_on:
-      - webapp.bff
-    environment:
-      VITE_API_URI: "https://webapp.bff:5113"
+  # webapp:
+  #   image: ${DOCKER_REGISTRY-}webapp
+  #   container_name: webapp
+  #   build:
+  #     context: .
+  #     dockerfile: src/WebApp/Dockerfile
+  #   ports:
+  #   - 5173:80
+  #   networks:
+  #     - thesis-net
+  #   depends_on:
+  #     - webapp.bff
+  #   environment:
+  #     VITE_API_URI: "https://webapp.bff:5113"
+    # volumes:
+    # - ./src/WebApp:/app
+    # - /app/node_modules
+    # - .:/app
+    # command: "npm run dev -- --host --port 3000"
 
   # papercut:
   #   image: changemakerstudiosus/papercut-smtp:latest

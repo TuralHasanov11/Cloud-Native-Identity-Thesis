@@ -1,4 +1,5 @@
-﻿using System.IO.Compression;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO.Compression;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -23,6 +24,7 @@ using ServiceDefaults.Middleware;
 
 namespace ServiceDefaults;
 
+[ExcludeFromCodeCoverage]
 public static partial class OpenApiExtensions
 {
     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
