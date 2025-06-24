@@ -6,13 +6,15 @@ import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useI18n } from 'vue-i18n'
+import type { BaseMenuItemProp } from '@/types/base'
+import { AwsCognitoGroups, MicrosoftEntraIdRoles } from '@/types/identity'
 const { t } = useI18n()
 const { productCount: basketProductCount } = useBasket()
-const { login, logout, user, isAuthenticated } = useIdentity()
+const { login, logout, user, isAuthenticated, hasRole, hasGroup } = useIdentity()
 const route = useRoute()
 
 
-const items = computed<MenuItem[]>(() => [
+const items = computed<BaseMenuItemProp[]>(() => [
   {
     label: 'Home',
     route: '/',
@@ -37,6 +39,13 @@ const userItems = computed<MenuItem[]>(() => [
       src: 'https://github.com/benjamincanac.png',
     },
     items: [
+      {
+        label: `Admin`,
+        icon: 'pi pi-desktop',
+        route: '/admin',
+        roles: [MicrosoftEntraIdRoles.Admin],
+        groups: [AwsCognitoGroups.Admin],
+      },
       {
         label: `Cart ${basketProductCount.value}`,
         icon: 'pi pi-shopping-cart',
@@ -94,28 +103,23 @@ const toggle = (event: MouseEvent) => {
         <div class="flex items-center gap-2">
           <InputText placeholder="Search" type="text" class="w-32 sm:w-auto" />
           <template v-if="isAuthenticated">
-            <Avatar
-              :label="user.name?.length > 0 ? user.name[0] : ''"
-              image="https://github.com/benjamincanac.png"
-              aria-haspopup="true"
-              aria-controls="user_menu"
-              @click="toggle"
-              icon="pi pi-user"
-              class="cursor-pointer"
-              v-ripple
-            />
+            <Avatar :label="user.name?.length > 0 ? user.name[0] : ''" image="https://github.com/benjamincanac.png"
+              aria-haspopup="true" aria-controls="user_menu" @click="toggle" icon="pi pi-user" class="cursor-pointer"
+              v-ripple />
             <Menu ref="menu" id="user_menu" :model="userItems" :popup="true">
               <template #item="{ item, props }">
-                <RouterLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-                  <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+                <template v-if="hasRole(item.roles) || hasGroup(item.groups)">
+                  <RouterLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                    <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+                      <span :class="item.icon" />
+                      <span class="ml-2">{{ item.label }}</span>
+                    </a>
+                  </RouterLink>
+                  <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
                     <span :class="item.icon" />
                     <span class="ml-2">{{ item.label }}</span>
                   </a>
-                </RouterLink>
-                <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
-                  <span :class="item.icon" />
-                  <span class="ml-2">{{ item.label }}</span>
-                </a>
+                </template>
               </template>
             </Menu>
           </template>

@@ -77,6 +77,9 @@ const router = createRouter({
           path: 'checkout',
           name: 'checkout',
           component: () => import('../views/Checkout/IndexView.vue'),
+          meta: {
+            requireAuth: true,
+          },
         },
       ],
     },
@@ -85,12 +88,44 @@ const router = createRouter({
       component: AdminLayout,
       meta: {
         // requireAuth: true,
+        // requireRole: []
       },
       children: [
         {
-          path: 'dashboard',
+          path: '',
           name: 'admin-dashboard',
           component: () => import('../views/Admin/DashboardView.vue'),
+        },
+        {
+          path: 'catalog',
+          name: 'admin-catalog',
+          children: [
+            {
+              path: 'products',
+              name: 'admin-catalog-products',
+              component: () => import('../views/Admin/Catalog/Products/IndexView.vue'),
+            },
+            {
+              path: 'brands',
+              name: 'admin-catalog-brands',
+              component: () => import('../views/Admin/Catalog/Brands/IndexView.vue'),
+            },
+            {
+              path: 'products/create',
+              name: 'admin-catalog-products-create',
+              component: () => import('../views/Admin/Catalog/Products/CreateView.vue'),
+            },
+          ],
+        },
+        {
+          path: 'orders',
+          children: [
+            {
+              path: '',
+              name: 'admin-orders',
+              component: () => import('../views/Admin/Ordering/IndexView.vue'),
+            },
+          ],
         },
       ],
     },

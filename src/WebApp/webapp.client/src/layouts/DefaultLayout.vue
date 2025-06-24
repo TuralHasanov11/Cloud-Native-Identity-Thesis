@@ -22,7 +22,7 @@ const { isShowingCart } = useBasket()
   </div>
 </template>
 
-<style>
+<style scoped>
 .layout-wrapper {
   min-height: 100vh;
 }
@@ -59,6 +59,7 @@ const { isShowingCart } = useBasket()
 @media (max-width: 991px) {
   .layout-topbar {
     padding: 0 2rem;
+
     .layout-topbar-menu-button {
       display: inline-flex;
     }
@@ -97,7 +98,7 @@ const { isShowingCart } = useBasket()
   list-style-type: none;
 
   .layout-root-menuitem {
-    > .layout-menuitem-root-text {
+    >.layout-menuitem-root-text {
       font-size: 0.857rem;
       text-transform: uppercase;
       font-weight: 700;
@@ -105,7 +106,7 @@ const { isShowingCart } = useBasket()
       margin: 0.75rem 0;
     }
 
-    > a {
+    >a {
       display: none;
     }
   }
@@ -114,14 +115,14 @@ const { isShowingCart } = useBasket()
     user-select: none;
 
     &.active-menuitem {
-      > .layout-submenu-toggler {
+      >.layout-submenu-toggler {
         transform: rotate(-180deg);
       }
     }
   }
 
   li.active-menuitem {
-    > a {
+    >a {
       .layout-submenu-toggler {
         transform: rotate(-180deg);
       }
@@ -246,13 +247,11 @@ const { isShowingCart } = useBasket()
 @media (min-width: 992px) {
   .layout-wrapper {
     &.layout-overlay {
-      &.layout-overlay-active {
-      }
+      &.layout-overlay-active {}
     }
 
     &.layout-static {
-      &.layout-static-inactive {
-      }
+      &.layout-static-inactive {}
     }
 
     .layout-mask {
@@ -294,5 +293,4 @@ const { isShowingCart } = useBasket()
   gap: 0.5rem;
   border-top: 1px solid var(--surface-border);
 }
-
 </style>

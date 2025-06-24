@@ -71,10 +71,8 @@ app.use(
             login: 'Log In',
             logout: 'Logout',
             backToLogin: 'Back to Login',
-            enterEmailOrUsernameForReset:
-              'Please enter your email address or username and we will send you a link to reset your password.',
-            ifRegistered:
-              'If your email address is registered with us, you will receive an email with a link to reset your password.',
+            enterEmailOrUsernameForReset: 'Please enter your email address or username and we will send you a link to reset your password.',
+            ifRegistered: 'If your email address is registered with us, you will receive an email with a link to reset your password.',
             requestNewLink: 'Please request a new link',
             resetPassword: 'Reset password',
             sendPasswordResetEmail: 'Send Password Reset Email',
@@ -120,8 +118,7 @@ app.use(
             noReviews: 'No reviews yet.',
             writeReview: 'Write a Review',
             close: 'Close',
-            rateReview:
-              'How would you rate your experience with this product? We strive for a 5 star experience',
+            rateReview: 'How would you rate your experience with this product? We strive for a 5 star experience',
             rateContent: 'How was your experience?',
             rateEmail: 'Your email',
             submit: 'Submit',
@@ -130,8 +127,7 @@ app.use(
             orderReceived: 'Order Received',
             orderNote: 'Order Note | Order Notes',
             orderNotePlaceholder: 'Notes about your order, e.g. special notes for delivery.',
-            orderThanks:
-              'Thank you for your order. We will send you an email with the order details.',
+            orderThanks: 'Thank you for your order. We will send you an email with the order details.',
             orderHistory: 'Order History',
             placeOrder: 'Place Order',
             total: 'Total',
@@ -300,12 +296,10 @@ app.use(
             submit: 'Senden',
             order: 'Bestellung | Bestellungen',
             orderSummary: 'Bestellübersicht',
-            orderReceived:
-              'Vielen Dank für Ihre Bestellung. Wir senden Ihnen eine E-Mail mit den Bestelldetails zu.',
+            orderReceived: 'Vielen Dank für Ihre Bestellung. Wir senden Ihnen eine E-Mail mit den Bestelldetails zu.',
             orderNote: 'Bestellnotiz | Bestellnotizen',
             orderNotePlaceholder: 'Nachricht zu Ihrer Bestellung, zum Beispiel zur Lieferung.',
-            orderThanks:
-              'Vielen Dank für Ihre Bestellung. Wir senden Ihnen eine E-Mail mit den Bestelldetails zu.',
+            orderThanks: 'Vielen Dank für Ihre Bestellung. Wir senden Ihnen eine E-Mail mit den Bestelldetails zu.',
             orderHistory: 'Bestellverlauf',
             placeOrder: 'Bestellung aufgeben',
             total: 'Gesamt',
@@ -331,8 +325,7 @@ app.use(
             },
             noProductsFound: {
               title: 'Keine Produkte gefunden',
-              subText:
-                'Versuchen Sie, Ihre Suche oder Filter anzupassen, um das zu finden, was Sie suchen.',
+              subText: 'Versuchen Sie, Ihre Suche oder Filter anzupassen, um das zu finden, was Sie suchen.',
               clearFiltersAndSearch: 'Alle Filter und die Suche zurücksetzen',
             },
           },
@@ -361,8 +354,7 @@ app.use(
             passwordMismatch: 'Die Passwörter stimmen nicht überein. Bitte versuche es erneut.',
             invalidPasswordResetLink: 'Der Passwort-Reset-Link ist ungültig.',
             general: 'Etwas ist schief gelaufen',
-            noOrder:
-              'Wir konnten Ihre Bestellung nicht finden. Bitte versuchen Sie es später noch einmal.',
+            noOrder: 'Wir konnten Ihre Bestellung nicht finden. Bitte versuchen Sie es später noch einmal.',
           },
           identity: {
             signIn: 'Anmelden',
@@ -385,5 +377,19 @@ app.use(PrimeVue, {
     },
   },
 })
+
+app.config.errorHandler = (err, vm, info) => {
+  console.error('Error:', err)
+  console.error('Vue instance:', vm)
+  console.error('Info:', info)
+}
+
+app.config.warnHandler = (msg, vm, trace) => {
+  console.warn('Warning:', msg)
+  console.warn('Vue instance:', vm)
+  console.warn('Trace:', trace)
+}
+
+app.config.performance = true
 
 app.mount('#app')

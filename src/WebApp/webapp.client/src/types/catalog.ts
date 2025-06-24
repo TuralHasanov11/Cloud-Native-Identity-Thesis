@@ -1,3 +1,5 @@
+import type { PaginationResponse } from './pagination'
+
 export type Product = {
   id: string
   name: string
@@ -53,4 +55,19 @@ export type ProductType = {
 export enum StockStatusEnum {
   OUT_OF_STOCK,
   IN_STOCK,
+}
+
+export interface GetProductsRequest {
+  name?: string
+  productType?: string
+  brand?: string
+  pageSize?: number
+  pageCursor?: string
+}
+
+export const PAGINATED_PRODUCTS_NULL_OBJECT: PaginationResponse<Product, string> = {
+  data: [],
+  pageSize: 0,
+  pageCursor: '',
+  count: 0,
 }

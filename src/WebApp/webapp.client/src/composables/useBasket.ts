@@ -2,6 +2,7 @@ import type { BasketGrpcItem, BasketItem, Cart } from '@/types/basket'
 import { HttpStatusCode } from '@/types/common'
 import { computed, onMounted, ref } from 'vue'
 import useBffFetch from './useBffFetch'
+import useIdentity from './useIdentity'
 
 export const DEFAULT_CART: Cart = {
   items: [],
@@ -153,7 +154,10 @@ export default function useBasket() {
   }
 
   onMounted(async () => {
-    await getBasket()
+    const {isAuthenticated} = useIdentity()
+    if (isAuthenticated.value) {
+      await getBasket()
+    }
   })
 
   return {

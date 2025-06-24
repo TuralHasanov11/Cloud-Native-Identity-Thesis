@@ -13,6 +13,10 @@ export default function useIdentity() {
     return user.value?.roles?.some((r) => roles.includes(r)) ?? false
   }
 
+  function hasGroup(groups: string[]): boolean {
+    return user.value?.groups?.some((r) => groups.includes(r)) ?? false
+  }
+
   function login(returnUrl: string = '/'): void {
     window.location.href = `/identity/login?returnUrl=${returnUrl}`
   }
@@ -26,6 +30,7 @@ export default function useIdentity() {
     isAuthenticated,
     isGuest,
     hasRole,
+    hasGroup,
     getUserInfo: identityStore.getUserInfo,
     login,
     logout,

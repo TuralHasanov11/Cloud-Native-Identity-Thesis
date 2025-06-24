@@ -4,6 +4,7 @@ export type User = {
   email: string
 
   roles?: string[]
+  groups?: string[]
   address: Address
 }
 
@@ -15,14 +16,10 @@ export type Address = {
   zipCode: string
 }
 
-//   export type Role = {
-//     id: string;
-//     name: string;
-//   };
+export enum MicrosoftEntraIdRoles {
+  Admin = 'Admin',
+}
 
-//   export enum Roles {
-//     Student = 'Student',
-//     Instructor = 'Instructor',
-//     Administrator = 'Administrator',
-//     Editor = 'Editor',
-//   }
+export enum AwsCognitoGroups {
+  Admin = 'Admin',
+}

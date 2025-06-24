@@ -82,8 +82,8 @@ function checkActiveRoute(item: AdminMenuItemProp) {
     </RouterLink>
     <Transition v-if="item.items && item.visible !== false" name="layout-submenu">
       <ul v-show="root ? true : isActiveMenu" class="layout-submenu">
-        <app-menu-item v-for="(child, i) in item.items" :key="child" :index="i" :item="child" :parentItemKey="itemKey"
-          :root="false"></app-menu-item>
+        <AdminMenuItem v-for="(child, i) in item.items" :key="child.url" :index="i" :item="child"
+          :parentItemKey="itemKey" :root="false"></AdminMenuItem>
       </ul>
     </Transition>
   </li>

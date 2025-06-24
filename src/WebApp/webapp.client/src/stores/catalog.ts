@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { shallowRef, type ShallowRef } from 'vue'
-import type { Brand, Product, ProductType } from '@/types/catalog'
+import { PAGINATED_PRODUCTS_NULL_OBJECT, type Brand, type GetProductsRequest, type Product, type ProductType } from '@/types/catalog'
 import type { PaginationResponse } from '@/types/pagination'
 import useBffFetch from '@/composables/useBffFetch'
 
@@ -12,21 +12,6 @@ export interface CatalogStore {
   getBrands: () => Promise<void>
   getProductTypes: () => Promise<void>
   getProducts: (payload?: GetProductsRequest) => Promise<void>
-}
-
-export interface GetProductsRequest {
-  name?: string
-  productType?: string
-  brand?: string
-  pageSize?: number
-  pageCursor?: string
-}
-
-export const PAGINATED_PRODUCTS_NULL_OBJECT: PaginationResponse<Product, string> = {
-  data: [],
-  pageSize: 0,
-  pageCursor: '',
-  count: 0,
 }
 
 export const useCatalogStore = defineStore('catalog', (): CatalogStore => {
@@ -58,9 +43,7 @@ export const useCatalogStore = defineStore('catalog', (): CatalogStore => {
       params.append('pageCursor', payload.pageCursor)
     }
 
-    const { data } = await useBffFetch(`/api/catalog/products?${params.toString()}`).json<
-      PaginationResponse<Product, string>
-    >()
+    const { data } = await useBffFetch(`/api/catalog/products?${params.toString()}`).json<PaginationResponse<Product, string>>()
     if (data.value) {
       products.value = data.value
     }
