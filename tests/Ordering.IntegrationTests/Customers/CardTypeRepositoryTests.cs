@@ -73,7 +73,7 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
         await DbContext.SaveChangesAsync(_cancellationToken);
 
         // Act
-        var specification = new GetCardTypeSpecification(cardType.Id);
+        var specification = new CardTypeSpecification(cardType.Id);
         var result = await _cardTypeRepository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         // Assert
@@ -92,7 +92,7 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
 
 
         // Act
-        var specification = new GetCardTypeSpecification(100);
+        var specification = new CardTypeSpecification(100);
         var result = await _cardTypeRepository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         // Assert

@@ -36,7 +36,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
 
         // Assert
         var createdProduct = await _repository.SingleOrDefaultAsync(
-            new GetProductSpecification(product.Id), _cancellationToken);
+            new ProductSpecification(product.Id), _cancellationToken);
 
         Assert.NotNull(createdProduct);
     }
@@ -69,7 +69,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
 
         // Assert
         var deletedProduct = await _repository.SingleOrDefaultAsync(
-            new GetProductSpecification(product.Id),
+            new ProductSpecification(product.Id),
             _cancellationToken);
 
         Assert.Null(deletedProduct);
@@ -84,7 +84,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
         var existingProducts = await DbContext.Products.ToListAsync(_cancellationToken);
 
         // Act
-        var specification = new GetProductsSpecification();
+        var specification = new ProductSpecification();
         var products = await _repository.ListAsync(specification, _cancellationToken);
 
         // Assert
@@ -113,7 +113,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
 
         await _repository.CreateAsync(product, _cancellationToken);
         await _repository.SaveChangesAsync(_cancellationToken);
-        var specification = new GetProductSpecification(product.Id);
+        var specification = new ProductSpecification(product.Id);
 
         // Act
         var result = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
@@ -127,7 +127,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenProductDoesNotExist()
     {
         // Arrange
-        var specification = new GetProductSpecification(new ProductId(Guid.NewGuid()));
+        var specification = new ProductSpecification(new ProductId(Guid.NewGuid()));
 
         // Act
         var result = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
@@ -173,7 +173,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
 
         // Assert
         var updatedProduct = await _repository.SingleOrDefaultAsync(
-            new GetProductSpecification(product.Id),
+            new ProductSpecification(product.Id),
             _cancellationToken);
 
         Assert.NotNull(updatedProduct);

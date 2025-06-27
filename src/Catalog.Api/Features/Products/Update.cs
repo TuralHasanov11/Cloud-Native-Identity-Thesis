@@ -15,7 +15,7 @@ public static class Update
         CancellationToken cancellationToken)
     {
         var product = await productRepository.SingleOrDefaultAsync(
-            new GetProductSpecification(new ProductId(id)),
+            new ProductSpecification(new ProductId(id)),
             cancellationToken);
 
         if (product == null)

@@ -10,7 +10,7 @@ public static class GetById
         var orderId = new OrderId(id);
 
         var order = await orderRepository.SingleOrDefaultAsync(
-            new GetOrderByIdSpecification(orderId),
+            new OrderSpecification(orderId),
             cancellationToken);
 
         if (order is null)

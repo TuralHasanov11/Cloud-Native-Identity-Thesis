@@ -15,7 +15,7 @@ public sealed class OrderStatusChangedToAwaitingValidationDomainEventHandler(
         //OrderingApiTrace.LogOrderStatusUpdated(_logger, domainEvent.OrderId, OrderStatus.AwaitingValidation);
 
         var order = await orderRepository.SingleOrDefaultAsync(
-            new GetOrderByIdSpecification(new OrderId(domainEvent.OrderId)),
+            new OrderSpecification(new OrderId(domainEvent.OrderId)),
             cancellationToken);
 
         if (order == null)
@@ -24,7 +24,7 @@ public sealed class OrderStatusChangedToAwaitingValidationDomainEventHandler(
         }
 
         var customer = await customerRepository.SingleOrDefaultAsync(
-            new GetCustomerByIdSpecification(new CustomerId(order.CustomerId!.Value)), // TODO: handle null
+            new CustomerSpecification(new CustomerId(order.CustomerId!.Value)), // TODO: handle null
             cancellationToken);
 
         if (customer == null)

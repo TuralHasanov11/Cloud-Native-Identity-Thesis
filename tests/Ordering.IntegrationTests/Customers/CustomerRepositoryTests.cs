@@ -56,7 +56,7 @@ public class CustomerRepositoryTests : BaseIntegrationTest
         DbContext.Customers.AddRange(customer1, customer2);
         await DbContext.SaveChangesAsync(_cancellationToken);
 
-        var specification = new GetCustomersSpecification();
+        var specification = new CustomerSpecification();
 
         // Act
         var customers = await _customerRepository.ListAsync(specification, _cancellationToken);
@@ -74,7 +74,7 @@ public class CustomerRepositoryTests : BaseIntegrationTest
 
         DbContext.Customers.Add(customer);
         await DbContext.SaveChangesAsync(_cancellationToken);
-        var specification = new GetCustomerByIdSpecification(customer.Id);
+        var specification = new CustomerSpecification(customer.Id);
 
         // Act
         var result = await _customerRepository.SingleOrDefaultAsync(specification, _cancellationToken);
@@ -88,7 +88,7 @@ public class CustomerRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenCustomerDoesNotExist()
     {
         // Arrange
-        var specification = new GetCustomerByIdSpecification(new CustomerId(Guid.CreateVersion7()));
+        var specification = new CustomerSpecification(new CustomerId(Guid.CreateVersion7()));
 
         // Act
         var result = await _customerRepository.SingleOrDefaultAsync(specification, _cancellationToken);

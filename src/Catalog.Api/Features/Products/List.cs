@@ -11,10 +11,10 @@ public static class List
         Guid? pageCursor = default,
         CancellationToken cancellationToken = default)
     {
-        var specification = new GetProductsSpecification()
-            .WithNameCriteria(name)
-            .WithProductTypeCriteria(type.HasValue ? new ProductTypeId(type.Value) : null)
-            .WithBrandCriteria(brand.HasValue ? new BrandId(brand.Value) : null);
+        var specification = new ProductSpecification()
+            .AddNameCriteria(name)
+            .AddProductTypeCriteria(type.HasValue ? new ProductTypeId(type.Value) : null)
+            .AddBrandCriteria(brand.HasValue ? new BrandId(brand.Value) : null);
 
         (var products, long count) = await productRepository.ListAsync(
             specification,

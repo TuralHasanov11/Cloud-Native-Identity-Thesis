@@ -21,7 +21,7 @@ public class ProductTypeRepositoryTests : BaseIntegrationTest
         await _repository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var specification = new GetProductTypeSpecification(productType.Id);
+        var specification = new ProductTypeSpecification(productType.Id);
         var createdProductType = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         // Act
@@ -42,7 +42,7 @@ public class ProductTypeRepositoryTests : BaseIntegrationTest
         await _repository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var specification = new GetProductTypeSpecification(productType.Id);
+        var specification = new ProductTypeSpecification(productType.Id);
         var deletedProductType = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
         Assert.Null(deletedProductType);
     }
@@ -58,7 +58,7 @@ public class ProductTypeRepositoryTests : BaseIntegrationTest
         await _repository.CreateAsync(productType2, _cancellationToken);
         await _repository.SaveChangesAsync(_cancellationToken);
 
-        var specification = new GetProductTypesSpecification();
+        var specification = new ProductTypeSpecification();
 
         // Act
         var productTypes = await _repository.ListAsync(specification, _cancellationToken);
@@ -76,7 +76,7 @@ public class ProductTypeRepositoryTests : BaseIntegrationTest
 
         await _repository.CreateAsync(productType, _cancellationToken);
         await _repository.SaveChangesAsync(_cancellationToken);
-        var specification = new GetProductTypeSpecification(productType.Id);
+        var specification = new ProductTypeSpecification(productType.Id);
 
         // Act
         var result = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
@@ -90,7 +90,7 @@ public class ProductTypeRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenProductTypeDoesNotExist()
     {
         // Arrange
-        var specification = new GetProductTypeSpecification(new ProductTypeId(Guid.NewGuid()));
+        var specification = new ProductTypeSpecification(new ProductTypeId(Guid.NewGuid()));
 
         // Act
         var result = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
@@ -114,7 +114,7 @@ public class ProductTypeRepositoryTests : BaseIntegrationTest
         await _repository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var specification = new GetProductTypeSpecification(productType.Id);
+        var specification = new ProductTypeSpecification(productType.Id);
         var updatedProductType = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         Assert.NotNull(updatedProductType);

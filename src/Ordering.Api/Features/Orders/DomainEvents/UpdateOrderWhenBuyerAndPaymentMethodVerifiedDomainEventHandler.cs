@@ -10,7 +10,7 @@ public class UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler(
     public async Task Handle(CustomerAndPaymentMethodVerifiedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         var order = await orderRepository.SingleOrDefaultAsync(
-            new GetOrderByIdSpecification(new OrderId(domainEvent.OrderId)),
+            new OrderSpecification(new OrderId(domainEvent.OrderId)),
             cancellationToken);
 
         if (order == null)

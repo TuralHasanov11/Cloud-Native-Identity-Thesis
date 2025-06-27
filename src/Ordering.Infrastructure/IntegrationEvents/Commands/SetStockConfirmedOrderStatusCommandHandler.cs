@@ -8,7 +8,7 @@ public sealed class SetStockConfirmedOrderStatusCommandHandler(
     public async Task<Result<bool>> Handle(SetStockConfirmedOrderStatusCommand request, CancellationToken cancellationToken)
     {
         var order = await orderRepository.SingleOrDefaultAsync(
-            new GetOrderByIdSpecification(new OrderId(request.OrderNumber)),
+            new OrderSpecification(new OrderId(request.OrderNumber)),
             cancellationToken);
 
         if (order == null)

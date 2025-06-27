@@ -12,7 +12,7 @@ public class OrderStatusChangedToShippedIntegrationEventHandler(
     public async Task Consume(ConsumeContext<OrderStatusChangedToShippedIntegrationEvent> context)
     {
         var subscriptions = await webhookSubscriptionRepository.ListAsync(
-            new GetWebhookSubscriptionsSpecification(WebhookType.OrderShipped));
+            new WebhookSubscriptionSpecification(WebhookType.OrderShipped));
 
         logger.LogInformation("Received OrderStatusChangedToShippedIntegrationEvent and got {SubscriptionCount} subscriptions to process", subscriptions.Count());
 

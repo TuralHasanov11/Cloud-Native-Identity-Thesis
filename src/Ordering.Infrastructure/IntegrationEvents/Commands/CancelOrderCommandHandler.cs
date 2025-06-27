@@ -6,7 +6,7 @@ public sealed class CancelOrderCommandHandler(IOrderRepository orderRepository)
     public async Task<Result<bool>> Handle(CancelOrderCommand request, CancellationToken cancellationToken)
     {
         var order = await orderRepository.SingleOrDefaultAsync(
-            new GetOrderByIdSpecification(new OrderId(request.OrderNumber)),
+            new OrderSpecification(new OrderId(request.OrderNumber)),
             cancellationToken);
 
         if (order == null)

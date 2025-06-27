@@ -90,7 +90,7 @@ public class OrderRepositoryTests : BaseIntegrationTest
         DbContext.Orders.AddRange([order1, order2]);
         await DbContext.SaveChangesAsync(_cancellationToken);
 
-        var specification = new GetOrdersByCustomerIdSpecification(identityId);
+        var specification = new OrderSpecification(identityId);
 
         // Act
         var orders = await _repository.ListAsync(specification, _cancellationToken);
@@ -116,7 +116,7 @@ public class OrderRepositoryTests : BaseIntegrationTest
 
         await _repository.CreateAsync(order, _cancellationToken);
         await _repository.SaveChangesAsync(_cancellationToken);
-        var specification = new GetOrderByIdSpecification(order.Id);
+        var specification = new OrderSpecification(order.Id);
 
         // Act
         var result = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
@@ -130,7 +130,7 @@ public class OrderRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenOrderDoesNotExist()
     {
         // Arrange
-        var specification = new GetOrderByIdSpecification(new OrderId(Guid.CreateVersion7()));
+        var specification = new OrderSpecification(new OrderId(Guid.CreateVersion7()));
 
         // Act
         var result = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
@@ -163,7 +163,7 @@ public class OrderRepositoryTests : BaseIntegrationTest
 
         // Assert
         var updatedOrder = await _repository.SingleOrDefaultAsync(
-            new GetOrderByIdSpecification(order.Id),
+            new OrderSpecification(order.Id),
             _cancellationToken);
         Assert.NotNull(updatedOrder);
         Assert.Equal(OrderStatus.AwaitingValidation, updatedOrder.OrderStatus);

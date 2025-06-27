@@ -7,7 +7,7 @@ public static class List
         CancellationToken cancellationToken = default)
     {
         var productTypes = await productTypeRepository.ListAsync(
-            new GetProductTypesSpecification(),
+            new ProductTypeSpecification(),
             p => p.ToProductTypeDto(),
             cancellationToken);
 

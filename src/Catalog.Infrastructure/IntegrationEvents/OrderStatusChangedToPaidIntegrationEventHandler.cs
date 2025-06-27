@@ -15,7 +15,7 @@ public class OrderStatusChangedToPaidIntegrationEventHandler(
         foreach (var orderStockItem in context.Message.OrderStockItems)
         {
             var product = await productRepository.SingleOrDefaultAsync(
-                new GetProductSpecification(new ProductId(orderStockItem.ProductId)));
+                new ProductSpecification(new ProductId(orderStockItem.ProductId)));
 
             if (product == null)
             {
