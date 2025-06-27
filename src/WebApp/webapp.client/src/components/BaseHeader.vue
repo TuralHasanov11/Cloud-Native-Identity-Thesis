@@ -5,9 +5,9 @@ import type { MenuItem } from 'primevue/menuitem'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { useI18n } from 'vue-i18n'
 import type { BaseMenuItemProp } from '@/types/base'
 import { AwsCognitoGroups, MicrosoftEntraIdRoles } from '@/types/identity'
+import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const { productCount: basketProductCount } = useBasket()
 const { login, logout, user, isAuthenticated, hasRole, hasGroup } = useIdentity()
@@ -78,11 +78,12 @@ const menu = ref<any>('menu')
 const toggle = (event: MouseEvent) => {
   menu?.value?.toggle(event)
 }
+
 </script>
 
 <template>
   <header class="layout-topbar">
-    <Menubar :model="items">
+    <Menubar :model="items" style="width: 100%;">
       <template #start>
         <BaseLogo />
       </template>
@@ -108,7 +109,7 @@ const toggle = (event: MouseEvent) => {
               v-ripple />
             <Menu ref="menu" id="user_menu" :model="userItems" :popup="true">
               <template #item="{ item, props }">
-                <template v-if="hasRole(item.roles) || hasGroup(item.groups)">
+                <template v-if="(!item.roles || hasRole(item.roles)) || (!item.groups || hasGroup(item.groups))">
                   <RouterLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
                     <a v-ripple :href="href" v-bind="props.action" @click="navigate">
                       <span :class="item.icon" />

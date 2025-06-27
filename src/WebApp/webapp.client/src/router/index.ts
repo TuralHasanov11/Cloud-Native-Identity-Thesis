@@ -115,6 +115,11 @@ const router = createRouter({
               name: 'admin-catalog-products-create',
               component: () => import('../views/Admin/Catalog/Products/CreateView.vue'),
             },
+            {
+              path: 'products/:id',
+              name: 'admin-catalog-products-update',
+              component: () => import('../views/Admin/Catalog/Products/UpdateView.vue'),
+            },
           ],
         },
         {

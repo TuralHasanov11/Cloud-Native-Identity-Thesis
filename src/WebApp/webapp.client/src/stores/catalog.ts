@@ -1,8 +1,10 @@
-import { defineStore } from 'pinia'
-import { shallowRef, type ShallowRef } from 'vue'
+import useBffFetch from '@/composables/useBffFetch'
+import { brandRepositoryName, type BrandRepository } from '@/plugins/brandRepositoryPlugin'
+import { productTypeRepositoryName, type ProductTypeRepository } from '@/plugins/productTypeRepositoryPlugin'
 import { PAGINATED_PRODUCTS_NULL_OBJECT, type Brand, type GetProductsRequest, type Product, type ProductType } from '@/types/catalog'
 import type { PaginationResponse } from '@/types/pagination'
-import useBffFetch from '@/composables/useBffFetch'
+import { defineStore } from 'pinia'
+import { inject, shallowRef, type ShallowRef } from 'vue'
 
 export interface CatalogStore {
   popularProducts: ShallowRef<Product[]>
@@ -19,6 +21,8 @@ export const useCatalogStore = defineStore('catalog', (): CatalogStore => {
   const brands = shallowRef<Brand[]>([])
   const products = shallowRef<PaginationResponse<Product, string>>(PAGINATED_PRODUCTS_NULL_OBJECT)
   const productTypes = shallowRef<ProductType[]>([])
+  const brandRepository = inject<BrandRepository>(brandRepositoryName)
+  const productTypeRepository = inject<ProductTypeRepository>(productTypeRepositoryName)
 
   async function getProducts(payload?: GetProductsRequest): Promise<void> {
     const params = new URLSearchParams()
@@ -50,17 +54,14 @@ export const useCatalogStore = defineStore('catalog', (): CatalogStore => {
   }
 
   async function getBrands(): Promise<void> {
-    const { data } = await useBffFetch('/api/catalog/brands').json<Brand[]>()
-    if (data.value) {
-      brands.value = data.value
+    if (brandRepository) {
+      brands.value = await brandRepository.list()
     }
   }
 
   async function getProductTypes(): Promise<void> {
-    const { data } = await useBffFetch<ProductType[]>('/api/catalog/product-types')
-
-    if (data.value) {
-      productTypes.value = data.value
+    if (productTypeRepository) {
+      productTypes.value = await productTypeRepository.list()
     }
   }
 

@@ -1,6 +1,6 @@
 import type { BasketGrpcItem, BasketItem, Cart } from '@/types/basket'
 import { HttpStatusCode } from '@/types/common'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, readonly, ref } from 'vue'
 import useBffFetch from './useBffFetch'
 import useIdentity from './useIdentity'
 
@@ -9,10 +9,12 @@ export const DEFAULT_CART: Cart = {
 }
 
 const cart = ref<Cart>(DEFAULT_CART)
+const isInitialized = ref<boolean>(false)
 
 const totalQuantity = computed<number>(() => {
   return cart.value.items.reduce((total, item) => total + item.quantity, 0)
 })
+
 const isEmpty = computed<boolean>(() => {
   return cart.value.items.length === 0
 })
@@ -25,11 +27,12 @@ const total = computed<number>(() => {
   return cart.value.items.reduce((total, item) => total + item.unitPrice * item.quantity, 0)
 })
 
-const isShowingCart = ref<boolean>(false)
 const isUpdatingCart = ref<boolean>(false)
-const isUpdatingCoupon = ref<boolean>(false)
+const isShowingCart = ref<boolean>(false)
 
 export default function useBasket() {
+  const { isAuthenticated } = useIdentity()
+
   async function getBasket(): Promise<void> {
     try {
       const { data } = await useBffFetch('/api/basket').json<BasketItem[]>()
@@ -106,7 +109,7 @@ export default function useBasket() {
     }
   }
 
-  async function removeFromCart(productId: string) {
+  async function removeItem(productId: string) {
     isUpdatingCart.value = true
     try {
       cart.value.items = cart.value.items.filter((item) => item.productId !== productId)
@@ -154,26 +157,24 @@ export default function useBasket() {
   }
 
   onMounted(async () => {
-    const {isAuthenticated} = useIdentity()
-    if (isAuthenticated.value) {
+    if (isAuthenticated.value && !isInitialized.value) {
       await getBasket()
+      isInitialized.value = true
     }
   })
 
   return {
-    cart,
-    isShowingCart,
-    isUpdatingCart,
-    isUpdatingCoupon,
+    cart: readonly(cart),
+    isShowingCart: readonly(isShowingCart),
+    isUpdatingCart: readonly(isUpdatingCart),
     toggleCart,
     addToCart,
-    removeItem: removeFromCart,
+    removeItem,
     updateItemQuantity,
     emptyCart,
     deleteBasket,
     updateBasket,
     totalQuantity,
-    getBasket,
     isEmpty,
     productCount,
     total,

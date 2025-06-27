@@ -1,8 +1,8 @@
 ﻿namespace WebApp.Server.Features.Identity;
 
-public sealed record UserInfoDto(string? Id, string? Name, Address Address)
+public sealed record UserInfoDto(string? Id, string? Name, Address Address, IEnumerable<string>? roles, IEnumerable<string>? groups)
 {
-    public static UserInfoDto Guest => new(string.Empty, string.Empty, Address.Empty);
+    public static UserInfoDto Guest => new(string.Empty, string.Empty, Address.Empty, [], []);
 }
 
 

@@ -16,13 +16,13 @@ const route = useRoute();
 const { layoutState, setActiveMenuItem, toggleMenu } = useLayout();
 
 
-const props = defineProps<Props>();
+const {root = true, parentItemKey, index, item} = defineProps<Props>();
 
 const isActiveMenu = ref(false);
 const itemKey = ref<string>("");
 
 onBeforeMount(() => {
-  itemKey.value = props.parentItemKey ? props.parentItemKey + '-' + props.index : String(props.index);
+  itemKey.value = parentItemKey ? parentItemKey + '-' + index : String(index);
 
   const activeItem = layoutState.activeMenuItem;
 
@@ -52,7 +52,7 @@ function itemClick(event: MouseEvent, item: AdminMenuItemProp) {
 
   let foundItemKey: string;
   if (item.items) {
-    foundItemKey = isActiveMenu.value ? (props.parentItemKey ?? "") : itemKey.value;
+    foundItemKey = isActiveMenu.value ? (parentItemKey ?? "") : itemKey.value;
   } else {
     foundItemKey = itemKey.value;
   }

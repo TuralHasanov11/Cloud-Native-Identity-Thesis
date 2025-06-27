@@ -7,7 +7,7 @@ public static class List
         string? name,
         Guid? type,
         Guid? brand,
-        int pageSize = 10,
+        int pageSize = 50,
         Guid? pageCursor = default,
         CancellationToken cancellationToken = default)
     {

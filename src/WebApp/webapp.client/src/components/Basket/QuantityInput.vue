@@ -11,9 +11,9 @@ const { item } = defineProps<{
 
 const quantity = ref<number>(item.quantity)
 
-watch(quantity, (newQuantity) => {
+watch(quantity, async (newQuantity) => {
   if (newQuantity >= 0) {
-    updateItemQuantity(item.productId, newQuantity)
+    await updateItemQuantity(item.productId, newQuantity)
   }
 })
 

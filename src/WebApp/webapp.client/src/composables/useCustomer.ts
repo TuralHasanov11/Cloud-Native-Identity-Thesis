@@ -1,27 +1,19 @@
-import { useCustomerStore, GUEST_CUSTOMER } from '@/stores/ordering'
-import { computed, onMounted, watch } from 'vue'
+import { useCustomerStore } from '@/stores/ordering'
+import { computed, watch } from 'vue'
 import useIdentity from './useIdentity'
 
 export default function useCustomer() {
   const customerStore = useCustomerStore()
-  const { user, isGuest: isUserGuest } = useIdentity()
-
-  const isGuest = computed<boolean>(() => customerStore.customer.id === GUEST_CUSTOMER.id)
+  const { user, isGuest } = useIdentity()
 
   watch(user, async () => {
-    if (isUserGuest.value) {
+    if (isGuest.value) {
       console.log('getCustomer')
     }
   })
 
-  onMounted(async () => {
-    if(isUserGuest.value){
-      await customerStore.getOrders()
-    }
-  })
-
-  async function refreshOrders(){
-    if (isUserGuest.value) {
+  async function refreshOrders() {
+    if (isGuest.value) {
       await customerStore.getOrders()
     }
   }
@@ -33,5 +25,6 @@ export default function useCustomer() {
     getOrder: customerStore.getOrder,
     isGuest,
     refreshOrders,
+    getOrders: customerStore.getOrders,
   }
 }

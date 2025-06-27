@@ -22,7 +22,7 @@ public class ProductRepository(CatalogDbContext dbContext) : IProductRepository
     public async Task<(IEnumerable<Product>, long)> ListAsync(
         Specification<Product> specification,
         ProductId pageCursor,
-        int pageSize = 10,
+        int pageSize = 50,
         CancellationToken cancellationToken = default)
     {
 

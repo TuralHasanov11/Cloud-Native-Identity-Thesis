@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import useBrands from '@/composables/useBrands'
+import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
-const { brands } = useBrands()
+const { brands, getBrands } = useBrands()
+
+onMounted(async () => {
+  await getBrands()
+})
 
 </script>
 

@@ -37,9 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\webapp.client\webapp.client.esproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
 	<ProjectReference Include="..\..\ServiceDefaults\ServiceDefaults.csproj" />
 	<ProjectReference Include="..\..\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>

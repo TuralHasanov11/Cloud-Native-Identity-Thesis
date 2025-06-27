@@ -22,7 +22,7 @@ const { isShowingCart } = useBasket()
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 .layout-wrapper {
   min-height: 100vh;
 }

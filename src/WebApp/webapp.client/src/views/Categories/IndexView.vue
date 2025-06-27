@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import useBrands from '@/composables/useBrands'
 
-const { brands } = useBrands()
+const { brands, getBrands } = useBrands()
+
+onMounted(async () => {
+  await getBrands()
+})
 
 </script>
 

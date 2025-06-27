@@ -5,7 +5,7 @@ public static class ListByName
     public static async Task<Ok<PaginatedItems<ProductDto, Guid>>> Handle(
         IProductRepository productRepository,
         string? name,
-        int pageSize = 10,
+        int pageSize = 50,
         Guid? pageCursor = default,
         CancellationToken cancellationToken = default)
     {

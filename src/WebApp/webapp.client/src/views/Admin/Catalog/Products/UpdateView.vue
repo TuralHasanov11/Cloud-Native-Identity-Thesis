@@ -6,55 +6,59 @@ import useAdminProductTypes from '@/composables/admin/catalog/useAdminProductTyp
 import { type ProductFormData } from '@/types/catalog';
 import { mapToCreateProductRequest } from '@/utils/mapper';
 import { useToast } from 'primevue/usetoast';
-import { onMounted, useTemplateRef } from 'vue';
-import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
 const toast = useToast()
-const productFormTemplateRef = useTemplateRef('product-form')
 
-const { createProduct } = useAdminProducts();
+const { updateProduct, product, getProduct } = useAdminProducts();
 const { productTypes, getProductTypes } = useAdminProductTypes();
 const { brands, getBrands } = useAdminBrands();
 
+onMounted(async () => {
+  const result = await getProduct(route.params.id as string);
+  if (result.err) {
+    toast.add({
+      severity: 'error',
+      summary: 'Product Not Found',
+      detail: 'The product you are trying to update does not exist.',
+      life: 3000,
+    });
+    router.push({ name: 'admin-catalog-products' });
+  }
+  await Promise.all([getBrands(), getProductTypes()])
+});
+
 async function onFormSubmit(data: ProductFormData) {
-  console.log(data)
-  console.log(mapToCreateProductRequest(data))
-  const result = await createProduct(mapToCreateProductRequest(data));
+  const result = await updateProduct(product.value.id, mapToCreateProductRequest(data));
   if (result.ok) {
-    productFormTemplateRef.value?.resetForm();
     toast.add({
       severity: 'success',
-      summary: 'Product Created',
-      detail: 'The product has been created successfully.',
+      summary: 'Product Updated',
+      detail: 'The product has been updated successfully.',
       life: 3000,
     })
-    router.push({ name: 'admin-catalog-products' });
   }
   else {
     toast.add({
       severity: 'error',
-      summary: 'Product Creation Error',
-      detail: 'There was an error creating the product. Please try again.',
+      summary: 'Product Update Error',
+      detail: 'There was an error updating the product. Please try again.',
       life: 3000,
     })
   }
 }
-
-onMounted(async () => {
-  await Promise.all([getBrands(), getProductTypes()])
-})
-
 </script>
 
 <template>
   <Fluid class="grid grid-cols-12 gap-8">
     <div class="col-span-12 xl:col-span-6">
       <Toast />
-      <template v-if="brands && productTypes">
-        <ProductForm ref="product-form" @submit="onFormSubmit" :brands :productTypes />
+      <template v-if="product && brands && productTypes">
+        <ProductForm ref="product-form" @submit="onFormSubmit" :brands :productTypes :product :isUpdateMode="true" />
       </template>
     </div>
-
   </Fluid>
 </template>

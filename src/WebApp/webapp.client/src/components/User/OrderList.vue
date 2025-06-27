@@ -3,14 +3,20 @@ import useCustomer from '@/composables/useCustomer'
 import { useHelpers } from '@/composables/useHelpers'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { onMounted } from 'vue'
 const { t } = useI18n()
 const router = useRouter()
 const { formatDate, scrollToTop } = useHelpers()
-const { orders, refreshOrders } = useCustomer()
+const { orders, refreshOrders, getOrders } = useCustomer()
 
 const goToOrder = (orderNumber: string): void => {
   router.push(`/user/orders/${orderNumber}`)
 }
+
+onMounted(async () => {
+  await getOrders()
+})
+
 </script>
 
 <template>

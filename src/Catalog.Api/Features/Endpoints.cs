@@ -95,7 +95,7 @@ public static class Endpoints
             .WithTags("Products");
 
         api.MapDelete("products/{id:guid}", Products.DeleteById.Handle)
-            .WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
+            //.WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
             .RequireAuthorization("RoleCatalogAdmins")
             .WithName("DeleteProductById")
             .WithSummary("Delete catalog product")

@@ -14,16 +14,6 @@ export type ShipOrderRequest = {
   orderNumber: string
 }
 
-export enum OrderStatus {
-  Default,
-  Submitted,
-  AwaitingValidation,
-  StockConfirmed,
-  Paid,
-  Shipped,
-  Cancelled,
-}
-
 export type OrderItem = {
   productId: string
   productName: string
@@ -43,9 +33,19 @@ export type Order = {
   state: string
   street: string
   zipcode: string
-  status: string
+  status: OrderStatus
   total: number
   orderItems: OrderItem[]
+}
+
+export enum OrderStatus {
+  Default = 'Default',
+  Submitted = 'Submitted',
+  AwaitingValidation = 'AwaitingValidation',
+  StockConfirmed = 'StockConfirmed',
+  Paid = 'Paid',
+  Shipped = 'Shipped',
+  Cancelled = 'Cancelled',
 }
 
 export type OrderDraft = {

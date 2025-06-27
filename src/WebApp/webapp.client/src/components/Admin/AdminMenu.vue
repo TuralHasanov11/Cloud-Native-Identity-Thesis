@@ -5,22 +5,23 @@ import { ref } from 'vue';
 const model = ref<BaseMenuItemProp[]>([
   {
     label: 'Dashboard',
-    icon: 'pi pi-fw pi-home',
-    to: '/'
-  },
-  {
-    label: 'Catalog',
-    icon: 'pi pi-fw pi-home',
     items: [
-      { label: 'Products', icon: 'pi pi-fw pi-id-card', to: '/admin/catalog/products' },
-      { label: 'Create Product', icon: 'pi pi-fw pi-id-card', to: '/admin/catalog/products/create' },
-      { label: 'Brands', icon: 'pi pi-fw pi-id-card', to: '/admin/catalog/brands' },
+      { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }
     ],
   },
   {
-    label: 'Orders',
-    icon: 'pi pi-fw pi-briefcase',
-    to: '/admin/orders',
+    label: 'Catalog',
+    items: [
+      { label: 'Products', icon: 'pi pi-shopping-bag', to: '/admin/catalog/products' },
+      { label: 'Create Product', icon: 'pi pi-file-plus', to: '/admin/catalog/products/create' },
+      { label: 'Brands', icon: 'pi pi-shop', to: '/admin/catalog/brands' },
+    ],
+  },
+  {
+    label: 'Ordering',
+    items: [
+      { label: 'Orders', icon: 'pi pi-list-check', to: '/admin/orders', },
+    ],
   },
 ]);
 </script>

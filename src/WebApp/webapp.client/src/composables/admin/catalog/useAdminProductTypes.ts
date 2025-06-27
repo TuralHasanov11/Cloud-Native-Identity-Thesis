@@ -1,7 +1,7 @@
 import { useCatalogStore } from '@/stores/catalog'
 import { computed } from 'vue'
 
-export default function useProductTypes() {
+export default function useAdminProductTypes() {
   const catalogStore = useCatalogStore()
 
   return {

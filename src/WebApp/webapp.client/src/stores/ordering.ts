@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { shallowRef, type ShallowRef } from 'vue'
-import type { Customer, Order, OrderSummary } from '@/types/ordering'
+import { OrderStatus, type Customer, type Order, type OrderSummary } from '@/types/ordering'
 import useBffFetch from '@/composables/useBffFetch'
 
 export const ORDER_NULL_OBJECT: Order = {
@@ -12,7 +12,7 @@ export const ORDER_NULL_OBJECT: Order = {
   state: '',
   street: '',
   zipcode: '',
-  status: '',
+  status: OrderStatus.Default,
   total: 0,
   orderItems: [],
 }

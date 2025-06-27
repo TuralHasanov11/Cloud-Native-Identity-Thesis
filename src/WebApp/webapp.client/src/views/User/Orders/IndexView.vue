@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import useCustomer from '@/composables/useCustomer'
+import { onMounted } from 'vue'
 
-const { orders } = useCustomer()
+const { orders, getOrders } = useCustomer()
 
+onMounted(async () => {
+  await getOrders()
+})
 
 </script>
 

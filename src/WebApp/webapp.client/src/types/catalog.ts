@@ -10,7 +10,7 @@ export type Product = {
   availableStock: number
   restockThreshold: number
   maxStockThreshold: number
-  categories: Category[]
+  categories?: Category[]
   pictureUrl?: string
 }
 
@@ -70,4 +70,28 @@ export const PAGINATED_PRODUCTS_NULL_OBJECT: PaginationResponse<Product, string>
   pageSize: 0,
   pageCursor: '',
   count: 0,
+}
+
+export const PRODUCT_NULL_OBJECT: Product = {
+  id: '',
+  name: '',
+  description: '',
+  price: 0,
+  productTypeId: '',
+  brandId: '',
+  availableStock: 0,
+  restockThreshold: 0,
+  maxStockThreshold: 0,
+  categories: [],
+}
+
+export interface ProductFormData {
+  name: string
+  description: string | null
+  price: number
+  brand: Brand | null
+  productType: ProductType | null
+  availableStock: number
+  restockThreshold: number
+  maxStockThreshold: number
 }

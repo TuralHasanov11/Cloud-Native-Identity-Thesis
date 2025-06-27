@@ -2,6 +2,8 @@ import { GUEST_USER, useIdentityStore } from '@/stores/identity'
 import type { User } from '@/types/identity'
 import { computed } from 'vue'
 
+const baseUrl = import.meta.env.VITE_API_URI as string
+
 export default function useIdentity() {
   const identityStore = useIdentityStore()
 
@@ -18,11 +20,11 @@ export default function useIdentity() {
   }
 
   function login(returnUrl: string = '/'): void {
-    window.location.href = `/identity/login?returnUrl=${returnUrl}`
+    window.location.href = `${baseUrl}/identity/login?returnUrl=${returnUrl}`
   }
 
   function logout(): void {
-    window.location.href = '/identity/logout'
+    window.location.href = `${baseUrl}/identity/logout`
   }
 
   return {

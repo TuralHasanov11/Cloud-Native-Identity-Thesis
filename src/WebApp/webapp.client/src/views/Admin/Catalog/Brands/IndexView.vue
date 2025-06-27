@@ -12,11 +12,10 @@ onMounted(async () => {
 
 <template>
   <Fluid class="grid grid-cols-12 gap-8">
-    <h1 class="col-span-12 text-2xl font-bold mb-4">Brands</h1>
     <div class="col-span-12 xl:col-span-6">
       <div class="card">
-        <DataTable :value="brands" showGridlines tableStyle="min-width: 50rem">
-          <Column field="id" header="Id"></Column>
+        <h2 class="font-semibold text-xl mb-4">Brands</h2>
+        <DataTable :value="brands" showGridlines tableStyle="min-width: 25rem">
           <Column field="name" header="Name"></Column>
         </DataTable>
       </div>

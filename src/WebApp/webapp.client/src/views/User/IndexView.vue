@@ -2,8 +2,9 @@
 import useBasket from '@/composables/useBasket'
 import useIdentity from '@/composables/useIdentity'
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+
 const { t } = useI18n()
 const { user, logout } = useIdentity()
 
@@ -12,6 +13,7 @@ const route = useRoute()
 
 const activeTab = computed(() => route.query.tab || 'my-details')
 const showLoader = computed(() => !cart.value)
+
 </script>
 
 <template>
@@ -20,10 +22,7 @@ const showLoader = computed(() => !cart.value)
       <div v-if="showLoader" class="flex flex-col min-h-[500px]">
         <LoadingIcon class="m-auto" />
       </div>
-      <div
-        v-else
-        class="flex flex-col items-start justify-between w-full lg:gap-12 mb-24 lg:flex-row"
-      >
+      <div v-else class="flex flex-col items-start justify-between w-full lg:gap-12 mb-24 lg:flex-row">
         <div class="mt-2 w-full lg:max-w-[260px]">
           <section class="my-8 flex gap-4 items-start justify-center w-full">
             <!-- <img v-if="avatar" :src="avatar" class="rounded-full aspect-square border border-white" alt="user-image" width="48" height="48" > -->
@@ -35,29 +34,20 @@ const showLoader = computed(() => !cart.value)
             </div>
             <Button
               class="flex text-gray-700 items-center flex-col p-2 px-4 rounded-lg hover:bg-white hover:text-red-700 lg:hidden"
-              @click="logout"
-            >
+              @click="logout">
               <i class="pi pi-sign-out" />
               <small>{{ t('messages.account.logout') }}</small>
             </Button>
           </section>
           <hr class="my-8" />
-          <nav
-            class="flex text-gray-700 lg:grid flex-wrap w-full gap-1.5 my-8 min-w-[240px] lg:w-auto items-start"
-          >
-            <RouterLink
-              to="/user?tab=my-details"
-              class="flex items-center gap-4 p-2 px-4"
-              :class="{ active: activeTab == 'my-details' }"
-            >
+          <nav class="flex text-gray-700 lg:grid flex-wrap w-full gap-1.5 my-8 min-w-[240px] lg:w-auto items-start">
+            <RouterLink to="/user?tab=my-details" class="flex items-center gap-4 p-2 px-4"
+              :class="{ active: activeTab == 'my-details' }">
               <i class="pi pi-user" />
               {{ t('messages.general.myDetails') }}
             </RouterLink>
-            <RouterLink
-              to="/user?tab=orders"
-              class="flex items-center gap-4 p-2 px-4"
-              :class="{ active: activeTab == 'orders' }"
-            >
+            <RouterLink to="/user?tab=orders" class="flex items-center gap-4 p-2 px-4"
+              :class="{ active: activeTab == 'orders' }">
               <i class="pi pi-shopping-bag" />
               {{ t('messages.shop.order', 2) }}
             </RouterLink>
@@ -73,7 +63,6 @@ const showLoader = computed(() => !cart.value)
 
         <main class="flex-1 w-full rounded-lg max-w-screen-lg">
           <AccountMyDetails v-if="activeTab === 'my-details'" />
-          <OrderList v-else-if="activeTab === 'orders'" />
         </main>
       </div>
     </div>
