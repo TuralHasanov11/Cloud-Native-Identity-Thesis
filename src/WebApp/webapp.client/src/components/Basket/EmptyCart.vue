@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import useBasket from '@/composables/useBasket'
+import useBasket from '@/composables/basket/useBasket'
 
 const { emptyCart } = useBasket()
 </script>

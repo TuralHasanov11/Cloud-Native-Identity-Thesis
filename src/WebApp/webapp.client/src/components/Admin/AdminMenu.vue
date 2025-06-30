@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import type { BaseMenuItemProp } from '@/types/base';
-import { ref } from 'vue';
+import type { BaseMenuItemProp } from '@/types/base'
+import { ref } from 'vue'
 
 const model = ref<BaseMenuItemProp[]>([
   {
     label: 'Dashboard',
-    items: [
-      { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }
-    ],
+    items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }],
   },
   {
     label: 'Catalog',
@@ -19,11 +17,9 @@ const model = ref<BaseMenuItemProp[]>([
   },
   {
     label: 'Ordering',
-    items: [
-      { label: 'Orders', icon: 'pi pi-list-check', to: '/admin/orders', },
-    ],
+    items: [{ label: 'Orders', icon: 'pi pi-list-check', to: '/admin/orders' }],
   },
-]);
+])
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import useBasket from '@/composables/useBasket'
-import useIdentity from '@/composables/useIdentity'
+import useBasket from '@/composables/basket/useBasket'
+import useIdentity from '@/composables/identity/useIdentity'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
@@ -13,7 +13,6 @@ const route = useRoute()
 
 const activeTab = computed(() => route.query.tab || 'my-details')
 const showLoader = computed(() => !cart.value)
-
 </script>
 
 <template>
@@ -28,26 +27,20 @@ const showLoader = computed(() => !cart.value)
             <!-- <img v-if="avatar" :src="avatar" class="rounded-full aspect-square border border-white" alt="user-image" width="48" height="48" > -->
             <div class="flex-1 text-balance leading-tight w-full text-ellipsis overflow-hidden">
               <div class="text-lg font-semibold">Welcome, {{ user?.name }}</div>
-              <span v-if="user?.email" class="text-gray-400 font-light" :title="user?.email">{{
-                user?.email
-              }}</span>
+              <span v-if="user?.email" class="text-gray-400 font-light" :title="user?.email">{{ user?.email }}</span>
             </div>
-            <Button
-              class="flex text-gray-700 items-center flex-col p-2 px-4 rounded-lg hover:bg-white hover:text-red-700 lg:hidden"
-              @click="logout">
+            <Button class="flex text-gray-700 items-center flex-col p-2 px-4 rounded-lg hover:bg-white hover:text-red-700 lg:hidden" @click="logout">
               <i class="pi pi-sign-out" />
               <small>{{ t('messages.account.logout') }}</small>
             </Button>
           </section>
           <hr class="my-8" />
           <nav class="flex text-gray-700 lg:grid flex-wrap w-full gap-1.5 my-8 min-w-[240px] lg:w-auto items-start">
-            <RouterLink to="/user?tab=my-details" class="flex items-center gap-4 p-2 px-4"
-              :class="{ active: activeTab == 'my-details' }">
+            <RouterLink to="/user?tab=my-details" class="flex items-center gap-4 p-2 px-4" :class="{ active: activeTab == 'my-details' }">
               <i class="pi pi-user" />
               {{ t('messages.general.myDetails') }}
             </RouterLink>
-            <RouterLink to="/user?tab=orders" class="flex items-center gap-4 p-2 px-4"
-              :class="{ active: activeTab == 'orders' }">
+            <RouterLink to="/user?tab=orders" class="flex items-center gap-4 p-2 px-4" :class="{ active: activeTab == 'orders' }">
               <i class="pi pi-shopping-bag" />
               {{ t('messages.shop.order', 2) }}
             </RouterLink>

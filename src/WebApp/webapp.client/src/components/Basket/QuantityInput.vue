@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import useBasket from '@/composables/useBasket'
+import useBasket from '@/composables/basket/useBasket'
 import type { BasketItem } from '@/types/basket'
 import { ref, watch } from 'vue'
 
-const { updateItemQuantity, isUpdatingCart, cart } = useBasket()
+const { updateItemQuantity, isUpdatingCart } = useBasket()
 
 const { item } = defineProps<{
   item: BasketItem
@@ -16,33 +16,9 @@ watch(quantity, async (newQuantity) => {
     await updateItemQuantity(item.productId, newQuantity)
   }
 })
-
-const onFocusOut = () => {
-  if (quantity.value <= 0) {
-    const cartItem = cart.value.items.find((node) => node.productId === item.productId)
-
-    if (cartItem) {
-      quantity.value = cartItem.quantity
-    }
-  }
-}
 </script>
 
 <template>
-  <InputNumber
-    v-model="quantity"
-    showButtons
-    buttonLayout="horizontal"
-    :step="1"
-    :min="0"
-    :disabled="isUpdatingCart"
-    @blur="onFocusOut"
-  >
-    <template #incrementbutton>
-      <span class="pi pi-plus" />
-    </template>
-    <template #decrementbutton>
-      <span class="pi pi-minus" />
-    </template>
-  </InputNumber>
+  <InputNumber v-model="quantity" :inputId="`minmax-buttons-${item.productId}`" mode="decimal"
+    :disabled="isUpdatingCart" showButtons :min="0" :step="1" :max="100" fluid />
 </template>

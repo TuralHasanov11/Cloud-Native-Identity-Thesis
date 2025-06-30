@@ -96,3 +96,24 @@ export type PaymentMethod = {
   cardTypeId: number
   cardType: CardType
 }
+
+export const GUEST_CUSTOMER: Customer = {
+  id: '',
+  name: '',
+  identityId: '',
+  paymentMethods: [],
+}
+
+export const CUSTOMER_ORDER_NULL_OBJECT: Order = {
+  orderNumber: '',
+  date: '',
+  description: '',
+  city: '',
+  country: '',
+  state: '',
+  street: '',
+  zipcode: '',
+  status: OrderStatus.Default,
+  total: 0,
+  orderItems: [],
+}

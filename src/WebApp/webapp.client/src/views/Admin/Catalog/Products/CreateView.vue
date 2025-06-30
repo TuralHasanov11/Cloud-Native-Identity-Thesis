@@ -1,60 +1,19 @@
 <script setup lang="ts">
-import ProductForm from '@/components/Admin/Catalog/ProductForm.vue';
-import useAdminBrands from '@/composables/admin/catalog/useAdminBrands';
-import useAdminProducts from '@/composables/admin/catalog/useAdminProducts';
-import useAdminProductTypes from '@/composables/admin/catalog/useAdminProductTypes';
-import { type ProductFormData } from '@/types/catalog';
-import { mapToCreateProductRequest } from '@/utils/mapper';
-import { useToast } from 'primevue/usetoast';
-import { onMounted, useTemplateRef } from 'vue';
-import { useRouter } from 'vue-router';
+import ProductForm from '@/components/Admin/Catalog/ProductForm.vue'
+import { useRouter } from 'vue-router'
 
-const router = useRouter();
-const toast = useToast()
-const productFormTemplateRef = useTemplateRef('product-form')
+const router = useRouter()
 
-const { createProduct } = useAdminProducts();
-const { productTypes, getProductTypes } = useAdminProductTypes();
-const { brands, getBrands } = useAdminBrands();
-
-async function onFormSubmit(data: ProductFormData) {
-  console.log(data)
-  console.log(mapToCreateProductRequest(data))
-  const result = await createProduct(mapToCreateProductRequest(data));
-  if (result.ok) {
-    productFormTemplateRef.value?.resetForm();
-    toast.add({
-      severity: 'success',
-      summary: 'Product Created',
-      detail: 'The product has been created successfully.',
-      life: 3000,
-    })
-    router.push({ name: 'admin-catalog-products' });
-  }
-  else {
-    toast.add({
-      severity: 'error',
-      summary: 'Product Creation Error',
-      detail: 'There was an error creating the product. Please try again.',
-      life: 3000,
-    })
-  }
+function onProductSaved() {
+  router.push({ name: 'admin-catalog-products' })
 }
-
-onMounted(async () => {
-  await Promise.all([getBrands(), getProductTypes()])
-})
-
 </script>
 
 <template>
   <Fluid class="grid grid-cols-12 gap-8">
     <div class="col-span-12 xl:col-span-6">
       <Toast />
-      <template v-if="brands && productTypes">
-        <ProductForm ref="product-form" @submit="onFormSubmit" :brands :productTypes />
-      </template>
+      <ProductForm @productSaved="onProductSaved" />
     </div>
-
   </Fluid>
 </template>

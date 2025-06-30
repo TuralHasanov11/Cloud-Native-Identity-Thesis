@@ -1,22 +1,18 @@
 <script setup lang="ts">
-import useCustomer from '@/composables/useCustomer'
+import useCustomer from '@/composables/ordering/useCustomer'
 import { useHelpers } from '@/composables/useHelpers'
-import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 const { t } = useI18n()
 const router = useRouter()
 const { formatDate, scrollToTop } = useHelpers()
-const { orders, refreshOrders, getOrders } = useCustomer()
+const { getOrders } = useCustomer()
+
+const { data: orders, execute: refreshOrders } = await getOrders()
 
 const goToOrder = (orderNumber: string): void => {
   router.push(`/user/orders/${orderNumber}`)
 }
-
-onMounted(async () => {
-  await getOrders()
-})
-
 </script>
 
 <template>
@@ -32,9 +28,12 @@ onMounted(async () => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="order in orders" :key="order.orderNumber"
+          <tr
+            v-for="order in orders"
+            :key="order.orderNumber"
             class="cursor-pointer hover:underline text-sm text-gray-500 hover:text-gray-800"
-            @click="goToOrder(order.orderNumber)">
+            @click="goToOrder(order.orderNumber)"
+          >
             <td class="rounded-l-lg">{{ order.orderNumber }}</td>
             <td>{{ formatDate(order.date) }}</td>
             <td>
@@ -45,19 +44,21 @@ onMounted(async () => {
         </tbody>
       </table>
       <div class="text-center flex justify-center w-full mt-8">
-        <Button type="button" @click="async () => {
-          scrollToTop()
-          await refreshOrders()
-        }">
+        <Button
+          type="button"
+          @click="
+            async () => {
+              scrollToTop()
+              await refreshOrders()
+            }
+          "
+        >
           <span>Reresh list</span>
           <i class="pi pi-refresh" />
         </Button>
       </div>
     </div>
-    <div v-else-if="orders && orders.length === 0"
-      class="min-h-[250px] flex items-center justify-center text-gray-500 text-lg">
-      No orders found.
-    </div>
+    <div v-else-if="orders && orders.length === 0" class="min-h-[250px] flex items-center justify-center text-gray-500 text-lg">No orders found.</div>
     <LoadingIcon v-else size="24" stroke="2" />
   </div>
 </template>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import useIdentity from '@/composables/useIdentity'
+import useIdentity from '@/composables/identity/useIdentity'
 import type { Address } from '@/types/identity'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
@@ -12,15 +12,7 @@ const address = defineModel<Address>('address', { required: true })
   <div class="grid w-full gap-4 lg:grid-cols-2">
     <div class="w-full">
       <label for="first-name">{{ t('messages.billing.firstName') }}</label>
-      <InputText
-        id="first-name"
-        disabled
-        v-model="user.name"
-        placeholder="John"
-        autocomplete="given-name"
-        type="text"
-        required
-      />
+      <InputText id="first-name" disabled v-model="user.name" placeholder="John" autocomplete="given-name" type="text" required />
     </div>
 
     <div class="w-full col-span-full">
@@ -38,53 +30,22 @@ const address = defineModel<Address>('address', { required: true })
 
     <div class="w-full">
       <label for="city">{{ t('messages.billing.city') }}</label>
-      <InputText
-        id="city"
-        disabled
-        v-model="address.city"
-        placeholder="New York"
-        autocomplete="locality"
-        type="text"
-        required
-      />
+      <InputText id="city" disabled v-model="address.city" placeholder="New York" autocomplete="locality" type="text" required />
     </div>
 
     <div class="w-full">
-      <label for="state"
-        >{{ t('messages.billing.state') }} ({{ t('messages.general.optional') }})</label
-      >
-      <Select
-        id="state"
-        disabled
-        v-model="address.state"
-        :value="address.state"
-        :country-code="address.country"
-        autocomplete="address-level1"
-      />
+      <label for="state">{{ t('messages.billing.state') }} ({{ t('messages.general.optional') }})</label>
+      <Select id="state" disabled v-model="address.state" :value="address.state" :country-code="address.country" autocomplete="address-level1" />
     </div>
 
     <div class="w-full">
       <label for="country">{{ t('messages.billing.country') }}</label>
-      <Select
-        id="country"
-        disabled
-        v-model="address.country"
-        :value="address.country"
-        autocomplete="country"
-      />
+      <Select id="country" disabled v-model="address.country" :value="address.country" autocomplete="country" />
     </div>
 
     <div class="w-full">
       <label for="zip">{{ t('messages.billing.zip') }}</label>
-      <InputText
-        id="zip"
-        disabled
-        v-model="address.zipCode"
-        placeholder="10001"
-        autocomplete="postal-code"
-        type="text"
-        required
-      />
+      <InputText id="zip" disabled v-model="address.zipCode" placeholder="10001" autocomplete="postal-code" type="text" required />
     </div>
   </div>
 </template>

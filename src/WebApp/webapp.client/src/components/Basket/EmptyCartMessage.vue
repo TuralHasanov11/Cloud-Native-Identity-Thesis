@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import useBasket from '@/composables/useBasket'
+import useBasket from '@/composables/basket/useBasket'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const { toggleCart } = useBasket()

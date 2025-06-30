@@ -20,6 +20,7 @@ const { isLoading: isImageLoading } = useImage({ src: FALLBACK_IMG })
     <RouterLink :to="`/products/${decodeURIComponent(product.id)}`" :title="product.name">
       <SaleBadge :product class="absolute top-2 right-2" />
       <img
+        v-if="!isImageLoading"
         :width="imgWidth"
         :height="imgHeight"
         :src="FALLBACK_IMG"

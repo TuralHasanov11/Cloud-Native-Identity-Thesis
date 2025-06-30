@@ -20,7 +20,7 @@ export default function useAdminCreateProductForm({
   brands,
   productTypes,
 }: {
-  product?: Product
+  product: Product | null
   brands: Brand[]
   productTypes: ProductType[]
 }) {

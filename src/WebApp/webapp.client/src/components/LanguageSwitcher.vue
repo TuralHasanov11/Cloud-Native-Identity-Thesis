@@ -17,12 +17,5 @@ function onChangeLanguage(payload: SelectChangeEvent) {
 </script>
 
 <template>
-  <Select
-    :options="locales"
-    optionLabel="name"
-    variant="filled"
-    v-model="currentLocale"
-    class="w-48"
-    @change="onChangeLanguage"
-  />
+  <Select :options="locales" optionLabel="name" variant="filled" v-model="currentLocale" class="w-48" @change="onChangeLanguage" />
 </template>

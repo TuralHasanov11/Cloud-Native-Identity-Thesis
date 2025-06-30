@@ -18,8 +18,7 @@ export function useHelpers() {
     isShowingMobileMenu.value = state ?? !isShowingMobileMenu.value
   }
 
-  const formatPrice = (price: number): string =>
-    price.toLocaleString('en-US', { style: 'currency', currency: 'EUR' })
+  const formatPrice = (price: number): string => price.toLocaleString('en-US', { style: 'currency', currency: 'EUR' })
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })

@@ -24,7 +24,7 @@ const router = createRouter({
         {
           path: 'cart',
           name: 'cart',
-          component: () => import('../views/Cart/IndexView.vue'),
+          component: () => import('../views/Basket/IndexView.vue'),
           meta: {
             requireAuth: true,
           },

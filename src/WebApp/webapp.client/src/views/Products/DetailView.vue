@@ -1,20 +1,22 @@
 <script lang="ts" setup>
-import useBasket from '@/composables/useBasket'
-import useCatalog from '@/composables/useCatalog'
+import useBasket from '@/composables/basket/useBasket'
+import useIdentity from '@/composables/identity/useIdentity'
 import { useHelpers } from '@/composables/useHelpers'
-import useIdentity from '@/composables/useIdentity'
 
+import useProducts from '@/composables/catalog/useProducts'
 import type { BasketItem } from '@/types/basket'
 import { StockStatusEnum } from '@/types/catalog'
-import { computed, ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 const { t } = useI18n()
 const route = useRoute()
 const { addToCart, isUpdatingCart } = useBasket()
-const { product, getProductById } = useCatalog()
+const { getProductById } = useProducts()
 const { FALLBACK_IMG } = useHelpers()
 const { isAuthenticated } = useIdentity()
+
+const { data: product } = await getProductById(route.params.slug as string)
 
 const selectProductInput = computed<BasketItem>(() => ({
   productId: product.value?.id ?? '',
@@ -26,23 +28,13 @@ const selectProductInput = computed<BasketItem>(() => ({
   id: product.value?.id ?? '',
 }))
 
-onMounted(async () => {
-  await getProductById(route.params.slug as string)
-})
-
 const quantity = ref<number>(1)
 
 const stockStatus = computed<StockStatusEnum>(() => {
-  return product.value != null && product.value.availableStock > 0
-    ? StockStatusEnum.IN_STOCK
-    : StockStatusEnum.OUT_OF_STOCK
+  return product.value != null && product.value.availableStock > 0 ? StockStatusEnum.IN_STOCK : StockStatusEnum.OUT_OF_STOCK
 })
 const disabledAddToCart = computed(() => {
-  return (
-    product.value == null ||
-    stockStatus.value === StockStatusEnum.OUT_OF_STOCK ||
-    isUpdatingCart.value
-  )
+  return product.value == null || stockStatus.value === StockStatusEnum.OUT_OF_STOCK || isUpdatingCart.value
 })
 </script>
 
@@ -58,12 +50,7 @@ const disabledAddToCart = computed(() => {
             :gallery="[product.pictureUrl]"
             :product="product"
           />
-          <img
-            v-else
-            class="relative flex-1 skeleton"
-            :src="FALLBACK_IMG"
-            :alt="product?.name || 'Product'"
-          />
+          <img v-else class="relative flex-1 skeleton" :src="FALLBACK_IMG" :alt="product?.name || 'Product'" />
 
           <div class="lg:max-w-md xl:max-w-lg md:py-2 w-full">
             <div class="flex justify-between mb-4">
@@ -72,11 +59,7 @@ const disabledAddToCart = computed(() => {
                   {{ product.name }}
                 </h1>
               </div>
-              <ProductPrice
-                class="text-xl"
-                :sale-price="product.price"
-                :regular-price="product.price"
-              />
+              <ProductPrice class="text-xl" :sale-price="product.price" :regular-price="product.price" />
             </div>
 
             <div class="grid gap-2 my-8 text-sm empty:hidden">
@@ -92,15 +75,10 @@ const disabledAddToCart = computed(() => {
 
             <template v-if="isAuthenticated">
               <form @submit.prevent="addToCart(selectProductInput)">
-                <div
-                  class="fixed bottom-0 left-0 z-10 flex items-center w-full gap-4 p-4 mt-12 md:static md:bg-transparent bg-opacity-90 md:p-0"
-                >
+                <div class="fixed bottom-0 left-0 z-10 flex items-center w-full gap-4 p-4 mt-12 md:static md:bg-transparent bg-opacity-90 md:p-0">
                   <InputNumber v-model="quantity" type="number" :min="1" aria-label="Quantity" />
 
-                  <AddToCartButton
-                    class="flex-1 w-full md:max-w-xs"
-                    :disabled="disabledAddToCart"
-                  />
+                  <AddToCartButton class="flex-1 w-full md:max-w-xs" :disabled="disabledAddToCart" />
                 </div>
               </form>
             </template>

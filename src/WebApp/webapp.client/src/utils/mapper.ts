@@ -1,6 +1,6 @@
-import type { CreateProductRequest, Product, ProductFormData } from '@/types/catalog'
+import type { CreateOrUpdateProductRequest, Product, ProductFormData } from '@/types/catalog'
 
-export function mapToCreateProductRequest(formData: ProductFormData): CreateProductRequest {
+export function mapToCreateOrUpdateProductRequest(formData: ProductFormData): CreateOrUpdateProductRequest {
   return {
     name: formData.name,
     description: formData.description ?? '',

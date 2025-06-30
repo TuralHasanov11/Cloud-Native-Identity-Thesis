@@ -1,10 +1,10 @@
 import type { BasketCheckoutInfo } from '@/types/basket'
 import type { CardType, CreateOrderRequest } from '@/types/ordering'
 import { onMounted, ref } from 'vue'
-import useBasket from './useBasket'
-import useIdentity from './useIdentity'
-import useOrdering from './useOrdering'
-import useBffFetch from './useBffFetch'
+import useBasket from '../basket/useBasket'
+import useIdentity from '../identity/useIdentity'
+import useOrders from './useOrders'
+import useBffFetch from '../useBffFetch'
 
 const cardTypes = ref<CardType[]>([])
 
@@ -29,7 +29,7 @@ export default function useCheckout() {
     const { user } = useIdentity()
 
     const { cart, emptyCart, deleteBasket } = useBasket()
-    const { createOrder } = useOrdering()
+    const { createOrder } = useOrders()
 
     isProcessingOrder.value = true
 

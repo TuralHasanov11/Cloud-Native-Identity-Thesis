@@ -2,13 +2,10 @@
 defineProps<{
   hideCategories: boolean
 }>()
-
 </script>
 
 <template>
-  <aside id="filters">
-
-  </aside>
+  <aside id="filters"></aside>
 </template>
 
 <style lang="postcss">

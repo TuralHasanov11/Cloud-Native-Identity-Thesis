@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import useIdentity from '@/composables/useIdentity'
+import useIdentity from '@/composables/identity/useIdentity'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const { user } = useIdentity()

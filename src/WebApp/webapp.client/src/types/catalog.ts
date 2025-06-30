@@ -20,7 +20,7 @@ export type Category = {
   name: string
 }
 
-export type CreateProductRequest = {
+export type CreateOrUpdateProductRequest = {
   name: string
   description: string
   price: number

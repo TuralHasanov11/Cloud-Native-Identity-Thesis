@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { mapToCreateProductRequest, mapToCreateProductFormData } from './mapper'
-import type { CreateProductRequest, Product, ProductFormData } from '@/types/catalog'
+import { mapToCreateOrUpdateProductRequest, mapToCreateProductFormData } from './mapper'
+import type { CreateOrUpdateProductRequest, Product, ProductFormData } from '@/types/catalog'
 
 describe('mapper', () => {
   describe('mapToCreateProductRequest', () => {
@@ -18,7 +18,7 @@ describe('mapper', () => {
       }
 
       // Act
-      const result = mapToCreateProductRequest(formData)
+      const result = mapToCreateOrUpdateProductRequest(formData)
 
       // Assert
       expect(result).toEqual({
@@ -30,7 +30,7 @@ describe('mapper', () => {
         availableStock: 100,
         restockThreshold: 10,
         maxStockThreshold: 500,
-      } as CreateProductRequest)
+      } as CreateOrUpdateProductRequest)
     })
 
     it('should handle null description by using empty string', () => {
@@ -47,7 +47,7 @@ describe('mapper', () => {
       }
 
       // Act
-      const result = mapToCreateProductRequest(formData)
+      const result = mapToCreateOrUpdateProductRequest(formData)
 
       // Assert
       expect(result.description).toBe('')
@@ -67,7 +67,7 @@ describe('mapper', () => {
       }
 
       // Act
-      const result = mapToCreateProductRequest(formData)
+      const result = mapToCreateOrUpdateProductRequest(formData)
 
       // Assert
       expect(result.productTypeId).toBe('')
@@ -87,7 +87,7 @@ describe('mapper', () => {
       }
 
       // Act
-      const result = mapToCreateProductRequest(formData)
+      const result = mapToCreateOrUpdateProductRequest(formData)
 
       // Assert
       expect(result.brandId).toBe('')
@@ -107,7 +107,7 @@ describe('mapper', () => {
       }
 
       // Act
-      const result = mapToCreateProductRequest(formData)
+      const result = mapToCreateOrUpdateProductRequest(formData)
 
       // Assert
       expect(result.price).toBe(0)
@@ -130,7 +130,7 @@ describe('mapper', () => {
       }
 
       // Act
-      const result = mapToCreateProductRequest(formData)
+      const result = mapToCreateOrUpdateProductRequest(formData)
 
       // Assert
       expect(result.price).toBe(-10.5)
@@ -153,7 +153,7 @@ describe('mapper', () => {
       }
 
       // Act
-      const result = mapToCreateProductRequest(formData)
+      const result = mapToCreateOrUpdateProductRequest(formData)
 
       // Assert
       expect(result.price).toBe(Number.MAX_SAFE_INTEGER)
@@ -176,7 +176,7 @@ describe('mapper', () => {
       }
 
       // Act
-      const result = mapToCreateProductRequest(formData)
+      const result = mapToCreateOrUpdateProductRequest(formData)
 
       // Assert
       expect(result.productTypeId).toBe('')
@@ -381,7 +381,7 @@ describe('mapper', () => {
 
       // Act
       const formData = mapToCreateProductFormData(originalProduct)
-      const createRequest = mapToCreateProductRequest(formData)
+      const createRequest = mapToCreateOrUpdateProductRequest(formData)
 
       // Assert
       expect(createRequest.name).toBe(originalProduct.name)

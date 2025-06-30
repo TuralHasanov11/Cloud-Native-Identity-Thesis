@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import useBasket from '@/composables/useBasket'
-import useIdentity from '@/composables/useIdentity'
+import useBasket from '@/composables/basket/useBasket'
+import useIdentity from '@/composables/identity/useIdentity'
 import type { MenuItem } from 'primevue/menuitem'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
@@ -12,7 +12,6 @@ const { t } = useI18n()
 const { productCount: basketProductCount } = useBasket()
 const { login, logout, user, isAuthenticated, hasRole, hasGroup } = useIdentity()
 const route = useRoute()
-
 
 const items = computed<BaseMenuItemProp[]>(() => [
   {
@@ -78,12 +77,11 @@ const menu = ref<any>('menu')
 const toggle = (event: MouseEvent) => {
   menu?.value?.toggle(event)
 }
-
 </script>
 
 <template>
   <header class="layout-topbar">
-    <Menubar :model="items" style="width: 100%;">
+    <Menubar :model="items" style="width: 100%">
       <template #start>
         <BaseLogo />
       </template>
@@ -104,12 +102,19 @@ const toggle = (event: MouseEvent) => {
         <div class="flex items-center gap-2">
           <InputText placeholder="Search" type="text" class="w-32 sm:w-auto" />
           <template v-if="isAuthenticated">
-            <Avatar :label="user.name?.length > 0 ? user.name[0] : ''" image="https://github.com/benjamincanac.png"
-              aria-haspopup="true" aria-controls="user_menu" @click="toggle" icon="pi pi-user" class="cursor-pointer"
-              v-ripple />
+            <Avatar
+              :label="user.name?.length > 0 ? user.name[0] : ''"
+              image="https://github.com/benjamincanac.png"
+              aria-haspopup="true"
+              aria-controls="user_menu"
+              @click="toggle"
+              icon="pi pi-user"
+              class="cursor-pointer"
+              v-ripple
+            />
             <Menu ref="menu" id="user_menu" :model="userItems" :popup="true">
               <template #item="{ item, props }">
-                <template v-if="(!item.roles || hasRole(item.roles)) || (!item.groups || hasGroup(item.groups))">
+                <template v-if="!item.roles || hasRole(item.roles) || !item.groups || hasGroup(item.groups)">
                   <RouterLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
                     <a v-ripple :href="href" v-bind="props.action" @click="navigate">
                       <span :class="item.icon" />

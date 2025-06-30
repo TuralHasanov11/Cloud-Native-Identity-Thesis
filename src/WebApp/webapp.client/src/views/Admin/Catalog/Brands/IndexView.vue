@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import useAdminBrands from '@/composables/admin/catalog/useAdminBrands';
-import { onMounted } from 'vue';
+import useAdminBrands from '@/composables/admin/catalog/useAdminBrands'
 
-const { brands, getBrands } = useAdminBrands();
+const { getBrands } = useAdminBrands()
 
-onMounted(async () => {
-  await getBrands();
-});
-
+const { data: brands } = await getBrands()
 </script>
 
 <template>
@@ -20,6 +16,5 @@ onMounted(async () => {
         </DataTable>
       </div>
     </div>
-
   </Fluid>
 </template>

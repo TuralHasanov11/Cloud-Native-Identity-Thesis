@@ -1,4 +1,4 @@
-import useIdentity from '@/composables/useIdentity'
+import useIdentity from '@/composables/identity/useIdentity'
 
 export default {
   async install() {

@@ -1,19 +1,15 @@
 <script lang="ts" setup>
-import useBasket from '@/composables/useBasket'
+import useBasket from '@/composables/basket/useBasket'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const { cart, isEmpty, productCount, total } = useBasket()
-
 </script>
 
 <template>
   <main id="cart" class="py-5 relative">
     <div class="container mx-auto">
       <template v-if="!isEmpty">
-        <EmptyCart
-          v-if="!isEmpty"
-          class="rounded-lg shadow-lg p-1.5 hover:bg-red-400 hover:text-white"
-        />
+        <EmptyCart v-if="!isEmpty" class="rounded-lg shadow-lg p-1.5 hover:bg-red-400 hover:text-white" />
         <div class="mt-8 text-center">
           {{ t('messages.shop.cart') }}
           <span v-if="productCount"> ({{ productCount }}) </span>

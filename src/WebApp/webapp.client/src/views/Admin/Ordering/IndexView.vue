@@ -1,36 +1,30 @@
 <script setup lang="ts">
-import useAdminOrders from '@/composables/admin/ordering/useAdminOrders';
-import type { Order } from '@/types/ordering';
-import { onMounted } from 'vue';
+import useAdminOrders from '@/composables/admin/ordering/useAdminOrders'
+import type { Order } from '@/types/ordering'
+import { onMounted } from 'vue'
 
-const { orders, getOrders, isSubmitted,
-  isAwaitingValidation,
-  isStockConfirmed,
-  isPaid,
-  isShipped,
-  isCancelled, } = useAdminOrders();
+const { orders, getOrders, isSubmitted, isAwaitingValidation, isStockConfirmed, isPaid, isShipped, isCancelled } = useAdminOrders()
 
 onMounted(async () => {
-  await getOrders();
-});
+  await getOrders()
+})
 
 const getOrderStatusSeverity = (order: Order) => {
   if (isSubmitted(order)) {
-    return 'info';
+    return 'info'
   } else if (isAwaitingValidation(order)) {
-    return 'warn';
+    return 'warn'
   } else if (isStockConfirmed(order)) {
-    return 'success';
+    return 'success'
   } else if (isPaid(order)) {
-    return 'success';
+    return 'success'
   } else if (isShipped(order)) {
-    return 'success';
+    return 'success'
   } else if (isCancelled(order)) {
-    return 'danger';
+    return 'danger'
   }
-  return '';
-};
-
+  return ''
+}
 </script>
 
 <template>

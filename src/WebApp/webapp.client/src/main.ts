@@ -9,8 +9,6 @@ import ToastService from 'primevue/toastservice'
 import { createI18n } from 'vue-i18n'
 import App from './App.vue'
 import auth from './plugins/auth'
-import brandRepositoryPlugin from './plugins/brandRepositoryPlugin'
-import productTypeRepositoryPlugin from './plugins/productTypeRepositoryPlugin'
 import router from './router'
 
 const app = createApp(App)
@@ -381,8 +379,6 @@ app.use(PrimeVue, {
   },
 })
 app.use(ToastService)
-app.use(brandRepositoryPlugin)
-app.use(productTypeRepositoryPlugin)
 
 app.config.errorHandler = (err, vm, info) => {
   console.error('Error:', err)

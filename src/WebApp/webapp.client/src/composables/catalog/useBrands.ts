@@ -1,7 +1,7 @@
-import useBffFetch from '@/composables/useBffFetch'
 import type { Brand } from '@/types/catalog'
+import useBffFetch from '../useBffFetch'
 
-export default function useAdminBrands() {
+export default function useBrands() {
   return {
     getBrands() {
       return useBffFetch('/api/catalog/brands').json<Brand[]>()

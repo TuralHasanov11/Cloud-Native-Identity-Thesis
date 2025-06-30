@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import useBasket from '@/composables/useBasket'
+import useBasket from '@/composables/basket/useBasket'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -9,9 +9,7 @@ defineProps<{
 }>()
 const isLoading = ref(false)
 const { t } = useI18n()
-const addToCartButtonText = computed(() =>
-  isLoading.value ? t('messages.shop.adding') : t('messages.shop.addToCart'),
-)
+const addToCartButtonText = computed(() => (isLoading.value ? t('messages.shop.adding') : t('messages.shop.addToCart')))
 
 watch(isUpdatingCart, () => {
   if (isUpdatingCart.value) {

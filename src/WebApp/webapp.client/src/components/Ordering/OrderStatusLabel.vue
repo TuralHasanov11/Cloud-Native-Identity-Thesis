@@ -23,9 +23,5 @@ const orderStatus = computed<string>(() => {
 </script>
 
 <template>
-  <span
-    :class="orderStatus"
-    class="border rounded-md font-semibold bg-gray-100 text-xs leading-none p-1.5 inline-block"
-    >{{ status }}</span
-  >
+  <span :class="orderStatus" class="border rounded-md font-semibold bg-gray-100 text-xs leading-none p-1.5 inline-block">{{ status }}</span>
 </template>

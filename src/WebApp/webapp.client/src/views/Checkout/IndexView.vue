@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import useBasket from '@/composables/useBasket'
-import useCheckout from '@/composables/useCheckout'
-import useIdentity from '@/composables/useIdentity'
+import useBasket from '@/composables/basket/useBasket'
+import useCheckout from '@/composables/ordering/useCheckout'
+import useIdentity from '@/composables/identity/useIdentity'
 
 import { computed, onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -15,9 +15,7 @@ const { isGuest } = useIdentity()
 const { user } = useIdentity()
 const { isProcessingOrder, processCheckout } = useCheckout()
 
-const buttonText = ref<string>(
-  isProcessingOrder.value ? t('messages.general.processing') : t('messages.shop.checkoutButton'),
-)
+const buttonText = ref<string>(isProcessingOrder.value ? t('messages.general.processing') : t('messages.shop.checkoutButton'))
 const isCheckoutDisabled = computed<boolean>(() => isProcessingOrder.value || isUpdatingCart.value)
 
 onBeforeMount(async () => {
@@ -63,11 +61,7 @@ const payNow = async () => {
             </RouterLink>
           </div>
 
-          <form
-            v-else
-            class="container flex flex-wrap items-start gap-8 my-16 justify-evenly lg:gap-20"
-            @submit.prevent="payNow"
-          >
+          <form v-else class="container flex flex-wrap items-start gap-8 my-16 justify-evenly lg:gap-20" @submit.prevent="payNow">
             <div class="grid w-full max-w-2xl gap-8 checkout-form md:flex-1">
               <!-- Customer details -->
               <div v-if="isGuest">

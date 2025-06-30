@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import useCustomer from '@/composables/useCustomer'
+import useCustomer from '@/composables/ordering/useCustomer'
 import { useHelpers } from '@/composables/useHelpers'
 import { OrderStatus } from '@/types/ordering'
-import { computed, ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 const { t } = useI18n()
 const { params, name } = useRoute()
-const { order, getOrder } = useCustomer()
+const { getOrder } = useCustomer()
 const { formatDate, formatPrice, FALLBACK_IMG } = useHelpers()
+
+const { data: order, execute: refreshOrder } = await getOrder(params.id as string)
 
 const errorMessage = ref('')
 
@@ -16,17 +18,8 @@ const isSummaryPage = computed<boolean>(() => name === 'order-summary')
 const isCheckoutPage = computed<boolean>(() => name === 'order-received')
 const orderIsNotCompleted = computed<boolean>(
   () =>
-    (order.value && order.value?.status !== OrderStatus.AwaitingValidation.toString()) ||
-    order.value?.status !== OrderStatus.Cancelled.toString(),
+    (order.value && order.value?.status !== OrderStatus.AwaitingValidation.toString()) || order.value?.status !== OrderStatus.Cancelled.toString(),
 )
-
-onMounted(async () => {
-  await getOrder(params.id as string)
-})
-
-const refreshOrder = async () => {
-  await getOrder(params.id as string)
-}
 </script>
 
 <template>
@@ -64,7 +57,7 @@ const refreshOrder = async () => {
                   class="inline-flex items-center justify-center p-2 bg-white border rounded-md"
                   title="Refresh order"
                   aria-label="Refresh order"
-                  @click="refreshOrder"
+                  @click="async () => await refreshOrder()"
                 >
                   <i class="pi pi-refresh" />
                 </Button>
@@ -104,16 +97,12 @@ const refreshOrder = async () => {
               <hr class="my-8" />
 
               <div class="grid gap-2">
-                <div
-                  v-for="item in order.orderItems"
-                  :key="item.productId"
-                  class="flex items-center justify-between gap-8"
-                >
+                <div v-for="item in order.orderItems" :key="item.productId" class="flex items-center justify-between gap-8">
                   <RouterLink :to="`/products/${item.productId}`">
                     <img
                       class="w-16 h-16 rounded-xl"
                       :src="item.pictureUrl || FALLBACK_IMG"
-                      :alt="'Product image'"
+                      :alt="'Product'"
                       :title="'Product image'"
                       width="64"
                       height="64"
@@ -137,10 +126,7 @@ const refreshOrder = async () => {
               </div>
             </div>
           </div>
-          <div
-            v-else-if="errorMessage"
-            class="flex flex-col items-center justify-center flex-1 w-full gap-4 text-center"
-          >
+          <div v-else-if="errorMessage" class="flex flex-col items-center justify-center flex-1 w-full gap-4 text-center">
             <i class="pi pi-times-circle text-gray-700" />
             <h1 class="text-xl font-semibold">Error</h1>
             <div v-if="errorMessage" class="text-sm text-red-500">

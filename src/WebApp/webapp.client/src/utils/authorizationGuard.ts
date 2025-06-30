@@ -1,16 +1,8 @@
-import useIdentity from '@/composables/useIdentity'
+import useIdentity from '@/composables/identity/useIdentity'
 import type { CustomRouteMeta } from '@/types/common'
-import type {
-  NavigationGuardNext,
-  RouteLocationNormalizedGeneric,
-  RouteLocationNormalizedLoadedGeneric,
-} from 'vue-router'
+import type { NavigationGuardNext, RouteLocationNormalizedGeneric, RouteLocationNormalizedLoadedGeneric } from 'vue-router'
 
-const guard = async (
-  to: RouteLocationNormalizedGeneric,
-  from: RouteLocationNormalizedLoadedGeneric,
-  next: NavigationGuardNext,
-) => {
+const guard = async (to: RouteLocationNormalizedGeneric, from: RouteLocationNormalizedLoadedGeneric, next: NavigationGuardNext) => {
   const { hasRole, isAuthenticated, login } = useIdentity()
   const toRouteMeta = to.meta as CustomRouteMeta
 

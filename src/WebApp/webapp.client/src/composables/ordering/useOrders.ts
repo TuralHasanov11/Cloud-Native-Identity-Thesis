@@ -1,8 +1,8 @@
 import { HttpStatusCode } from '@/types/common'
 import type { CreateOrderRequest } from '@/types/ordering'
-import useBffFetch from './useBffFetch'
+import useBffFetch from '../useBffFetch'
 
-export default function useOrdering() {
+export default function useOrders() {
   async function createOrder(request: CreateOrderRequest): Promise<boolean> {
     try {
       const { statusCode, data } = await useBffFetch('api/ordering/orders').post(request)

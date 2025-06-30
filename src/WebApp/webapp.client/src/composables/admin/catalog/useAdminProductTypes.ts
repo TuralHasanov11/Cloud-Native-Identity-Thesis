@@ -1,11 +1,10 @@
-import { useCatalogStore } from '@/stores/catalog'
-import { computed } from 'vue'
+import useBffFetch from '@/composables/useBffFetch'
+import type { ProductType } from '@/types/catalog'
 
 export default function useAdminProductTypes() {
-  const catalogStore = useCatalogStore()
-
   return {
-    productTypes: computed(() => catalogStore.productTypes),
-    getProductTypes: catalogStore.getProductTypes,
+    getProductTypes() {
+      return useBffFetch('/api/catalog/product-types').json<ProductType[]>()
+    },
   }
 }

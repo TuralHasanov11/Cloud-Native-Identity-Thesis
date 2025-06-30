@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import useBasket from '@/composables/useBasket'
+import useBasket from '@/composables/basket/useBasket'
 import { useHelpers } from '@/composables/useHelpers'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
@@ -8,10 +8,7 @@ const { formatPrice } = useHelpers()
 </script>
 
 <template>
-  <aside
-    v-if="cart"
-    class="bg-white rounded-lg shadow-lg mb-8 w-full min-h-[280px] p-4 sm:p-8 relative md:max-w-md md:top-32 md:sticky"
-  >
+  <aside v-if="cart" class="bg-white rounded-lg shadow-lg mb-8 w-full min-h-[280px] p-4 sm:p-8 relative md:max-w-md md:top-32 md:sticky">
     <h2 class="mb-6 text-xl font-semibold leading-none">{{ t('messages.shop.orderSummary') }}</h2>
 
     <ul class="flex flex-col gap-4 overflow-y-auto">
@@ -27,10 +24,7 @@ const { formatPrice } = useHelpers()
 
     <slot></slot>
 
-    <div
-      v-if="isUpdatingCart"
-      class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50"
-    >
+    <div v-if="isUpdatingCart" class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50">
       <LoadingIcon />
     </div>
   </aside>
