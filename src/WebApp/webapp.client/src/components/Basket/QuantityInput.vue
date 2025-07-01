@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import useBasket from '@/composables/basket/useBasket'
-import type { BasketItem } from '@/types/basket'
-import { ref, watch } from 'vue'
+import useBasket from '@/composables/basket/useBasket';
+import type { BasketItem } from '@/types/basket';
+import type { InputNumberBlurEvent } from 'primevue';
+import { ref } from 'vue';
 
 const { updateItemQuantity, isUpdatingCart } = useBasket()
 
@@ -11,14 +12,13 @@ const { item } = defineProps<{
 
 const quantity = ref<number>(item.quantity)
 
-watch(quantity, async (newQuantity) => {
-  if (newQuantity >= 0) {
-    await updateItemQuantity(item.productId, newQuantity)
-  }
-})
+async function handleQuantityUpdate(event: InputNumberBlurEvent) {
+  await updateItemQuantity(item.productId, Number(event.value));
+}
+
 </script>
 
 <template>
   <InputNumber v-model="quantity" :inputId="`minmax-buttons-${item.productId}`" mode="decimal"
-    :disabled="isUpdatingCart" showButtons :min="0" :step="1" :max="100" fluid />
+    :disabled="isUpdatingCart" showButtons :min="0" :step="1" :max="100" fluid @blur="handleQuantityUpdate" />
 </template>

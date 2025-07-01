@@ -59,7 +59,7 @@ try
 
     app.MapBffApi();
 
-    app.MapFallbackToFile("/index.html");
+    app.MapFallbackToFile("index.html");
 
     await app.RunAsync();
 }

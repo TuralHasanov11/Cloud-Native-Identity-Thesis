@@ -45,7 +45,6 @@ const {
 
 async function onFormSubmit(event: FormSubmitEvent) {
   if (!event.valid) {
-    console.log('Form is invalid:', event.errors)
     return
   }
 

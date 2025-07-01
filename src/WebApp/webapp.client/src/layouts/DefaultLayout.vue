@@ -3,7 +3,9 @@ import { AsyncBaseFooter } from '@/components/AsyncBaseFooter'
 import { AsyncCartSummary } from '@/components/Basket/AsyncCartSummary'
 import useBasket from '@/composables/basket/useBasket'
 
-const { isShowingCart } = useBasket()
+const { isShowingCart, initializeBasket } = useBasket()
+
+await initializeBasket()
 </script>
 
 <template>
@@ -14,9 +16,7 @@ const { isShowingCart } = useBasket()
       <RouterView />
     </div>
 
-    <Transition name="slide-from-right">
-      <AsyncCartSummary :visible="isShowingCart" />
-    </Transition>
+    <AsyncCartSummary :visible="isShowingCart" />
 
     <AsyncBaseFooter />
   </div>

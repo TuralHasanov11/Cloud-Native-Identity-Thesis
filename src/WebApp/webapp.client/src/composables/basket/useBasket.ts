@@ -1,15 +1,15 @@
 import type { BasketItem, Cart } from '@/types/basket'
 import { HttpStatusCode } from '@/types/common'
 import { Err, Ok } from 'ts-results'
-import { computed, onMounted, readonly, ref } from 'vue'
+import { computed, readonly, ref } from 'vue'
 import useIdentity from '../identity/useIdentity'
 import useBffFetch from '../useBffFetch'
 
-export const DEFAULT_CART: Cart = {
+const DEFAULT_CART: Cart = Object.freeze({
   items: [],
-}
+})
 
-const cart = ref<Cart>(DEFAULT_CART)
+const cart = ref<Cart>({ ...DEFAULT_CART })
 const isInitialized = ref<boolean>(false)
 
 const totalQuantity = computed<number>(() => {
@@ -36,7 +36,9 @@ export default function useBasket() {
 
   async function getBasket(): Promise<void> {
     const { data } = await useBffFetch('/api/basket').json<BasketItem[]>()
-    cart.value.items = data.value ?? DEFAULT_CART.items
+    if (data.value) {
+      cart.value.items = data.value
+    }
   }
 
   async function deleteBasket() {
@@ -46,12 +48,11 @@ export default function useBasket() {
       return new Err('Failed to delete basket')
     }
 
-    cart.value = DEFAULT_CART
     return Ok.EMPTY
   }
 
   async function updateBasket(items: BasketItem[]) {
-    const response = await useBffFetch('/api/basket')
+    const { data, statusCode } = await useBffFetch('/api/basket')
       .post({
         items: items.map((item) => ({
           productId: item.productId,
@@ -60,8 +61,8 @@ export default function useBasket() {
       })
       .json<BasketItem[]>()
 
-    if (response.statusCode.value === HttpStatusCode.OK) {
-      cart.value.items = response.data.value ?? DEFAULT_CART.items
+    if (statusCode.value === HttpStatusCode.OK && data.value) {
+      cart.value.items = data.value
       return Ok.EMPTY
     }
     return new Err('Failed to update basket')
@@ -86,7 +87,7 @@ export default function useBasket() {
       if (!isShowingCart.value) {
         toggleCart(true)
       }
-
+      isUpdatingCart.value = false
       return Ok.EMPTY
     }
 
@@ -104,7 +105,7 @@ export default function useBasket() {
     return new Err('Failed to remove item from cart')
   }
 
-  async function updateItemQuantity(productId: string, quantity: number): Promise<void> {
+  async function updateItemQuantity(productId: string, quantity: number) {
     isUpdatingCart.value = true
 
     try {
@@ -119,33 +120,36 @@ export default function useBasket() {
         }
 
         await updateBasket(updatedCartItems)
+        return Ok.EMPTY
       }
     } catch (error: unknown) {
       console.error('Error adding item to cart:', error)
+      return new Err('Failed to update item quantity in cart')
     } finally {
       isUpdatingCart.value = false
     }
   }
 
-  async function emptyCart(): Promise<void> {
+  async function emptyCart() {
     isUpdatingCart.value = true
 
-    try {
-      cart.value = DEFAULT_CART
-      await deleteBasket()
-    } catch (error: unknown) {
-      console.error('Error emptying cart:', error)
-    } finally {
+    const result = await deleteBasket()
+    if (result.ok) {
+      cart.value = { ...DEFAULT_CART }
+      console.log(cart.value, DEFAULT_CART)
       isUpdatingCart.value = false
+      return Ok.EMPTY
     }
+    isUpdatingCart.value = false
+    return new Err('Failed to empty cart')
   }
 
-  onMounted(async () => {
+  async function initializeBasket() {
     if (isAuthenticated.value && !isInitialized.value) {
       await getBasket()
       isInitialized.value = true
     }
-  })
+  }
 
   return {
     cart: readonly(cart),
@@ -156,11 +160,10 @@ export default function useBasket() {
     removeItem,
     updateItemQuantity,
     emptyCart,
-    deleteBasket,
-    updateBasket,
     totalQuantity,
     isEmpty,
     productCount,
     total,
+    initializeBasket,
   }
 }

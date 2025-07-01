@@ -20,11 +20,9 @@ FROM with-node AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Directory.Packages.props", "."]
-COPY ["webapp.client/webapp.client.esproj", "webapp.client/"]
 COPY ["Directory.Build.props", "."]
-COPY ["webapp.client/webapp.client.esproj", "webapp.client/"]
 COPY ["src/WebApp/WebApp.Server/WebApp.Server.csproj", "src/WebApp/WebApp.Server/"]
-COPY ["webapp.client/webapp.client.esproj", "webapp.client/"]
+COPY ["src/WebApp/webapp.client/webapp.client.esproj", "src/WebApp/webapp.client/"]
 RUN dotnet restore "./src/WebApp/WebApp.Server/WebApp.Server.csproj"
 COPY . .
 WORKDIR "/src/src/WebApp/WebApp.Server"

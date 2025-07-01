@@ -10,10 +10,7 @@ import { PrimeVueResolver } from '@primevue/auto-import-resolver'
 import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
-const baseFolder =
-  env.APPDATA !== undefined && env.APPDATA !== ''
-    ? `${env.APPDATA}/ASP.NET/https`
-    : `${env.HOME}/.aspnet/https`
+const baseFolder = env.APPDATA !== undefined && env.APPDATA !== '' ? `${env.APPDATA}/ASP.NET/https` : `${env.HOME}/.aspnet/https`
 
 const certificateName = 'webapp.client'
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`)
@@ -26,24 +23,18 @@ if (!fs.existsSync(baseFolder)) {
 if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
   if (
     0 !==
-    child_process.spawnSync(
-      'dotnet',
-      ['dev-certs', 'https', '--export-path', certFilePath, '--format', 'Pem', '--no-password'],
-      { stdio: 'inherit' },
-    ).status
+    child_process.spawnSync('dotnet', ['dev-certs', 'https', '--export-path', certFilePath, '--format', 'Pem', '--no-password'], { stdio: 'inherit' })
+      .status
   ) {
     throw new Error('Could not create certificate.')
   }
 }
 
-let target: string = "";
-if (env.ASPNETCORE_HTTPS_PORT) {
-  target = `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`;
-} else if (env.ASPNETCORE_URLS) {
-  target = env.ASPNETCORE_URLS.split(';')[0];
-} else {
-  target = 'https://localhost:5113';
-}
+const target = env.ASPNETCORE_HTTPS_PORT
+  ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`
+  : env.ASPNETCORE_URLS
+    ? env.ASPNETCORE_URLS.split(';')[0]
+    : 'https://localhost:5113'
 
 // https://vitejs.dev/config/
 export default defineConfig({
