@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using FluentValidation;
 using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -197,6 +198,8 @@ public static class Extensions
                 options.SaveTokens = true;
                 options.GetClaimsFromUserInfoEndpoint = true;
             });
+
+        builder.Services.AddControllersWithViews();
     }
 
     private static void AddMicrosoftEntraExternalId(IHostApplicationBuilder builder)
@@ -210,10 +213,6 @@ public static class Extensions
             options.HandleSameSiteCookieCompatibility();
         });
 
-        builder.Services.AddOptions<OpenIdConnectOptions>()
-            .BindConfiguration(IdentityProviderSettings.AzureAd)
-            .ValidateOnStart()
-            .ValidateDataAnnotations();
 
         var defaultScopes = builder.Configuration[$"{IdentityProviderSettings.AzureAd}:Scopes"]
             ?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
@@ -222,6 +221,12 @@ public static class Extensions
             .AddMicrosoftIdentityWebApp(builder.Configuration)
             .EnableTokenAcquisitionToCallDownstreamApi(defaultScopes)
             .AddInMemoryTokenCaches();
+
+        builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
+        {
+            // The claim in the Jwt token where App roles are available.
+            options.TokenValidationParameters.RoleClaimType = "roles";
+        });
 
         builder.Services.AddControllersWithViews()
             .AddMicrosoftIdentityUI();
@@ -267,8 +272,10 @@ public static class Extensions
 
             options.MapInboundClaims = false;
             options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
-            //options.TokenValidationParameters.RoleClaimType = "roles";
+            options.TokenValidationParameters.RoleClaimType = "roles";
         });
+
+        builder.Services.AddControllersWithViews();
 
         //builder.Services.ConfigureCookieOidcRefresh(CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
     }

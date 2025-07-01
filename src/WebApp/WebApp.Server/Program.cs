@@ -58,8 +58,13 @@ try
     app.MapControllers();
 
     app.MapBffApi();
+    
+    app.MapFallback((IConfiguration config) =>
+    {
+        var clientUrl = config.GetValue<string>("ClientUrl") ?? "https://localhost:50563";
+        return Results.Redirect(clientUrl);
+    });
 
-    app.MapFallbackToFile("index.html");
 
     await app.RunAsync();
 }
