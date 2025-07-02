@@ -266,7 +266,7 @@ services:
     - basket.api
     - catalog.api
     - ordering.api
-    # - paymentprocessor
+    - paymentprocessor
     networks:
       - thesis-net
 
