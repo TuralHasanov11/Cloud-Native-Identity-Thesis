@@ -45,11 +45,4 @@
 	<Protobuf Include="..\..\Basket.Api\Proto\basket.proto" GrpcServices="Client" />
   </ItemGroup>
 
-  <ItemGroup>
-	<ProjectReference Include="..\webapp.client\webapp.client.esproj">
-		<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-	</ProjectReference>
-  </ItemGroup>
-
-
 </Project>

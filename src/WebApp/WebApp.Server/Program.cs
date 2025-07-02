@@ -58,13 +58,15 @@ try
     app.MapControllers();
 
     app.MapBffApi();
-    
-    app.MapFallback((IConfiguration config) =>
-    {
-        var clientUrl = config.GetValue<string>("ClientUrl") ?? "https://localhost:50563";
-        return Results.Redirect(clientUrl);
-    });
 
+    //app.MapFallback((IConfiguration config) =>
+    //{
+    //    var clientUrl = config.GetValue<string>("ClientUrl") ?? "https://localhost:50563";
+    //    return Results.Redirect(clientUrl);
+    //});
+
+    var clientUrl = app.Configuration.GetValue<string>("ClientUrl") ?? "https://10.0.11.2:50563";
+    app.MapForwarder("/{**catch-all}", clientUrl);
 
     await app.RunAsync();
 }

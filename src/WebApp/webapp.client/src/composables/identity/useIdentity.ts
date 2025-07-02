@@ -20,7 +20,7 @@ export default function useIdentity() {
   }
 
   function login(returnUrl: string = '/'): void {
-    window.location.href = `${baseUrl}/identity/login?returnUrl=${window.location.href}`
+    window.location.href = `${baseUrl}/identity/login?returnUrl=${returnUrl}`
   }
 
   function logout(): void {
