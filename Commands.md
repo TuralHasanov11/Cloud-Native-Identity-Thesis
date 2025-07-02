@@ -82,3 +82,8 @@ turalhasanovthesis AD B2c
 ```sh
 
 ```
+
+### OSV
+```sh
+docker run -it -v ${PWD}:/src ghcr.io/google/osv-scanner -L /src/
+```
