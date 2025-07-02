@@ -87,3 +87,10 @@ turalhasanovthesis AD B2c
 ```sh
 docker run -it -v ${PWD}:/src ghcr.io/google/osv-scanner -L /src/
 ```
+
+### Scorecard
+```sh
+docker pull gcr.io/openssf/scorecard:stable
+
+docker run -e GITHUB_AUTH_TOKEN=<your access token> gcr.io/openssf/scorecard:stable --repo=https://github.com/TuralHasanov11/Cloud-Native-Identity-Thesis.git
+```
