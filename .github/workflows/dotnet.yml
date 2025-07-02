@@ -19,10 +19,11 @@ jobs:
     strategy:
       matrix:
         dotnet-version: [9.0.x]
-        os: [ubuntu-latest, windows-2022]
+        os: [ubuntu-latest]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Setup .NET ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v4
         with:

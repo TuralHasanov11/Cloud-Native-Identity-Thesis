@@ -13,16 +13,19 @@ jobs:
 
     name: analyze
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
       matrix:
         language: ['csharp', 'javascript-typescript']
+        dotnet-version: [9.0.x]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
+    - name: Setup .NET ${{ matrix.dotnet-version }}
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
