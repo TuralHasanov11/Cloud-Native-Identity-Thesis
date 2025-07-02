@@ -12,7 +12,7 @@ public static class List
         var userId = user.GetUserId();
 
         var subscriptions = await webhookSubscriptionRepository.ListAsync(
-            new GetWebhookSubscriptionsSpecification(new IdentityId(userId)),
+            new WebhookSubscriptionSpecification(new IdentityId(userId)),
             ws => ws.ToWebhookSubscriptionDto(),
             cancellationToken);
 

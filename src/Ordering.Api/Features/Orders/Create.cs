@@ -6,23 +6,38 @@ public static class Create
 {
     public static async Task<Results<Ok, ProblemHttpResult>> Handle(
         IOrderRepository orderRepository,
+        ICustomerRepository customerRepository,
         IOrderingIntegrationEventService orderingIntegrationEventService,
         CreateOrderRequest request,
         ILogger<CreateOrderRequest> logger,
         IIdentityService identityService,
         CancellationToken cancellationToken)
     {
-        var userId = identityService.GetUser()!.GetUserId()!;
+        var userId = new IdentityId(identityService.GetUser()!.GetUserId()!);
+
+        var customer = await customerRepository
+            .SingleOrDefaultAsync(
+                new CustomerSpecification(userId),
+                cancellationToken: cancellationToken);
+
+        if (customer is null)
+        {
+            await customerRepository.CreateAsync(
+                Customer.Create(userId, request.UserName),
+                cancellationToken);
+
+            await orderRepository.SaveChangesAsync(cancellationToken);
+        }
 
         var orderStartedIntegrationEvent = new OrderStartedIntegrationEvent(userId);
         await orderingIntegrationEventService.AddAndSaveEventAsync(orderStartedIntegrationEvent);
 
         var order = new Order(
-            new IdentityId(userId),
+            userId,
             request.UserName,
             new Address(request.Street, request.City, request.State, request.Country, request.ZipCode),
             request.CardTypeId,
-            customerId: new CustomerId(Guid.Parse(userId)));
+            customerId: customer?.Id);
 
         foreach (var item in request.Items.ToOrderItemsDto())
         {

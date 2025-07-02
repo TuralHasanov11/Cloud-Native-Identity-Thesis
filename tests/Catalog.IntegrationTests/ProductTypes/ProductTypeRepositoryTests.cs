@@ -3,7 +3,7 @@
 public class ProductTypeRepositoryTests : BaseIntegrationTest
 {
     private readonly IProductTypeRepository _repository;
-    private static readonly CancellationTokenSource _cancellationTokenSource = new(TimeSpan.FromSeconds(30));
+    private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
     public ProductTypeRepositoryTests(CatalogFactory factory)
         : base(factory)
@@ -17,12 +17,12 @@ public class ProductTypeRepositoryTests : BaseIntegrationTest
         var productType = ProductType.Create("Electronics");
 
         // Act
-        await _repository.CreateAsync(productType, _cancellationTokenSource.Token);
-        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
+        await _repository.CreateAsync(productType, _cancellationToken);
+        await _repository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var specification = new GetProductTypeSpecification(productType.Id);
-        var createdProductType = await _repository.SingleOrDefaultAsync(specification, _cancellationTokenSource.Token);
+        var specification = new ProductTypeSpecification(productType.Id);
+        var createdProductType = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         // Act
         Assert.NotNull(createdProductType);
@@ -34,16 +34,16 @@ public class ProductTypeRepositoryTests : BaseIntegrationTest
         // Arrange
         var productType = ProductType.Create("Electronics1");
 
-        await _repository.CreateAsync(productType, _cancellationTokenSource.Token);
-        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
+        await _repository.CreateAsync(productType, _cancellationToken);
+        await _repository.SaveChangesAsync(_cancellationToken);
 
         // Act
         _repository.Delete(productType);
-        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
+        await _repository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var specification = new GetProductTypeSpecification(productType.Id);
-        var deletedProductType = await _repository.SingleOrDefaultAsync(specification, _cancellationTokenSource.Token);
+        var specification = new ProductTypeSpecification(productType.Id);
+        var deletedProductType = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
         Assert.Null(deletedProductType);
     }
 
@@ -54,14 +54,14 @@ public class ProductTypeRepositoryTests : BaseIntegrationTest
         var productType1 = ProductType.Create("Electronics2");
         var productType2 = ProductType.Create("Clothing2");
 
-        await _repository.CreateAsync(productType1, _cancellationTokenSource.Token);
-        await _repository.CreateAsync(productType2, _cancellationTokenSource.Token);
-        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
+        await _repository.CreateAsync(productType1, _cancellationToken);
+        await _repository.CreateAsync(productType2, _cancellationToken);
+        await _repository.SaveChangesAsync(_cancellationToken);
 
-        var specification = new GetProductTypesSpecification();
+        var specification = new ProductTypeSpecification();
 
         // Act
-        var productTypes = await _repository.ListAsync(specification, _cancellationTokenSource.Token);
+        var productTypes = await _repository.ListAsync(specification, _cancellationToken);
 
         // Assert
         Assert.Contains(productTypes, pt => pt.Name == "Electronics2");
@@ -74,12 +74,12 @@ public class ProductTypeRepositoryTests : BaseIntegrationTest
         // Arrange
         var productType = ProductType.Create("Electronics3");
 
-        await _repository.CreateAsync(productType, _cancellationTokenSource.Token);
-        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
-        var specification = new GetProductTypeSpecification(productType.Id);
+        await _repository.CreateAsync(productType, _cancellationToken);
+        await _repository.SaveChangesAsync(_cancellationToken);
+        var specification = new ProductTypeSpecification(productType.Id);
 
         // Act
-        var result = await _repository.SingleOrDefaultAsync(specification, _cancellationTokenSource.Token);
+        var result = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         // Assert
         Assert.NotNull(result);
@@ -90,10 +90,10 @@ public class ProductTypeRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenProductTypeDoesNotExist()
     {
         // Arrange
-        var specification = new GetProductTypeSpecification(new ProductTypeId(Guid.NewGuid()));
+        var specification = new ProductTypeSpecification(new ProductTypeId(Guid.NewGuid()));
 
         // Act
-        var result = await _repository.SingleOrDefaultAsync(specification, _cancellationTokenSource.Token);
+        var result = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         // Assert
         Assert.Null(result);
@@ -105,17 +105,17 @@ public class ProductTypeRepositoryTests : BaseIntegrationTest
         // Arrange
         var productType = ProductType.Create("Electronics4");
 
-        await _repository.CreateAsync(productType, _cancellationTokenSource.Token);
-        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
+        await _repository.CreateAsync(productType, _cancellationToken);
+        await _repository.SaveChangesAsync(_cancellationToken);
 
         // Act
         productType.UpdateName("UpdatedElectronics");
         _repository.Update(productType);
-        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
+        await _repository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var specification = new GetProductTypeSpecification(productType.Id);
-        var updatedProductType = await _repository.SingleOrDefaultAsync(specification, _cancellationTokenSource.Token);
+        var specification = new ProductTypeSpecification(productType.Id);
+        var updatedProductType = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         Assert.NotNull(updatedProductType);
         Assert.Equal("UpdatedElectronics", updatedProductType.Name);

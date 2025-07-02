@@ -13,7 +13,7 @@ public class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler(
         var cardTypeId = domainEvent.CardTypeId != 0 ? domainEvent.CardTypeId : 1; // TODO: set the default card type to 1 for now
 
         var customer = await customerRepository.SingleOrDefaultAsync(
-            new GetCustomerByIdSpecification(new IdentityId(domainEvent.UserId)),
+            new CustomerSpecification(new IdentityId(domainEvent.UserId)),
             cancellationToken);
 
         if (customer is null)

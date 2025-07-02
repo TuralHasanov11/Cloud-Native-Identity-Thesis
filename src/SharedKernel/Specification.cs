@@ -8,19 +8,16 @@ public abstract class Specification<TEntity>(
     bool criteriaCondition = true)
     where TEntity : class
 {
-    private readonly List<Expression<Func<TEntity, bool>>> _criteria = criteria is null ? [] : [criteria];
+    private readonly List<(Expression<Func<TEntity, bool>>, bool)> _criteria = criteria is null ? [] : [(criteria, criteriaCondition)];
 
-    private readonly List<bool> _criteriaCondition = criteria is null ? [] : [criteriaCondition];
-
-    public IReadOnlyList<Expression<Func<TEntity, bool>>> Criteria => _criteria.AsReadOnly();
-
-    public IReadOnlyList<bool> CriteriaCondition => _criteriaCondition.AsReadOnly();
+    public IReadOnlyList<(Expression<Func<TEntity, bool>>, bool)> Criteria => _criteria.AsReadOnly();
 
     public bool IsSplitQuery { get; protected set; }
 
     public Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? IncludeExpression { get; protected set; }
 
-    public Specification<TEntity> AddInclude(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression)
+    public Specification<TEntity> AddInclude(
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression)
     {
         if (includeExpression is null)
         {
@@ -41,8 +38,7 @@ public abstract class Specification<TEntity>(
             throw new InvalidOperationException("Criteria is null");
         }
 
-        _criteria.Add(criteria);
-        _criteriaCondition.Add(condition);
+        _criteria.Add((criteria, condition));
 
         return this;
     }
@@ -59,9 +55,7 @@ public static class SpecificationEvaluator
         {
             for (int i = 0; i < specification.Criteria.Count; i++)
             {
-                queryable = queryable.WhereIf(
-                    specification.CriteriaCondition[i],
-                    specification.Criteria[i]);
+                queryable = queryable.WhereIf(specification.Criteria[i].Item2, specification.Criteria[i].Item1);
             }
         }
 

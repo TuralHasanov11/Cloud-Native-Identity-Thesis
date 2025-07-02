@@ -4,6 +4,20 @@ public class EntityTests
 {
     private record TestDomainEvent(DateTime OccurredOnUtc) : DomainEventBase(OccurredOnUtc);
 
+    private class TestEntity1 : EntityBase
+    {
+        public TestEntity1() : base()
+        {
+        }
+    }
+
+    private class TestEntityWithId : EntityBase<Guid>
+    {
+        public TestEntityWithId(Guid id) : base(id)
+        {
+        }
+    }
+
     private class TestEntity : HasDomainEventsBase
     {
         public void AddEvent(DomainEventBase eventItem)
@@ -83,5 +97,42 @@ public class EntityTests
         // Act & Assert
         var exception = Record.Exception(() => entity.RemoveEvent(domainEvent2));
         Assert.Null(exception);
+    }
+
+    [Fact]
+    public void EntityBase_ShouldInitializeProperties()
+    {
+        // Arrange & Act
+        var entity = new TestEntity1();
+
+        // Assert
+        Assert.Equal(default(int), entity.Id);
+        Assert.Null(entity.RowVersion);
+    }
+
+    [Fact]
+    public void EntityBaseWithId_ShouldInitializeProperties()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var entity = new TestEntityWithId(id);
+
+        // Act & Assert
+        Assert.Equal(id, entity.Id);
+        Assert.Null(entity.RowVersion);
+    }
+
+    [Fact]
+    public void RowVersionValue_ShouldReturnEmptyString_WhenRowVersionIsNull()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var entity = new TestEntityWithId(id);
+
+        // Act
+        var rowVersionValue = entity.RowVersionValue;
+
+        // Assert
+        Assert.Equal(string.Empty, rowVersionValue);
     }
 }

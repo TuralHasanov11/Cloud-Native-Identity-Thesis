@@ -18,10 +18,7 @@ public class GracePeriodManagerService(
     {
         var delayTime = TimeSpan.FromSeconds(_options.CheckUpdateTime);
 
-        if (logger.IsEnabled(LogLevel.Debug))
-        {
-            stoppingToken.Register(logger.LogStopping);
-        }
+        stoppingToken.Register(logger.LogStopping);
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -37,21 +34,18 @@ public class GracePeriodManagerService(
 
     private async Task CheckConfirmedGracePeriodOrders()
     {
-        if (logger.IsEnabled(LogLevel.Debug))
-        {
-            logger.LogCheckingOrders();
-        }
+        logger.LogCheckingOrders();
 
         var orderIds = await GetConfirmedGracePeriodOrders();
 
-        foreach (var orderId in orderIds)
+        await Parallel.ForEachAsync(orderIds, async (orderId, cancellationToken) =>
         {
             var confirmGracePeriodEvent = new GracePeriodConfirmedIntegrationEvent(orderId);
 
             logger.LogPublishingIntegrationEvent(confirmGracePeriodEvent.Id, confirmGracePeriodEvent);
 
-            await eventBus.Publish(confirmGracePeriodEvent);
-        }
+            await eventBus.Publish(confirmGracePeriodEvent, cancellationToken);
+        });
     }
 
     private async ValueTask<List<Guid>> GetConfirmedGracePeriodOrders()

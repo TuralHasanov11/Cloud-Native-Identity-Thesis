@@ -7,7 +7,7 @@ public static class ListByIds
         Guid[] ids,
         CancellationToken cancellationToken)
     {
-        var specification = new GetProductsSpecification([.. ids.Select(i => new ProductId(i))]);
+        var specification = new ProductSpecification([.. ids.Select(i => new ProductId(i))]);
 
         var products = await productRepository.ListAsync(
             specification,

@@ -8,7 +8,8 @@ public class WebhookSubscriptionRepositoryTests : BaseIntegrationTest
     private readonly IWebhookSubscriptionRepository _repository;
     private static readonly CancellationTokenSource _cancellationTokenSource = new(TimeSpan.FromSeconds(30));
 
-    public WebhookSubscriptionRepositoryTests(WebhooksFactory factory) : base(factory)
+    public WebhookSubscriptionRepositoryTests(WebhooksFactory factory)
+        : base(factory)
     {
         _repository = factory.Services.GetRequiredService<IWebhookSubscriptionRepository>();
     }
@@ -75,7 +76,7 @@ public class WebhookSubscriptionRepositoryTests : BaseIntegrationTest
         await _repository.CreateAsync(subscription2);
         await _repository.SaveChangesAsync();
 
-        var specification = new GetWebhookSubscriptionSpecification(WebhookType.OrderPaid);
+        var specification = new WebhookSubscriptionSpecification(WebhookType.OrderPaid);
 
         // Act
         var subscriptions = await _repository.ListAsync(specification);
@@ -99,7 +100,7 @@ public class WebhookSubscriptionRepositoryTests : BaseIntegrationTest
 
         await repository.CreateAsync(subscription);
         await repository.SaveChangesAsync();
-        var specification = new GetWebhookSubscriptionSpecification(subscription.UserId, subscription.Id);
+        var specification = new WebhookSubscriptionSpecification(subscription.UserId, subscription.Id);
 
         // Act
         var result = await repository.SingleOrDefaultAsync(specification);
@@ -113,7 +114,7 @@ public class WebhookSubscriptionRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenSubscriptionDoesNotExist()
     {
         // Arrange
-        var specification = new GetWebhookSubscriptionSpecification(
+        var specification = new WebhookSubscriptionSpecification(
             new IdentityId(IdentityExtensions.GenerateId()),
             new WebhookId(Guid.CreateVersion7()));
 

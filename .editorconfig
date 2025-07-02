@@ -1,4 +1,4 @@
-# Remove the line below if you want to inherit .editorconfig settings from higher directories
+ï»¿# Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
 # C# files
@@ -538,7 +538,7 @@ dotnet_diagnostic.CA1713.severity = warning
 dotnet_diagnostic.CA1714.severity = error
 
 # Identifiers should have correct prefix
-dotnet_diagnostic.CA1715.severity = error
+dotnet_diagnostic.CA1715.severity = suggestion
 
 # Identifiers should not match keywords
 dotnet_diagnostic.CA1716.severity = warning
@@ -1244,7 +1244,7 @@ dotnet_diagnostic.CA5383.severity = warning
 # Do Not Use Digital Signature Algorithm (DSA)
 dotnet_diagnostic.CA5384.severity = warning
 
-# Use Rivest–Shamir–Adleman (RSA) Algorithm With Sufficient Key Size
+# Use RivestÂ–ShamirÂ–Adleman (RSA) Algorithm With Sufficient Key Size
 dotnet_diagnostic.CA5385.severity = warning
 
 # Avoid hardcoding SecurityProtocolType value

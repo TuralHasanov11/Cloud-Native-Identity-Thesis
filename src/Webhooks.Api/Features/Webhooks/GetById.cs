@@ -12,7 +12,7 @@ public static class GetById
     {
         var userId = user.GetUserId();
         var subscription = await webhookSubscriptionRepository.SingleOrDefaultAsync(
-            new GetWebhookSubscriptionSpecification(new IdentityId(userId), new WebhookId(id)),
+            new WebhookSubscriptionSpecification(new IdentityId(userId), new WebhookId(id)),
             cancellationToken);
 
         if (subscription is null)

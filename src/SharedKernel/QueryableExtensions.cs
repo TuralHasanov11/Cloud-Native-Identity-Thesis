@@ -17,7 +17,7 @@ public static class QueryableExtensions
         this IQueryable<TEntity> queryable,
         TCursor pageCursor,
         Func<TEntity, TCursor> field,
-        int pageSize = 10,
+        int pageSize = 50,
         CancellationToken cancellationToken = default)
         where TEntity : EntityBase<TCursor>
         where TCursor : class, IEquatable<TCursor>, IComparable<TCursor>

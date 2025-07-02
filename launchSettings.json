@@ -4,7 +4,7 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "composeLaunchAction": "LaunchBrowser",
-      "composeLaunchServiceName": "webapp.bff",
+      "composeLaunchServiceName": "webapp.server",
       "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
       "serviceActions": {
         "basket.api": "StartDebugging",
@@ -12,18 +12,13 @@
         "paymentprocessor": "StartDebugging",
         "catalog.api": "StartDebugging",
         "orderprocessor": "StartDebugging",
-        "webhooks.api": "StartDebugging",
-        "webhooks.client": "StartDebugging",
         "catalog.postgres": "StartWithoutDebugging",
         "ordering.postgres": "StartWithoutDebugging",
-        "papercut": "StartWithoutDebugging",
         "pgadmin": "StartWithoutDebugging",
         "rabbitmq": "StartWithoutDebugging",
         "redis": "StartWithoutDebugging",
         "seq": "StartWithoutDebugging",
-        "webapp.bff": "StartDebugging",
-        "webhooks.postgres": "StartWithoutDebugging",
-        "webapp": "StartWithoutDebugging"
+        "webapp.server": "StartDebugging"
       }
     }
   }

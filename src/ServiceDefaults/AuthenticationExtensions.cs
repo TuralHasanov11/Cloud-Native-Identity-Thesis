@@ -5,8 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
-using Microsoft.IdentityModel.Tokens;
-using ServiceDefaults.Identity;
 
 namespace ServiceDefaults;
 
@@ -89,7 +87,6 @@ public static class AuthenticationExtensions
                     options.TokenValidationParameters.RoleClaimType = "roles";
                 });
 
-        builder.Services.AddSingleton<IAuthorizationPolicyProvider, BaseAuthorizationPolicyProvider>();
         builder.Services.AddSingleton<IAuthorizationHandler, GroupHandler>();
 
         builder.Services.AddAuthorization(options =>

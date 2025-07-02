@@ -13,7 +13,7 @@ public sealed class OrderStatusChangedToStockConfirmedDomainEventHandler(
         //OrderingApiTrace.LogOrderStatusUpdated(_logger, domainEvent.OrderId, OrderStatus.StockConfirmed);
 
         var order = await orderRepository.SingleOrDefaultAsync(
-            new GetOrderByIdSpecification(new OrderId(domainEvent.OrderId)),
+            new OrderSpecification(new OrderId(domainEvent.OrderId)),
             cancellationToken);
 
         if (order == null)
@@ -22,7 +22,7 @@ public sealed class OrderStatusChangedToStockConfirmedDomainEventHandler(
         }
 
         var customer = await customerRepository.SingleOrDefaultAsync(
-            new GetCustomerByIdSpecification(new CustomerId(order.CustomerId!.Value)), // TODO: handle null
+            new CustomerSpecification(new CustomerId(order.CustomerId!.Value)), // TODO: handle null
             cancellationToken);
 
         if (customer == null)

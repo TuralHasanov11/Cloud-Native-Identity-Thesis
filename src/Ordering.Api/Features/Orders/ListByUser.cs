@@ -13,7 +13,7 @@ public static class ListByUser
         var userId = user?.GetUserId();
 
         var orders = await orderRepository.ListAsync(
-            new GetOrdersByCustomerIdSpecification(new IdentityId(userId!)), // TODO: Handle null userId
+            new OrderSpecification(new IdentityId(userId!)), // TODO: Handle null userId
             o => o.ToOrderSummary(),
             cancellationToken);
 

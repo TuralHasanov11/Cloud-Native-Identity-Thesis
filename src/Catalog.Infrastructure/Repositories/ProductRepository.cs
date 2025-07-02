@@ -22,7 +22,7 @@ public class ProductRepository(CatalogDbContext dbContext) : IProductRepository
     public async Task<(IEnumerable<Product>, long)> ListAsync(
         Specification<Product> specification,
         ProductId pageCursor,
-        int pageSize = 10,
+        int pageSize = 50,
         CancellationToken cancellationToken = default)
     {
 
@@ -31,6 +31,7 @@ public class ProductRepository(CatalogDbContext dbContext) : IProductRepository
         var products = await queryable
                 .OrderBy(p => p.Id)
                 .Where(p => p.Id > pageCursor)
+                .AsNoTracking()
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
 
@@ -43,24 +44,10 @@ public class ProductRepository(CatalogDbContext dbContext) : IProductRepository
         Specification<Product> specification,
         CancellationToken cancellationToken = default)
     {
-        return await dbContext.Products.GetQuery(specification).ToListAsync(cancellationToken);
+        return await dbContext.Products.GetQuery(specification)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
     }
-
-    //public async Task<(IEnumerable<TResponse>, long)> ListAsync<TResponse>(
-    //    Specification<Product> specification,
-    //    Expression<Func<Product, TResponse>> mapper,
-    //    ProductId pageCursor,
-    //    int pageSize = 10,
-    //    CancellationToken cancellationToken = default)
-    //    where TResponse : class
-    //{
-    //    var (dataTask, countTask) = dbContext.Products.GetQuery(specification)
-    //        .OrderBy(p => p.Id)
-    //        .Select(mapper)
-    //        .Paginate(pageCursor, field: p => p.Id, pageSize, cancellationToken);
-
-    //    return (await dataTask, await countTask);
-    //}
 
     public async Task<IEnumerable<TResponse>> ListAsync<TResponse>(
         Specification<Product> specification,
@@ -68,7 +55,10 @@ public class ProductRepository(CatalogDbContext dbContext) : IProductRepository
         CancellationToken cancellationToken = default)
         where TResponse : class
     {
-        return await dbContext.Products.GetQuery(specification).Select(mapper).ToListAsync(cancellationToken);
+        return await dbContext.Products.GetQuery(specification)
+            .AsNoTracking()
+            .Select(mapper)
+            .ToListAsync(cancellationToken);
     }
 
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)

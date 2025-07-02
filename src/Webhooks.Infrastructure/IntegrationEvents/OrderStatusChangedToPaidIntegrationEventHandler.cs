@@ -12,7 +12,7 @@ public class OrderStatusChangedToPaidIntegrationEventHandler(
     public async Task Consume(ConsumeContext<OrderStatusChangedToPaidIntegrationEvent> context)
     {
         var subscriptions = await webhookSubscriptionRepository.ListAsync(
-            new GetWebhookSubscriptionsSpecification(WebhookType.OrderPaid));
+            new WebhookSubscriptionSpecification(WebhookType.OrderPaid));
 
         if (subscriptions is null)
         {

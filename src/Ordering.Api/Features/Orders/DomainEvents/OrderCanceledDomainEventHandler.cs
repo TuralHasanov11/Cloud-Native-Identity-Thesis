@@ -11,7 +11,7 @@ public sealed class OrderCanceledDomainEventHandler(
         //OrderingApiTrace.LogOrderStatusUpdated(_logger, notification.Order.Id, OrderStatus.Cancelled);
 
         var order = await orderRepository.SingleOrDefaultAsync(
-            new GetOrderByIdSpecification(new OrderId(notification.Order.Id)),
+            new OrderSpecification(new OrderId(notification.Order.Id)),
             cancellationToken);
 
         if (order == null)
@@ -20,7 +20,7 @@ public sealed class OrderCanceledDomainEventHandler(
         }
 
         var customer = await customerRepository.SingleOrDefaultAsync(
-            new GetCustomerByIdSpecification(order.CustomerId!), // TODO: Check if CustomerId is nullable
+            new CustomerSpecification(order.CustomerId!), // TODO: Check if CustomerId is nullable
             cancellationToken);
 
         if (customer == null)

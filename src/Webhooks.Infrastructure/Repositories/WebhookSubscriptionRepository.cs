@@ -24,6 +24,7 @@ public class WebhookSubscriptionRepository(WebhooksDbContext dbContext) : IWebho
     {
         return await dbContext.Subscriptions
             .GetQuery(specification)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
 
@@ -35,6 +36,7 @@ public class WebhookSubscriptionRepository(WebhooksDbContext dbContext) : IWebho
     {
         return await dbContext.Subscriptions
             .GetQuery(specification)
+            .AsNoTracking()
             .Select(mapper)
             .ToListAsync(cancellationToken);
     }

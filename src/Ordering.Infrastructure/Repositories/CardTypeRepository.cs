@@ -24,7 +24,7 @@ public class CardTypeRepository(OrderingDbContext dbContext) : ICardTypeReposito
         CancellationToken cancellationToken = default)
         where TResponse : class
     {
-        return await dbContext.CardTypes.Select(mapper).ToListAsync(cancellationToken);
+        return await dbContext.CardTypes.Select(mapper).AsNoTracking().ToListAsync(cancellationToken);
     }
 
     public Task<CardType?> SingleOrDefaultAsync(

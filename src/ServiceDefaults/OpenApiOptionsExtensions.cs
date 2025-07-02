@@ -1,6 +1,6 @@
 ﻿using Asp.Versioning.ApiExplorer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Configuration;
@@ -23,8 +23,6 @@ internal static class OpenApiOptionsExtensions
             {
                 return Task.CompletedTask;
             }
-
-            document.Info.Version = apiDescription.ApiVersion.ToString();
 
             document.Info = new()
             {
@@ -50,30 +48,19 @@ internal static class OpenApiOptionsExtensions
         return options;
     }
 
-    public static OpenApiOptions ApplySecuritySchemeDefinitions(this OpenApiOptions options)
+    public static OpenApiOptions ApplySecuritySchemeDefinitions(this OpenApiOptions options, string[] scopes)
     {
-        options.AddDocumentTransformer<SecuritySchemeDefinitionsTransformer>();
+        options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
 
-        return options;
-    }
-
-    public static OpenApiOptions ApplyAuthorizationChecks(this OpenApiOptions options, string[] scopes)
-    {
         options.AddOperationTransformer((operation, context, cancellationToken) =>
         {
-            var metadata = context.Description.ActionDescriptor.EndpointMetadata;
-
-            if (!metadata.OfType<IAuthorizeData>().Any())
-            {
-                return Task.CompletedTask;
-            }
-
-            operation.Responses.TryAdd("401", new OpenApiResponse { Description = "Unauthorized" });
-            operation.Responses.TryAdd("403", new OpenApiResponse { Description = "Forbidden" });
-
             var jwtBarerScheme = new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = JwtBearerDefaults.AuthenticationScheme }
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = JwtBearerDefaults.AuthenticationScheme
+                }
             };
 
             operation.Security =
@@ -101,88 +88,57 @@ internal static class OpenApiOptionsExtensions
         return options;
     }
 
-    public static OpenApiOptions ApplyApiVersionDescription(this OpenApiOptions options)
+    public sealed class BearerSecuritySchemeTransformer(
+        IConfiguration configuration,
+        IAuthenticationSchemeProvider authenticationSchemeProvider)
+        : IOpenApiDocumentTransformer
     {
-        //options.AddOperationTransformer((operation, context, cancellationToken) =>
-        //{
-        //    return Task.CompletedTask;
-        //});
-
-        return options;
-    }
-
-    public static OpenApiOptions ApplySchemaNullableFalse(this OpenApiOptions options)
-    {
-        options.AddSchemaTransformer((schema, context, cancellationToken) =>
-        {
-            if (schema.Properties is not null)
-            {
-                foreach (var property in schema.Properties)
-                {
-                    if (schema.Required?.Contains(property.Key) != true)
-                    {
-                        property.Value.Nullable = false;
-                    }
-                }
-            }
-
-            return Task.CompletedTask;
-        });
-
-        return options;
-    }
-
-    private sealed class SecuritySchemeDefinitionsTransformer(IConfiguration configuration) : IOpenApiDocumentTransformer
-    {
-        public Task TransformAsync(
+        public async Task TransformAsync(
             OpenApiDocument document,
             OpenApiDocumentTransformerContext context,
             CancellationToken cancellationToken)
         {
-            var identitySettings = configuration.GetSection(IdentityProviderSettings.SectionName).Get<IdentityProviderSettings>();
+            var identitySettings = configuration.GetSection(IdentityProviderSettings.SectionName)
+                .Get<IdentityProviderSettings>();
 
             if (identitySettings is null)
             {
-                return Task.CompletedTask;
+                return;
             }
 
             var enabledProvider = identitySettings.EnabledProviderName;
 
             if (enabledProvider is null)
             {
-                return Task.CompletedTask;
+                return;
             }
 
-            //string[] scopes = [];
-
-            var securityScheme = new OpenApiSecurityScheme
+            var authenticationSchemes = await authenticationSchemeProvider.GetAllSchemesAsync();
+            if (authenticationSchemes.Any(scheme => scheme.Name == JwtBearerDefaults.AuthenticationScheme))
             {
-                Name = "Authorization",
-                Type = SecuritySchemeType.OAuth2,
-                Scheme = JwtBearerDefaults.AuthenticationScheme,
-                //Flows = new OpenApiOAuthFlows()
-                //{
-                //    AuthorizationCode = new OpenApiOAuthFlow()
-                //    {
-                //        AuthorizationUrl = new Uri($"{enabledProvider.Authority}/connect/authorize"),
-                //        TokenUrl = new Uri($"{enabledProvider.Authority}/connect/token"),
-                //        Scopes = (IDictionary<string, string>)scopes,
-                //    }
-                //},
-                Reference = new OpenApiReference
+                var requirements = new Dictionary<string, OpenApiSecurityScheme>
                 {
-                    Id = JwtBearerDefaults.AuthenticationScheme,
-                    Type = ReferenceType.SecurityScheme,
-                },
-                In = ParameterLocation.Header,
-                BearerFormat = "JSON Web Token",
-                Description = "JWT Authorization: Bearer {token}",
-            };
-            document.Components ??= new();
-            document.Components.SecuritySchemes.Add(JwtBearerDefaults.AuthenticationScheme, securityScheme);
+                    ["Bearer"] = new OpenApiSecurityScheme
+                    {
+                        Type = SecuritySchemeType.Http,
+                        Scheme = JwtBearerDefaults.AuthenticationScheme,
+                        In = ParameterLocation.Header,
+                        BearerFormat = "JSON Web Token",
+                        Reference = new OpenApiReference
+                        {
+                            Id = JwtBearerDefaults.AuthenticationScheme,
+                            Type = ReferenceType.SecurityScheme,
+                        },
+                        Description = "JWT Authorization: Bearer {token}",
+                    }
+                };
 
-
-            return Task.CompletedTask;
+                document.Components ??= new OpenApiComponents();
+                document.Components.SecuritySchemes = requirements;
+            }
         }
     }
+
 }
+
+

@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<UserSecretsId>a4f190f0-defc-4dca-a62a-c80c4da94ce5</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+    <SpaRoot>..\webapp.client</SpaRoot>
+    <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
+    <SpaProxyServerUrl>https://localhost:50563</SpaProxyServerUrl>
+    <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Amazon.AspNetCore.Identity.Cognito" />
+	<PackageReference Include="Amazon.Extensions.CognitoAuthentication" />
+	<PackageReference Include="AWSSDK.CognitoIdentityProvider" />
+	<PackageReference Include="FluentValidation" />
+	<PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+	<PackageReference Include="Google.Apis.Auth.AspNetCore3" />
+	<PackageReference Include="Google.Protobuf" />
+	<PackageReference Include="Grpc.Net.Client" />
+	<PackageReference Include="Grpc.Net.ClientFactory" />
+	<PackageReference Include="Grpc.Tools">
+		<PrivateAssets>all</PrivateAssets>
+		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
+	<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" />
+	<PackageReference Include="Microsoft.Identity.Web" />
+	<PackageReference Include="Microsoft.Identity.Web.UI" />
+	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+	<PackageReference Include="Yarp.ReverseProxy" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\..\ServiceDefaults\ServiceDefaults.csproj" />
+	<ProjectReference Include="..\..\SharedKernel\SharedKernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<Protobuf Include="..\..\Basket.Api\Proto\basket.proto" GrpcServices="Client" />
+  </ItemGroup>
+
+</Project>

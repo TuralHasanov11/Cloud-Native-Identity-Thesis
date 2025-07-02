@@ -10,7 +10,7 @@ public class SetAwaitingValidationOrderStatusCommandHandler(
         CancellationToken cancellationToken)
     {
         var order = await orderRepository.SingleOrDefaultAsync(
-            new GetOrderByIdSpecification(new OrderId(request.OrderNumber)),
+            new OrderSpecification(new OrderId(request.OrderNumber)),
             cancellationToken);
 
         if (order == null)

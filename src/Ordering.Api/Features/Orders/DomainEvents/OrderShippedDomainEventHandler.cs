@@ -13,7 +13,7 @@ public sealed class OrderShippedDomainEventHandler(
         //OrderingApiTrace.LogOrderStatusUpdated(_logger, domainEvent.Order.Id, OrderStatus.Shipped);
 
         var order = await orderRepository.SingleOrDefaultAsync(
-            new GetOrderByIdSpecification(domainEvent.Order.Id),
+            new OrderSpecification(domainEvent.Order.Id),
             cancellationToken);
 
         if (order == null)
@@ -22,7 +22,7 @@ public sealed class OrderShippedDomainEventHandler(
         }
 
         var customer = await customerRepository.SingleOrDefaultAsync(
-            new GetCustomerByIdSpecification(order.CustomerId!), // TODO: Check if CustomerId is nullable
+            new CustomerSpecification(order.CustomerId!), // TODO: Check if CustomerId is nullable
             cancellationToken);
 
         if (customer == null)

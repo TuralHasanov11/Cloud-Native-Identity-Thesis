@@ -11,7 +11,7 @@ public static class Delete
         CancellationToken cancellationToken)
     {
         var subscription = await webhookSubscriptionRepository.SingleOrDefaultAsync(
-            new GetWebhookSubscriptionSpecification(new IdentityId(user.GetUserId()), new WebhookId(id)),
+            new WebhookSubscriptionSpecification(new IdentityId(user.GetUserId()), new WebhookId(id)),
             cancellationToken);
 
         if (subscription is null)

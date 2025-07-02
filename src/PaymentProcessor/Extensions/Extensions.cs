@@ -24,7 +24,6 @@ public static class Extensions
             .ValidateOnStart();
 
         builder.Services.AddSingleton<IValidateOptions<MessageBrokerSettings>, ValidateMessageBrokerSettings>();
-
         builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<MessageBrokerSettings>>().Value);
 
         builder.Services.AddMassTransit(options =>

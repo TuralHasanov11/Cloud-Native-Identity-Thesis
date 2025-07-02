@@ -1,5 +1,4 @@
-﻿using Microsoft.Identity.Web;
-using ServiceDefaults.Identity;
+﻿using ServiceDefaults.Identity;
 
 namespace Ordering.Api.Features;
 
@@ -23,8 +22,8 @@ public static class Endpoints
             .WithTags("Orders");
 
         api.MapPut("ship", Orders.Ship.Handle)
-            .RequireAuthorization("RoleOrderAdmins")
-            //.WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
+            //.RequireAuthorization("RoleOrderAdmins")
+            .WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
             .WithName("ShipOrder")
             .WithSummary("Ships an order")
             .WithDescription("Ships an order.")

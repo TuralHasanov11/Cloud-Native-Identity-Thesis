@@ -7,7 +7,7 @@ public interface IProductRepository
     Task<(IEnumerable<Product>, long)> ListAsync(
         Specification<Product> specification,
         ProductId pageCursor,
-        int pageSize = 10,
+        int pageSize = 50,
         CancellationToken cancellationToken = default);
 
     Task<IEnumerable<Product>> ListAsync(

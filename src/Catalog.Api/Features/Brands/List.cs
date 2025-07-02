@@ -7,7 +7,7 @@ public static class List
         CancellationToken cancellationToken)
     {
         var brands = await brandRepository.ListAsync(
-            new GetBrandsSpecification(),
+            new BrandSpecification(),
             p => p.ToBrandDto(),
             cancellationToken);
 

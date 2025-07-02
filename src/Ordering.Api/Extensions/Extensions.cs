@@ -58,7 +58,7 @@ public static class Extensions
             //cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
         });
 
-        builder.Services.AddValidatorsFromAssembly(Api.AssemblyReference.Assembly);
+        builder.Services.AddValidatorsFromAssembly(AssemblyReference.Assembly);
 
         builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();

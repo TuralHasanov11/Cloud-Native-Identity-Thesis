@@ -1,10 +1,12 @@
-﻿using Ordering.Core.CustomerAggregate.Specifications;
+﻿using Ordering.Core.CustomerAggregate;
+using Ordering.Core.CustomerAggregate.Specifications;
 
 namespace Ordering.IntegrationTests.Customers;
 
 public class CustomerRepositoryTests : BaseIntegrationTest
 {
     private readonly ICustomerRepository _customerRepository;
+    private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
     public CustomerRepositoryTests(OrderingFactory factory) : base(factory)
     {
@@ -18,11 +20,11 @@ public class CustomerRepositoryTests : BaseIntegrationTest
         var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
         // Act
-        await _customerRepository.CreateAsync(customer);
-        await _customerRepository.SaveChangesAsync();
+        await _customerRepository.CreateAsync(customer, _cancellationToken);
+        await _customerRepository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var createdCustomer = await DbContext.Customers.FindAsync(customer.Id);
+        var createdCustomer = await DbContext.Customers.FirstOrDefaultAsync(c => c.Id == customer.Id, _cancellationToken);
         Assert.NotNull(createdCustomer);
     }
 
@@ -32,15 +34,15 @@ public class CustomerRepositoryTests : BaseIntegrationTest
         // Arrange
         var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
-        await _customerRepository.CreateAsync(customer);
-        await _customerRepository.SaveChangesAsync();
+        DbContext.Customers.Add(customer);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
         // Act
         _customerRepository.Delete(customer);
-        await _customerRepository.SaveChangesAsync();
+        await _customerRepository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var deletedCustomer = await DbContext.Customers.FindAsync(customer.Id);
+        var deletedCustomer = await DbContext.Customers.FirstOrDefaultAsync(c => c.Id == customer.Id, _cancellationToken);
         Assert.Null(deletedCustomer);
     }
 
@@ -51,14 +53,13 @@ public class CustomerRepositoryTests : BaseIntegrationTest
         var customer1 = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
         var customer2 = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "Jane Doe");
 
-        await _customerRepository.CreateAsync(customer1);
-        await _customerRepository.CreateAsync(customer2);
-        await _customerRepository.SaveChangesAsync();
+        DbContext.Customers.AddRange(customer1, customer2);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
-        var specification = new GetCustomersSpecification();
+        var specification = new CustomerSpecification();
 
         // Act
-        var customers = await _customerRepository.ListAsync(specification);
+        var customers = await _customerRepository.ListAsync(specification, _cancellationToken);
 
         // Assert
         Assert.Contains(customers, c => c.Id == customer1.Id);
@@ -71,12 +72,12 @@ public class CustomerRepositoryTests : BaseIntegrationTest
         // Arrange
         var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
-        await _customerRepository.CreateAsync(customer);
-        await _customerRepository.SaveChangesAsync();
-        var specification = new GetCustomerByIdSpecification(customer.Id);
+        DbContext.Customers.Add(customer);
+        await DbContext.SaveChangesAsync(_cancellationToken);
+        var specification = new CustomerSpecification(customer.Id);
 
         // Act
-        var result = await _customerRepository.SingleOrDefaultAsync(specification);
+        var result = await _customerRepository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         // Assert
         Assert.NotNull(result);
@@ -87,30 +88,30 @@ public class CustomerRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenCustomerDoesNotExist()
     {
         // Arrange
-        var specification = new GetCustomerByIdSpecification(new CustomerId(Guid.CreateVersion7()));
+        var specification = new CustomerSpecification(new CustomerId(Guid.CreateVersion7()));
 
         // Act
-        var result = await _customerRepository.SingleOrDefaultAsync(specification);
+        var result = await _customerRepository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         // Assert
         Assert.Null(result);
     }
 
-    [Fact(Skip = "Not Ready")]
+    [Fact]
     public async Task Update_ShouldModifyCustomer()
     {
         // Arrange
         var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "Jane Doe");
-        await _customerRepository.CreateAsync(customer);
-        await _customerRepository.SaveChangesAsync();
+        DbContext.Customers.Add(customer);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
         // Act
         _customerRepository.Update(customer);
-        await _customerRepository.SaveChangesAsync();
+        await _customerRepository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var updatedCustomer = await DbContext.Customers.FindAsync(customer.Id);
+        var updatedCustomer = await DbContext.Customers.FirstOrDefaultAsync(c => c.Id == customer.Id, _cancellationToken);
         Assert.NotNull(updatedCustomer);
-        Assert.Equal("Jane Doe", updatedCustomer.Name);
+        Assert.Equal(customer.Name, updatedCustomer.Name);
     }
 }

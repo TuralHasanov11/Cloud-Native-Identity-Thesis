@@ -1,188 +1,171 @@
-﻿//namespace Ordering.IntegrationTests.Orders;
+﻿using Ordering.Core.OrderAggregate.Specifications;
 
-//public class OrderRepositoryTests : IClassFixture<OrderingFactory>
-//{
-//    private readonly OrderingFactory _factory;
+namespace Ordering.IntegrationTests.Orders;
 
-//    public OrderRepositoryTests(OrderingFactory factory)
-//    {
-//        _factory = factory;
-//    }
+public class OrderRepositoryTests : BaseIntegrationTest
+{
+    private readonly IOrderRepository _repository;
+    private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
-//    [Fact(Skip = "Waiting")]
-//    public async Task CreateAsync_ShouldAddOrder()
-//    {
-//        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-//        await dbContext.SeedDatabase();
+    public OrderRepositoryTests(OrderingFactory factory) : base(factory)
+    {
+        _repository = factory.Services.GetRequiredService<IOrderRepository>();
+    }
 
-//        var repository = new OrderRepository(dbContext);
-//        var order = new Order(
-//            new IdentityId(IdentityExtensions.GenerateId()),
-//            "fakeName",
-//            new Address("street", "city", "state", "country", "zipcode"),
-//            cardTypeId: 5,
-//            cardNumber: "12",
-//            cardSecurityNumber: "123",
-//            cardHolderName: "name",
-//            cardExpiration: DateTime.UtcNow);
+    [Fact]
+    public async Task CreateAsync_ShouldAddOrder()
+    {
+        var cardType = CardType.Create("Visa");
+        DbContext.CardTypes.Add(cardType);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
-//        await repository.CreateAsync(order);
-//        await repository.SaveChangesAsync();
+        var order = new Order(
+            new IdentityId(IdentityExtensions.GenerateId()),
+            "fakeName",
+            new Address("street", "city", "state", "country", "zipcode"),
+            cardType.Id);
 
-//        var createdOrder = await dbContext.Orders.FindAsync(order.Id);
-//        Assert.NotNull(createdOrder);
-//    }
+        await _repository.CreateAsync(order, _cancellationToken);
+        await _repository.SaveChangesAsync(_cancellationToken);
 
-//    [Fact(Skip = "Waiting")]
-//    public async Task Delete_ShouldRemoveOrder()
-//    {
-//        // Arrange
-//        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-//        await dbContext.SeedDatabase();
+        var createdOrder = await DbContext.Orders.FirstOrDefaultAsync(o => o.Id == order.Id, cancellationToken: _cancellationToken);
 
-//        var repository = new OrderRepository(dbContext);
-//        var order = new Order(
-//            new IdentityId(IdentityExtensions.GenerateId()),
-//            "fakeName",
-//            new Address("street", "city", "state", "country", "zipcode"),
-//            cardTypeId: 5,
-//            cardNumber: "12",
-//            cardSecurityNumber: "123",
-//            cardHolderName: "name",
-//            cardExpiration: DateTime.UtcNow);
+        Assert.NotNull(createdOrder);
+        Assert.Equal(order.Id, createdOrder.Id);
+    }
 
-//        await repository.CreateAsync(order);
-//        await repository.SaveChangesAsync();
+    [Fact]
+    public async Task Delete_ShouldRemoveOrder()
+    {
+        // Arrange
+        var cardType = CardType.Create("Visa");
+        DbContext.CardTypes.Add(cardType);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
-//        // Act
-//        repository.Delete(order);
-//        await repository.SaveChangesAsync();
+        var order = new Order(
+            new IdentityId(IdentityExtensions.GenerateId()),
+            "fakeName",
+            new Address("street", "city", "state", "country", "zipcode"),
+            cardType.Id);
 
-//        // Assert
-//        var deletedOrder = await dbContext.Orders.FindAsync(order.Id);
-//        Assert.Null(deletedOrder);
-//    }
+        await DbContext.Orders.AddAsync(order, _cancellationToken);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
-//    [Fact(Skip = "Waiting")]
-//    public async Task ListAsync_ShouldReturnOrders()
-//    {
-//        // Arrange
-//        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-//        await dbContext.SeedDatabase();
+        // Act
+        _repository.Delete(order);
+        await _repository.SaveChangesAsync(_cancellationToken);
 
-//        var repository = new OrderRepository(dbContext);
-//        var identityId = new IdentityId(IdentityExtensions.GenerateId());
+        // Assert
+        var deletedOrder = await DbContext.Orders.FirstOrDefaultAsync(o => o.Id == order.Id, cancellationToken: _cancellationToken);
+        Assert.Null(deletedOrder);
+    }
 
-//        var order1 = new Order(
-//            identityId,
-//            "fakeName",
-//            new Address("street", "city", "state", "country", "zipcode"),
-//            cardTypeId: 5,
-//            cardNumber: "12",
-//            cardSecurityNumber: "123",
-//            cardHolderName: "name",
-//            cardExpiration: DateTime.UtcNow);
+    [Fact]
+    public async Task ListAsync_ShouldReturnOrders()
+    {
+        // Arrange
+        var cardType = CardType.Create("Visa");
+        DbContext.CardTypes.Add(cardType);
 
-//        var order2 = new Order(
-//            identityId,
-//            "fakeName",
-//            new Address("street", "city", "state", "country", "zipcode"),
-//            cardTypeId: 5,
-//            cardNumber: "12",
-//            cardSecurityNumber: "123",
-//            cardHolderName: "name",
-//            cardExpiration: DateTime.UtcNow);
+        var identityId = new IdentityId(IdentityExtensions.GenerateId());
+        var customer = Customer.Create(identityId, "fakeName");
 
-//        await repository.CreateAsync(order1);
-//        await repository.CreateAsync(order2);
-//        await repository.SaveChangesAsync();
+        DbContext.Customers.Add(customer);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
-//        var specification = new GetOrdersByCustomerIdSpecification(identityId);
+        var order1 = new Order(
+            identityId,
+            "fakeName",
+            new Address("street", "city", "state", "country", "zipcode"),
+            cardTypeId: cardType.Id,
+            customer.Id);
 
-//        // Act
-//        var orders = await repository.ListAsync(specification);
+        var order2 = new Order(
+            identityId,
+            "fakeName",
+            new Address("street", "city", "state", "country", "zipcode"),
+            cardTypeId: cardType.Id,
+            customer.Id);
 
-//        // Assert
-//        Assert.Contains(orders, o => o.Id == order1.Id);
-//        Assert.Contains(orders, o => o.Id == order2.Id);
-//    }
+        DbContext.Orders.AddRange([order1, order2]);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
-//    [Fact(Skip = "Waiting")]
-//    public async Task SingleOrDefaultAsync_ShouldReturnOrder()
-//    {
-//        // Arrange
-//        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-//        await dbContext.SeedDatabase();
+        var specification = new OrderSpecification(identityId);
 
-//        var repository = new OrderRepository(dbContext);
-//        var order = new Order(
-//            new IdentityId(IdentityExtensions.GenerateId()),
-//            "fakeName",
-//            new Address("street", "city", "state", "country", "zipcode"),
-//            cardTypeId: 5,
-//            cardNumber: "12",
-//            cardSecurityNumber: "123",
-//            cardHolderName: "name",
-//            cardExpiration: DateTime.UtcNow);
+        // Act
+        var orders = await _repository.ListAsync(specification, _cancellationToken);
 
-//        await repository.CreateAsync(order);
-//        await repository.SaveChangesAsync();
-//        var specification = new GetOrderByIdSpecification(order.Id);
+        // Assert
+        Assert.Contains(orders, o => o.Id == order1.Id);
+        Assert.Contains(orders, o => o.Id == order2.Id);
+    }
 
-//        // Act
-//        var result = await repository.SingleOrDefaultAsync(specification);
+    [Fact]
+    public async Task SingleOrDefaultAsync_ShouldReturnOrder()
+    {
+        // Arrange
+        var cardType = CardType.Create("Visa");
+        DbContext.CardTypes.Add(cardType);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
-//        // Assert
-//        Assert.NotNull(result);
-//        Assert.Equal(order.Id, result.Id);
-//    }
+        var order = new Order(
+            new IdentityId(IdentityExtensions.GenerateId()),
+            "fakeName",
+            new Address("street", "city", "state", "country", "zipcode"),
+            cardType.Id);
 
-//    [Fact(Skip = "Waiting")]
-//    public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenOrderDoesNotExist()
-//    {
-//        // Arrange
-//        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-//        await dbContext.SeedDatabase();
+        await _repository.CreateAsync(order, _cancellationToken);
+        await _repository.SaveChangesAsync(_cancellationToken);
+        var specification = new OrderSpecification(order.Id);
 
-//        var repository = new OrderRepository(dbContext);
-//        var specification = new GetOrderByIdSpecification(new OrderId(Guid.CreateVersion7()));
+        // Act
+        var result = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
 
-//        // Act
-//        var result = await repository.SingleOrDefaultAsync(specification);
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(order.Id, result.Id);
+    }
 
-//        // Assert
-//        Assert.Null(result);
-//    }
+    [Fact]
+    public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenOrderDoesNotExist()
+    {
+        // Arrange
+        var specification = new OrderSpecification(new OrderId(Guid.CreateVersion7()));
 
-//    [Fact(Skip = "Waiting")]
-//    public async Task Update_ShouldModifyOrder()
-//    {
-//        // Arrange
-//        var dbContext = _factory.Services.GetRequiredService<OrderingDbContext>();
-//        await dbContext.SeedDatabase();
+        // Act
+        var result = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
 
-//        var repository = new OrderRepository(dbContext);
-//        var order = new Order(
-//            new IdentityId(IdentityExtensions.GenerateId()),
-//            "fakeName",
-//            new Address("street", "city", "state", "country", "zipcode"),
-//            cardTypeId: 5,
-//            cardNumber: "12",
-//            cardSecurityNumber: "123",
-//            cardHolderName: "name",
-//            cardExpiration: DateTime.UtcNow);
+        // Assert
+        Assert.Null(result);
+    }
 
-//        await repository.CreateAsync(order);
-//        await repository.SaveChangesAsync();
+    [Fact]
+    public async Task Update_ShouldModifyOrder()
+    {
+        var cardType = CardType.Create("Visa");
+        DbContext.CardTypes.Add(cardType);
+        await DbContext.SaveChangesAsync(_cancellationToken);
 
-//        // Act
-//        order.SetAwaitingValidationStatus();
-//        repository.Update(order);
-//        await repository.SaveChangesAsync();
+        // Arrange
+        var order = new Order(
+            new IdentityId(IdentityExtensions.GenerateId()),
+            "fakeName",
+            new Address("street", "city", "state", "country", "zipcode"),
+            cardType.Id);
 
-//        // Assert
-//        var updatedOrder = await dbContext.Orders.FindAsync(order.Id);
-//        Assert.NotNull(updatedOrder);
-//        Assert.Equal(OrderStatus.Submitted, updatedOrder.OrderStatus);
-//    }
-//}
+        await _repository.CreateAsync(order, _cancellationToken);
+        await _repository.SaveChangesAsync(_cancellationToken);
+
+        // Act
+        order.SetAwaitingValidationStatus();
+        _repository.Update(order);
+        await _repository.SaveChangesAsync(_cancellationToken);
+
+        // Assert
+        var updatedOrder = await _repository.SingleOrDefaultAsync(
+            new OrderSpecification(order.Id),
+            _cancellationToken);
+        Assert.NotNull(updatedOrder);
+        Assert.Equal(OrderStatus.AwaitingValidation, updatedOrder.OrderStatus);
+    }
+}

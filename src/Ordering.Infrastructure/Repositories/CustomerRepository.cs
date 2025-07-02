@@ -12,6 +12,7 @@ public class CustomerRepository(OrderingDbContext dbContext) : ICustomerReposito
     {
         return await _dbContext.Customers
             .GetQuery(specification)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
 
@@ -23,6 +24,7 @@ public class CustomerRepository(OrderingDbContext dbContext) : ICustomerReposito
     {
         return await _dbContext.Customers
             .GetQuery(specification)
+            .AsNoTracking()
             .Select(mapper)
             .ToListAsync(cancellationToken);
     }

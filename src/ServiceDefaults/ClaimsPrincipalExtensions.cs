@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using IdentityModel;
 
 namespace ServiceDefaults;
 
@@ -32,8 +33,13 @@ public static class ClaimsPrincipalExtensions
         };
     }
 
-    //public static IEnumerable<string> Roles(this ClaimsPrincipal principal)
-    //{
-    //    return [.. principal.FindAll(JwtClaimTypes.Role).Select(x => x.Value)];
-    //}
+    public static IEnumerable<string> EntraIdAppRoles(this ClaimsPrincipal principal)
+    {
+        return [.. principal.FindAll("roles").Select(x => x.Value)];
+    }
+
+    public static IEnumerable<string> CognitoGroups(this ClaimsPrincipal principal)
+    {
+        return [.. principal.FindAll("cognito:groups").Select(x => x.Value)];
+    }
 }

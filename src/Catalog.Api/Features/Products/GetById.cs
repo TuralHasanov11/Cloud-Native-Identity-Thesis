@@ -5,14 +5,20 @@ public static class GetById
     public static async Task<Results<Ok<ProductDto>, NotFound>> Handle(
         IProductRepository productRepository,
         Guid id,
+        HttpContext httpContext,
         CancellationToken cancellationToken)
     {
         var product = await productRepository.SingleOrDefaultAsync(
-            new GetProductSpecification(new ProductId(id)).WithBrand(),
+            new ProductSpecification(new ProductId(id)).WithBrand(),
             cancellationToken);
 
-        return product == null
-            ? (Results<Ok<ProductDto>, NotFound>)TypedResults.NotFound()
-            : (Results<Ok<ProductDto>, NotFound>)TypedResults.Ok(product.ToProductDto());
+        if (product == null)
+        {
+            return TypedResults.NotFound();
+        }
+
+        httpContext.WithETag(() => product.RowVersionValue);
+
+        return TypedResults.Ok(product.ToProductDto());
     }
 }
