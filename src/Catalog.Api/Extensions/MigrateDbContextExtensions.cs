@@ -68,7 +68,10 @@ internal static class MigrateDbContextExtensions
 
         try
         {
-            await context.Database.MigrateAsync();
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                await context.Database.MigrateAsync();
+            }
             await seeder(context, services);
         }
         catch (Exception ex)
