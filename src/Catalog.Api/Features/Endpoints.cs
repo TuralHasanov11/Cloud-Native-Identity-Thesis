@@ -79,24 +79,24 @@ public static class Endpoints
             .WithTags("Brands");
 
         api.MapPost("products", Products.Create.Handle)
-            //.WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
-            .RequireAuthorization("RoleCatalogAdmins")
+            .WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
+            //.RequireAuthorization("RoleCatalogAdmins")
             .WithName("CreateProduct")
             .WithSummary("Create a catalog product")
             .WithDescription("Create a new product in the catalog")
             .WithTags("Products");
 
         api.MapPut("products/{id:guid}", Products.Update.Handle)
-            //.WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
-            .RequireAuthorization("RoleCatalogAdmins")
+            .WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
+            //.RequireAuthorization("RoleCatalogAdmins")
             .WithName("UpdateProduct")
             .WithSummary("Create or replace a catalog product")
             .WithDescription("Create or replace a catalog product")
             .WithTags("Products");
 
         api.MapDelete("products/{id:guid}", Products.DeleteById.Handle)
-            //.WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
-            .RequireAuthorization("RoleCatalogAdmins")
+            .WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
+            //.RequireAuthorization("RoleCatalogAdmins")
             .WithName("DeleteProductById")
             .WithSummary("Delete catalog product")
             .WithDescription("Delete the specified catalog product")

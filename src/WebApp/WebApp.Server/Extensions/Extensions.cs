@@ -204,11 +204,13 @@ public static class Extensions
 
     private static void AddMicrosoftEntraExternalId(IHostApplicationBuilder builder)
     {
+
         builder.Services.Configure<CookiePolicyOptions>(options =>
         {
             // This lambda determines whether user consent for non-essential cookies is needed for a given request.
             options.CheckConsentNeeded = context => true;
             options.MinimumSameSitePolicy = SameSiteMode.None;
+            options.HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always;
             // Handling SameSite cookie according to https://learn.microsoft.com/aspnet/core/security/samesite?view=aspnetcore-3.1
             options.HandleSameSiteCookieCompatibility();
         });
