@@ -270,7 +270,13 @@ services:
     networks:
       - thesis-net
 
-
+  # zaproxy:
+  #   image: ghcr.io/zaproxy/zaproxy:stable
+  #   container_name: zaproxy
+  #   ports:
+  #     - "8085:8080"
+  #   networks:
+  #     - thesis-net
 
 networks:
   thesis-net:

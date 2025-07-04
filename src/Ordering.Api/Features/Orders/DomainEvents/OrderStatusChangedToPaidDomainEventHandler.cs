@@ -4,12 +4,13 @@
 public sealed class OrderStatusChangedToPaidDomainEventHandler(
     IOrderRepository orderRepository,
     ICustomerRepository customerRepository,
+    ILogger<OrderStatusChangedToPaidDomainEventHandler> logger,
     IOrderingIntegrationEventService orderingIntegrationEventService)
     : IDomainEventHandler<OrderStatusChangedToPaidDomainEvent>
 {
     public async Task Handle(OrderStatusChangedToPaidDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        //OrderingApiTrace.LogOrderStatusUpdated(_logger, domainEvent.OrderId, OrderStatus.Paid);
+        logger.LogOrderStatusUpdated(domainEvent.OrderId, OrderStatus.Paid);
 
         var order = await orderRepository.SingleOrDefaultAsync(
             new OrderSpecification(new OrderId(domainEvent.OrderId)),
@@ -41,4 +42,13 @@ public sealed class OrderStatusChangedToPaidDomainEventHandler(
 
         await orderingIntegrationEventService.AddAndSaveEventAsync(integrationEvent);
     }
+}
+
+public static partial class OrderStatusChangedToPaidDomainEventHandlerLogger
+{
+    [LoggerMessage(
+        EventId = 1001,
+        Level = LogLevel.Information,
+        Message = "Order status updated to {OrderStatus} for order {OrderId}")]
+    public static partial void LogOrderStatusUpdated(this ILogger<OrderStatusChangedToPaidDomainEventHandler> logger, Guid orderId, OrderStatus orderStatus);
 }

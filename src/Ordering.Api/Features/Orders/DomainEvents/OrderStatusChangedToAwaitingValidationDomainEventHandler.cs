@@ -12,7 +12,7 @@ public sealed class OrderStatusChangedToAwaitingValidationDomainEventHandler(
         OrderStatusChangedToAwaitingValidationDomainEvent domainEvent,
         CancellationToken cancellationToken)
     {
-        //OrderingApiTrace.LogOrderStatusUpdated(_logger, domainEvent.OrderId, OrderStatus.AwaitingValidation);
+        logger.LogOrderStatusUpdated(domainEvent.OrderId, OrderStatus.AwaitingValidation);
 
         var order = await orderRepository.SingleOrDefaultAsync(
             new OrderSpecification(new OrderId(domainEvent.OrderId)),
@@ -44,4 +44,14 @@ public sealed class OrderStatusChangedToAwaitingValidationDomainEventHandler(
 
         await orderingIntegrationEventService.AddAndSaveEventAsync(integrationEvent);
     }
+}
+
+
+public static partial class OrderStatusChangedToAwaitingValidationDomainEventHandlerLogger
+{
+    [LoggerMessage(
+        EventId = 1001,
+        Level = LogLevel.Information,
+        Message = "Order status updated to {OrderStatus} for order {OrderId}")]
+    public static partial void LogOrderStatusUpdated(this ILogger<OrderStatusChangedToAwaitingValidationDomainEventHandler> logger, Guid orderId, OrderStatus orderStatus);
 }

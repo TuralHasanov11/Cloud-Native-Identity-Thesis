@@ -35,8 +35,6 @@ public static class Extensions
                     HistoryRepository.DefaultTableName))
                 .AddInterceptors(builder.GetAuditInterceptor(sp));
 
-            //builder.UseVector();
-
             if (builder.Environment.IsDevelopment())
             {
                 options.EnableSensitiveDataLogging()
@@ -63,21 +61,6 @@ public static class Extensions
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        //if (builder.Configuration["OllamaEnabled"] is string ollamaEnabled && bool.Parse(ollamaEnabled))
-        //{
-        //    builder.AddOllamaApiClient("embedding")
-        //        .AddEmbeddingGenerator();
-        //}
-        //else if (!string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("openai")))
-        //{
-        //    builder.AddOpenAIClientFromConfiguration("openai");
-        //    builder.Services.AddEmbeddingGenerator(sp => sp.GetRequiredService<OpenAIClient>().AsEmbeddingGenerator(builder.Configuration["AI:OpenAI:EmbeddingModel"]!))
-        //        .UseOpenTelemetry()
-        //        .UseLogging();
-        //}
-
-        //builder.Services.AddScoped<ICatalogAI, CatalogAI>();
-
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddScoped<IBrandRepository, BrandRepository>();
         builder.Services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
@@ -103,7 +86,7 @@ public static class Extensions
                     .GetRequiredSection("ClientOrigins")
                     .Get<Dictionary<string, string>>();
 
-                ArgumentNullException.ThrowIfNull(origins, nameof(origins));
+                ArgumentNullException.ThrowIfNull(origins);
 
                 policy.WithOrigins([.. origins.Values])
                     .AllowCredentials()

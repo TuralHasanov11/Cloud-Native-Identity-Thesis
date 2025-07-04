@@ -4,13 +4,13 @@
 public sealed class OrderStatusChangedToStockConfirmedDomainEventHandler(
     IOrderRepository orderRepository,
     ICustomerRepository customerRepository,
-    //ILogger<OrderStatusChangedToStockConfirmedDomainEventHandler> logger,
+    ILogger<OrderStatusChangedToStockConfirmedDomainEventHandler> logger,
     IOrderingIntegrationEventService orderingIntegrationEventService)
     : IDomainEventHandler<OrderStatusChangedToStockConfirmedDomainEvent>
 {
     public async Task Handle(OrderStatusChangedToStockConfirmedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        //OrderingApiTrace.LogOrderStatusUpdated(_logger, domainEvent.OrderId, OrderStatus.StockConfirmed);
+        logger.LogOrderStatusUpdated(domainEvent.OrderId, OrderStatus.StockConfirmed);
 
         var order = await orderRepository.SingleOrDefaultAsync(
             new OrderSpecification(new OrderId(domainEvent.OrderId)),
@@ -38,4 +38,13 @@ public sealed class OrderStatusChangedToStockConfirmedDomainEventHandler(
 
         await orderingIntegrationEventService.AddAndSaveEventAsync(integrationEvent);
     }
+}
+
+public static partial class OrderStatusChangedToStockConfirmedDomainEventHandlerLogger
+{
+    [LoggerMessage(
+        EventId = 1001,
+        Level = LogLevel.Information,
+        Message = "Order status updated to {OrderStatus} for order {OrderId}")]
+    public static partial void LogOrderStatusUpdated(this ILogger<OrderStatusChangedToStockConfirmedDomainEventHandler> logger, Guid orderId, OrderStatus orderStatus);
 }

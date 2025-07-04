@@ -23,8 +23,8 @@ const removeItem = () => {
   <SwipeCard @remove="removeItem">
     <div class="flex items-center gap-3 group">
       <RouterLink :to="productSlug">
-        <img width="64" height="64" class="w-16 h-16 rounded-md skeleton" :src="imgScr"
-          :alt="item.productName + ' image'" :title="item.productName" loading="lazy" />
+        <img width="64" height="64" class="w-16 h-16 rounded-md skeleton" :src="imgScr" :alt="item.productName"
+          :title="item.productName" loading="lazy" />
       </RouterLink>
       <div class="flex-1">
         <div class="flex gap-x-2 gap-y-1 flex-wrap items-center">

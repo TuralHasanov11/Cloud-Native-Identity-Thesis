@@ -7,7 +7,6 @@ namespace Catalog.Api.Extensions;
 public class CatalogDbContextSeed(
     IWebHostEnvironment env,
     IOptions<CatalogOptions> settings,
-    //ICatalogAI catalogAI,
     ILogger<CatalogDbContextSeed> logger) : IDbSeeder<CatalogDbContext>
 {
     public async Task SeedAsync(CatalogDbContext context)
@@ -62,16 +61,6 @@ public class CatalogDbContextSeed(
                         1000 // MaxStockThreshold
                     );
                 }).ToList();
-
-            //if (catalogAI.IsEnabled)
-            //{
-            //    logger.LogInformation("Generating {NumItems} embeddings", products.Length);
-            //    IReadOnlyList<Vector> embeddings = await catalogAI.GetEmbeddingsAsync(products);
-            //    for (int i = 0; i < products.Length; i++)
-            //    {
-            //        products[i].Embedding = embeddings[i];
-            //    }
-            //}
 
             await context.Products.AddRangeAsync(productEntities);
             logger.LogInformation("Seeded catalog with {NumItems} items", await context.Products.CountAsync());

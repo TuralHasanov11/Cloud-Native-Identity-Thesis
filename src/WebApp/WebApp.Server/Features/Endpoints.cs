@@ -40,7 +40,7 @@ public static class Endpoints
             var dictionary = claims?.ToDictionary(
                 x => x.Type,
                 x => x.Value,
-                StringComparer.OrdinalIgnoreCase)!;
+                StringComparer.OrdinalIgnoreCase);
 
             var scopes = configuration[$"{IdentityProviderSettings.AzureAd}:Scopes"]
                 ?.Split(" ", StringSplitOptions.RemoveEmptyEntries) ?? [];
@@ -48,7 +48,7 @@ public static class Endpoints
             if (tokenAcquisition is not null)
             {
                 var accessToken = await tokenAcquisition.GetAccessTokenForUserAsync(scopes);
-                dictionary["access_token"] = accessToken;
+                dictionary?.TryAdd("access_token", accessToken);
             }
 
             return Results.Ok(dictionary);
@@ -68,7 +68,7 @@ public static class Endpoints
 
             string? accessToken = await httpContextAccessor.HttpContext?.GetTokenAsync("access_token");
 
-            dictionary["access_token"] = accessToken;
+            dictionary?.TryAdd("access_token", accessToken ?? string.Empty);
 
             return Results.Ok(dictionary);
         });
@@ -88,7 +88,7 @@ public static class Endpoints
 
             string? accessToken = await httpContextAccessor.HttpContext?.GetTokenAsync("access_token");
 
-            dictionary["access_token"] = accessToken;
+            dictionary?.TryAdd("access_token", accessToken ?? string.Empty);
 
             return Results.Ok(dictionary);
         });
@@ -142,6 +142,3 @@ public static class Endpoints
         return new AuthenticationProperties { RedirectUri = returnUrl };
     }
 }
-
-
-public class ClaimDto(string Type, string Value);

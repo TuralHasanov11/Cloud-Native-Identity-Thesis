@@ -1,5 +1,4 @@
 ﻿using ServiceDefaults.Identity;
-using SharedKernel;
 
 namespace Catalog.Api.Features;
 
@@ -9,60 +8,35 @@ public static class Endpoints
     {
         var api = app.MapGroup("api");
 
+        const string productsTag = "Products";
+
         api.MapGet("products", Products.List.Handle)
             .AllowAnonymous()
             .WithName("ListProducts")
             .WithSummary("List catalog products")
             .WithDescription("Get a list of products in the catalog.")
-            .WithTags("Products");
+            .WithTags(productsTag);
 
         api.MapGet("products/by", Products.ListByIds.Handle)
             .AllowAnonymous()
             .WithName("ListProductsByIds")
             .WithSummary("Batch get catalog products")
             .WithDescription("Get multiple products from the catalog")
-            .WithTags("Products");
+            .WithTags(productsTag);
 
         api.MapGet("products/{id:guid}", Products.GetById.Handle)
             .AllowAnonymous()
             .WithName("GetProductById")
             .WithSummary("Get catalog product")
             .WithDescription("Get an product from the catalog")
-            .WithTags("Products");
+            .WithTags(productsTag);
 
         api.MapGet("products/by/{name:minlength(1)}", Products.ListByName.Handle)
             .AllowAnonymous()
             .WithName("ListProductsByName")
             .WithSummary("Get catalog products by name")
             .WithDescription("Get a list of catalog products with the specified name.")
-            .WithTags("Products");
-
-        //// Routes for resolving catalog products using AI.
-        ////v1.MapGet("/products/withsemanticrelevance/{text:minlength(1)}", GetItemsBySemanticRelevanceV1)
-        ////    .WithName("GetRelevantItems")
-        ////    .WithSummary("Search catalog for relevant products")
-        ////    .WithDescription("Search the catalog for products related to the specified text")
-        ////    .WithTags("Search");
-
-        //// Routes for resolving catalog products using AI.
-        ////v2.MapGet("/products/withsemanticrelevance", GetItemsBySemanticRelevance)
-        ////    .WithName("GetRelevantItems-V2")
-        ////    .WithSummary("Search catalog for relevant products")
-        ////    .WithDescription("Search the catalog for products related to the specified text")
-        ////    .WithTags("Search");
-
-        //// Routes for resolving catalog products by type and brand.
-        ////v1.MapGet("/products/type/{typeId}/brand/{brandId?}", GetItemsByBrandAndTypeId)
-        ////    .WithName("GetItemsByTypeAndBrand")
-        ////    .WithSummary("Get catalog products by type and brand")
-        ////    .WithDescription("Get catalog products of the specified type and brand")
-        ////    .WithTags("Types");
-
-        ////v1.MapGet("/products/type/all/brand/{brandId:int?}", GetItemsByBrandId)
-        ////    .WithName("GetItemsByBrand")
-        ////    .WithSummary("List catalog products by brand")
-        ////    .WithDescription("Get a list of catalog products for the specified brand")
-        ////    .WithTags("Brands");
+            .WithTags(productsTag);
 
         api.MapGet("product-types", ProductTypes.List.Handle)
             .AllowAnonymous()
@@ -79,28 +53,28 @@ public static class Endpoints
             .WithTags("Brands");
 
         api.MapPost("products", Products.Create.Handle)
-            .WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
+            .WithMetadata(new GroupRequirementAttribute(AwsCognitoGroups.Admins))
             //.RequireAuthorization("RoleCatalogAdmins")
             .WithName("CreateProduct")
             .WithSummary("Create a catalog product")
             .WithDescription("Create a new product in the catalog")
-            .WithTags("Products");
+            .WithTags(productsTag);
 
         api.MapPut("products/{id:guid}", Products.Update.Handle)
-            .WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
+            .WithMetadata(new GroupRequirementAttribute(AwsCognitoGroups.Admins))
             //.RequireAuthorization("RoleCatalogAdmins")
             .WithName("UpdateProduct")
             .WithSummary("Create or replace a catalog product")
             .WithDescription("Create or replace a catalog product")
-            .WithTags("Products");
+            .WithTags(productsTag);
 
         api.MapDelete("products/{id:guid}", Products.DeleteById.Handle)
-            .WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
+            .WithMetadata(new GroupRequirementAttribute(AwsCognitoGroups.Admins))
             //.RequireAuthorization("RoleCatalogAdmins")
             .WithName("DeleteProductById")
             .WithSummary("Delete catalog product")
             .WithDescription("Delete the specified catalog product")
-            .WithTags("Products");
+            .WithTags(productsTag);
 
         return app;
     }
