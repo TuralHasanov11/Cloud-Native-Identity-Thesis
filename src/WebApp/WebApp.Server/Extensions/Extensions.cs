@@ -61,7 +61,6 @@ public static class Extensions
         // HTTP and GRPC client registrations
         builder.Services.AddGrpcClient<Basket.Api.Grpc.Basket.BasketClient>(
             o => o.Address = new("https://basket.api:5101"))
-            // TODO: Remove on production
             .ConfigureChannel(options =>
             {
                 options.HttpHandler = new SocketsHttpHandler

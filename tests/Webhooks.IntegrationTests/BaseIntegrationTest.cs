@@ -1,27 +1,20 @@
-﻿namespace Webhooks.IntegrationTests;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 
-[Collection(nameof(IntegrationTestCollection))]
-public class BaseIntegrationTest : IAsyncLifetime
+namespace Webhooks.IntegrationTests;
+
+public class BaseIntegrationTest
 {
-    protected const string ApiBaseUrl = "https://localhost:5109";
-
-    private readonly Func<Task> _resetDatabase;
-
     protected WebhooksDbContext DbContext { get; }
 
-    private readonly IServiceScope _scope;
+    public HttpClient HttpClient { get; private set; } = default!;
 
     protected BaseIntegrationTest(WebhooksFactory factory)
     {
-        _scope = factory.Services.CreateScope();
-        _resetDatabase = factory.ResetDatabaseAsync;
-        DbContext = _scope.ServiceProvider.GetRequiredService<WebhooksDbContext>();
+        DbContext = factory.Services.GetRequiredService<WebhooksDbContext>();
+        HttpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false,
+        });
     }
-
-    public Task InitializeAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    public async Task DisposeAsync() => await _resetDatabase();
 }
+

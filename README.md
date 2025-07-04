@@ -1,1 +1,13 @@
 # CloudNativeIdentityThesis
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=coverage)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=bugs)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
