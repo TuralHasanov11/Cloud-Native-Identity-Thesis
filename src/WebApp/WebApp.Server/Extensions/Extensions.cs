@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using FluentValidation;
 using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -14,7 +13,6 @@ using Polly;
 using ServiceDefaults.Identity;
 using WebApp.Server.Features.Basket;
 using WebApp.Server.Features.Catalog;
-using WebApp.Server.Features.Identity;
 
 namespace WebApp.Server.Extensions;
 
@@ -32,7 +30,7 @@ public static class Extensions
             .AddTransforms<CorrelationIdTransformProvider>()
             .ConfigureHttpClient((context, handler) =>
             {
-                if (builder.Configuration.GetValue<bool>("ReverseProxy:HttpClient:DangerousAcceptAnyServerCertificate"))
+                if (builder.Environment.IsDevelopment())
                 {
                     handler.SslOptions.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
                 }
@@ -228,11 +226,11 @@ public static class Extensions
             .EnableTokenAcquisitionToCallDownstreamApi(defaultScopes)
             .AddInMemoryTokenCaches();
 
-        //builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
-        //{
-        //    // The claim in the Jwt token where App roles are available.
-        //    options.TokenValidationParameters.RoleClaimType = "roles";
-        //});
+        builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
+        {
+            // The claim in the Jwt token where App roles are available.
+            options.TokenValidationParameters.RoleClaimType = "roles";
+        });
 
         builder.Services.AddControllersWithViews()
             .AddMicrosoftIdentityUI();
