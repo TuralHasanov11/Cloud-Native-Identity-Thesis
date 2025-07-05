@@ -23,6 +23,146 @@
                     ]
                 }
             ]
+        },
+        {
+            "Name": "Ordering.Api.Features.Orders.DomainEvents.OrderCanceledDomainEventHandlerLogger",
+            "Logging Methods": [
+                {
+                    "Name": "LogOrderStatusUpdated",
+                    "Parameters": [
+                        {
+                            "Name": "logger",
+                            "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.OrderCanceledDomainEventHandler>",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderCanceledDomainEventHandler.cs",
+                            "Line": "46"
+                        },
+                        {
+                            "Name": "orderId",
+                            "Type": "System.Guid",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderCanceledDomainEventHandler.cs",
+                            "Line": "46"
+                        },
+                        {
+                            "Name": "orderStatus",
+                            "Type": "Ordering.Core.OrderAggregate.OrderStatus",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderCanceledDomainEventHandler.cs",
+                            "Line": "46"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Ordering.Api.Features.Orders.DomainEvents.OrderShippedDomainEventHandlerLogger",
+            "Logging Methods": [
+                {
+                    "Name": "LogOrderStatusUpdated",
+                    "Parameters": [
+                        {
+                            "Name": "logger",
+                            "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.OrderShippedDomainEventHandler>",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderShippedDomainEventHandler.cs",
+                            "Line": "49"
+                        },
+                        {
+                            "Name": "orderId",
+                            "Type": "System.Guid",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderShippedDomainEventHandler.cs",
+                            "Line": "49"
+                        },
+                        {
+                            "Name": "orderStatus",
+                            "Type": "Ordering.Core.OrderAggregate.OrderStatus",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderShippedDomainEventHandler.cs",
+                            "Line": "49"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Ordering.Api.Features.Orders.DomainEvents.OrderStatusChangedToAwaitingValidationDomainEventHandlerLogger",
+            "Logging Methods": [
+                {
+                    "Name": "LogOrderStatusUpdated",
+                    "Parameters": [
+                        {
+                            "Name": "logger",
+                            "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.OrderStatusChangedToAwaitingValidationDomainEventHandler>",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToAwaitingValidationDomainEventHandler.cs",
+                            "Line": "56"
+                        },
+                        {
+                            "Name": "orderId",
+                            "Type": "System.Guid",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToAwaitingValidationDomainEventHandler.cs",
+                            "Line": "56"
+                        },
+                        {
+                            "Name": "orderStatus",
+                            "Type": "Ordering.Core.OrderAggregate.OrderStatus",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToAwaitingValidationDomainEventHandler.cs",
+                            "Line": "56"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Ordering.Api.Features.Orders.DomainEvents.OrderStatusChangedToPaidDomainEventHandlerLogger",
+            "Logging Methods": [
+                {
+                    "Name": "LogOrderStatusUpdated",
+                    "Parameters": [
+                        {
+                            "Name": "logger",
+                            "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.OrderStatusChangedToPaidDomainEventHandler>",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToPaidDomainEventHandler.cs",
+                            "Line": "53"
+                        },
+                        {
+                            "Name": "orderId",
+                            "Type": "System.Guid",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToPaidDomainEventHandler.cs",
+                            "Line": "53"
+                        },
+                        {
+                            "Name": "orderStatus",
+                            "Type": "Ordering.Core.OrderAggregate.OrderStatus",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToPaidDomainEventHandler.cs",
+                            "Line": "53"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Ordering.Api.Features.Orders.DomainEvents.OrderStatusChangedToStockConfirmedDomainEventHandlerLogger",
+            "Logging Methods": [
+                {
+                    "Name": "LogOrderStatusUpdated",
+                    "Parameters": [
+                        {
+                            "Name": "logger",
+                            "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.OrderStatusChangedToStockConfirmedDomainEventHandler>",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToStockConfirmedDomainEventHandler.cs",
+                            "Line": "49"
+                        },
+                        {
+                            "Name": "orderId",
+                            "Type": "System.Guid",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToStockConfirmedDomainEventHandler.cs",
+                            "Line": "49"
+                        },
+                        {
+                            "Name": "orderStatus",
+                            "Type": "Ordering.Core.OrderAggregate.OrderStatus",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToStockConfirmedDomainEventHandler.cs",
+                            "Line": "49"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

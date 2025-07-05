@@ -36,7 +36,7 @@ public static class Extensions
                     .GetRequiredSection("ClientOrigins")
                     .Get<Dictionary<string, string>>();
 
-                ArgumentNullException.ThrowIfNull(origins, nameof(origins));
+                ArgumentNullException.ThrowIfNull(origins);
 
                 policy.WithOrigins([.. origins.Values])
                     .AllowCredentials()

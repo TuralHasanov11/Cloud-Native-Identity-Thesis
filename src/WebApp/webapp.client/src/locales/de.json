@@ -103,6 +103,7 @@
       "order": "Bestellung | Bestellungen",
       "orderSummary": "Bestellübersicht",
       "orderReceived": "Vielen Dank für Ihre Bestellung. Wir senden Ihnen eine E-Mail mit den Bestelldetails zu.",
+      "orderNotReceived": "Bestellung nicht erhalten",
       "orderNote": "Bestellnotiz | Bestellnotizen",
       "orderNotePlaceholder": "Nachricht zu Ihrer Bestellung, zum Beispiel zur Lieferung.",
       "orderThanks": "Vielen Dank für Ihre Bestellung. Wir senden Ihnen eine E-Mail mit den Bestelldetails zu.",
@@ -161,6 +162,10 @@
       "invalidPasswordResetLink": "Der Passwort-Reset-Link ist ungültig.",
       "general": "Etwas ist schief gelaufen",
       "noOrder": "Wir konnten Ihre Bestellung nicht finden. Bitte versuchen Sie es später noch einmal."
+    },
+    "identity": {
+      "signIn": "Anmelden",
+      "signUp": "Registrieren"
     }
   }
 }

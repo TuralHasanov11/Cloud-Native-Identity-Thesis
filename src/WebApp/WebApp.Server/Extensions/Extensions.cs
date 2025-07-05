@@ -56,12 +56,9 @@ public static class Extensions
 
         builder.Services.AddSingleton<BasketService>();
 
-        builder.AddAIServices();
-
         // HTTP and GRPC client registrations
         builder.Services.AddGrpcClient<Basket.Api.Grpc.Basket.BasketClient>(
             o => o.Address = new("https://basket.api:5101"))
-            // TODO: Remove on production
             .ConfigureChannel(options =>
             {
                 options.HttpHandler = new SocketsHttpHandler
@@ -145,9 +142,6 @@ public static class Extensions
         builder.Services.AddInMemoryTokenCaches();
 
         JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
-        //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-        //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Add(JwtRegisteredClaimNames.Sub, ClaimTypes.NameIdentifier);
-        //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Add("given_name", JwtRegisteredClaimNames.GivenName);
 
         var identitySettings = builder.Configuration
             .GetSection(IdentityProviderSettings.SectionName)
@@ -220,15 +214,25 @@ public static class Extensions
             ?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
         builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApp(builder.Configuration)
+            .AddMicrosoftIdentityWebApp(
+                options =>
+                {
+                    builder.Configuration.Bind(IdentityProviderSettings.AzureAd, options);
+                    options.TokenValidationParameters.RoleClaimType = "roles";
+                },
+                options =>
+                {
+                    builder.Configuration.Bind(IdentityProviderSettings.AzureAd, options);
+                }
+            )
             .EnableTokenAcquisitionToCallDownstreamApi(defaultScopes)
             .AddInMemoryTokenCaches();
 
-        builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
-        {
-            // The claim in the Jwt token where App roles are available.
-            options.TokenValidationParameters.RoleClaimType = "roles";
-        });
+        //builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
+        //{
+        //    // The claim in the Jwt token where App roles are available.
+        //    options.TokenValidationParameters.RoleClaimType = "roles";
+        //});
 
         builder.Services.AddControllersWithViews()
             .AddMicrosoftIdentityUI();
@@ -278,22 +282,5 @@ public static class Extensions
         });
 
         builder.Services.AddControllersWithViews();
-
-        //builder.Services.ConfigureCookieOidcRefresh(CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
-    }
-
-    private static void AddAIServices(this IHostApplicationBuilder _)
-    {
-
-    }
-
-    public static IServiceCollection ConfigureCookieOidcRefresh(this IServiceCollection services, string cookieScheme, string oidcScheme)
-    {
-        services.AddSingleton<CookieOidcRefresher>();
-        services.AddOptions<CookieAuthenticationOptions>(cookieScheme).Configure<CookieOidcRefresher>((cookieOptions, refresher) =>
-        {
-            cookieOptions.Events.OnValidatePrincipal = context => refresher.ValidateOrRefreshCookieAsync(context, oidcScheme);
-        });
-        return services;
     }
 }

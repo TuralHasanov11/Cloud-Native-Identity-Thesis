@@ -57,7 +57,6 @@ public static class AuthenticationExtensions
                 builder.Configuration.Bind(IdentityProviderSettings.AWSCognito, options);
             });
 
-        //builder.Services.AddSingleton<IAuthorizationPolicyProvider, BaseAuthorizationPolicyProvider>();
         builder.Services.AddSingleton<IAuthorizationHandler, GroupHandler>();
 
         builder.Services.AddAuthorization(options =>

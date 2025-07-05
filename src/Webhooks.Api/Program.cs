@@ -36,17 +36,10 @@ try
 
     app.UseMiddleware<ContentTypeOptionsMiddleware>();
 
-    //app.UseRateLimiter();
-    //app.UseRequestLocalization();
-    //app.UseCors(Policies.DefaultCorsPolicy);
-
-    //app.UseOutputCache();
-
-    //app.UseRequestDecompression();
+    app.UseCors("CorsPolicy");
 
     app.UseAuthentication();
     app.UseAuthorization();
-    //app.UseResponseCompression();
 
     app.UseStatusCodePages();
 

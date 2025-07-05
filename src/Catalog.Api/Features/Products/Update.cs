@@ -45,8 +45,6 @@ public static class Update
             request.RestockThreshold,
             request.MaxStockThreshold);
 
-        //product.Embedding = await services.CatalogAI.GetEmbeddingAsync(product);
-
         if (product.Price != oldPrice)
         {
             var priceChangedEvent = new ProductPriceChangedIntegrationEvent(product.Id, product.Price, oldPrice);

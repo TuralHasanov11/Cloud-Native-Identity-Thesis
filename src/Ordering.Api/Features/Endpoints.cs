@@ -23,7 +23,7 @@ public static class Endpoints
 
         api.MapPut("ship", Orders.Ship.Handle)
             //.RequireAuthorization("RoleOrderAdmins")
-            .WithMetadata(new GroupRequirementAttribute(AWSCognitoGroups.Admins))
+            .WithMetadata(new GroupRequirementAttribute(AwsCognitoGroups.Admins))
             .WithName("ShipOrder")
             .WithSummary("Ships an order")
             .WithDescription("Ships an order.")

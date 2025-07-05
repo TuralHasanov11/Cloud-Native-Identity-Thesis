@@ -42,22 +42,22 @@ public class AuditInterceptor(ICollection<AuditEntry> auditEntryList, IPublishEn
         int result,
         CancellationToken cancellationToken = default)
     {
-        //if (eventData.Context is not null)
-        //{
-        //    var endTime = DateTime.UtcNow;
+        if (eventData.Context is not null)
+        {
+            var endTime = DateTime.UtcNow;
 
-        //    foreach (var item in auditEntryList)
-        //    {
-        //        item.EndTimeUtc = endTime;
-        //        item.Succeeded = true;
-        //    }
+            foreach (var item in auditEntryList)
+            {
+                item.EndTimeUtc = endTime;
+                item.Succeeded = true;
+            }
 
-        //    if (auditEntryList.Count > 0)
-        //    {
-        //        auditEntryList.Clear();
-        //        await publishEndpoint.Publish(new AuditTrailMessage(auditEntryList), cancellationToken);
-        //    }
-        //}
+            if (auditEntryList.Count > 0)
+            {
+                auditEntryList.Clear();
+                await publishEndpoint.Publish(new AuditTrailMessage(auditEntryList), cancellationToken);
+            }
+        }
 
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
     }

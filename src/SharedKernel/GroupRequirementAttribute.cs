@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace SharedKernel;
 
@@ -29,13 +30,9 @@ public sealed class GroupHandler : AuthorizationHandler<GroupRequirementAttribut
         AuthorizationHandlerContext context,
         GroupRequirementAttribute requirement)
     {
-        foreach (var group in requirement.Groups)
+        if (requirement.Groups.Any(group => context.User.HasClaim(c => c.Type == ClaimType && c.Value == group)))
         {
-            if (context.User.HasClaim(c => c.Type == ClaimType && c.Value == group))
-            {
-                context.Succeed(requirement);
-                break;
-            }
+            context.Succeed(requirement);
         }
 
         return Task.CompletedTask;

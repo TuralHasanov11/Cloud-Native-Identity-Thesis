@@ -8,7 +8,7 @@ public sealed class OrderCanceledDomainEventHandler(
 {
     public async Task Handle(OrderCanceledDomainEvent notification, CancellationToken cancellationToken)
     {
-        //OrderingApiTrace.LogOrderStatusUpdated(_logger, notification.Order.Id, OrderStatus.Cancelled);
+        logger.LogOrderStatusUpdated(notification.Order.Id, OrderStatus.Cancelled);
 
         var order = await orderRepository.SingleOrDefaultAsync(
             new OrderSpecification(new OrderId(notification.Order.Id)),
@@ -36,3 +36,13 @@ public sealed class OrderCanceledDomainEventHandler(
                 customer.IdentityId));
     }
 }
+
+public static partial class OrderCanceledDomainEventHandlerLogger
+{
+    [LoggerMessage(
+        EventId = 1001,
+        Level = LogLevel.Information,
+        Message = "Order status updated to {OrderStatus} for order {OrderId}")]
+    public static partial void LogOrderStatusUpdated(this ILogger<OrderCanceledDomainEventHandler> logger, Guid orderId, OrderStatus orderStatus);
+}
+

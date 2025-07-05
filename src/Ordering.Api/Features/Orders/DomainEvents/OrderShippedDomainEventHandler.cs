@@ -10,7 +10,7 @@ public sealed class OrderShippedDomainEventHandler(
 {
     public async Task Handle(OrderShippedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        //OrderingApiTrace.LogOrderStatusUpdated(_logger, domainEvent.Order.Id, OrderStatus.Shipped);
+        logger.LogOrderStatusUpdated(domainEvent.Order.Id, OrderStatus.Shipped);
 
         var order = await orderRepository.SingleOrDefaultAsync(
             new OrderSpecification(domainEvent.Order.Id),
@@ -38,4 +38,13 @@ public sealed class OrderShippedDomainEventHandler(
 
         await orderingIntegrationEventService.AddAndSaveEventAsync(integrationEvent);
     }
+}
+
+public static partial class OrderShippedDomainEventHandlerLogger
+{
+    [LoggerMessage(
+        EventId = 1001,
+        Level = LogLevel.Information,
+        Message = "Order status updated to {OrderStatus} for order {OrderId}")]
+    public static partial void LogOrderStatusUpdated(this ILogger<OrderShippedDomainEventHandler> logger, Guid orderId, OrderStatus orderStatus);
 }

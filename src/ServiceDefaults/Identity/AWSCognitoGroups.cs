@@ -1,6 +1,6 @@
 ﻿namespace ServiceDefaults.Identity;
 
-public sealed class AWSCognitoGroups
+public static class AwsCognitoGroups
 {
     public const string Admins = "Admins";
     public const string Customers = "Customers";

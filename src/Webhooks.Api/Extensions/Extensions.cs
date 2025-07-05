@@ -28,8 +28,6 @@ internal static class Extensions
                     HistoryRepository.DefaultTableName))
                 .AddInterceptors(builder.GetAuditInterceptor(sp));
 
-            //builder.UseVector();
-
             if (builder.Environment.IsDevelopment())
             {
                 options.EnableSensitiveDataLogging()
@@ -45,6 +43,23 @@ internal static class Extensions
 
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddTransient<IIdentityService, IdentityService>();
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", policy =>
+            {
+                var origins = builder.Configuration
+                    .GetRequiredSection("ClientOrigins")
+                    .Get<Dictionary<string, string>>();
+
+                ArgumentNullException.ThrowIfNull(origins);
+
+                policy.WithOrigins([.. origins.Values])
+                    .AllowCredentials()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
     }
 
     private static void ConfigureEventBus(this IHostApplicationBuilder builder)

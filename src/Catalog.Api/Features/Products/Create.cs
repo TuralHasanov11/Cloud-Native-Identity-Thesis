@@ -19,8 +19,6 @@ public static class Create
             request.RestockThreshold,
             request.MaxStockThreshold);
 
-        //product.Embedding = await services.CatalogAI.GetEmbeddingAsync(item);
-
         await productRepository.CreateAsync(product, cancellationToken);
         await productRepository.SaveChangesAsync(cancellationToken);
 

@@ -104,6 +104,7 @@
       "order": "Order | Orders",
       "orderSummary": "Order Summary",
       "orderReceived": "Order Received",
+      "orderNotReceived": "Order Not Received",
       "orderNote": "Order Note | Order Notes",
       "orderNotePlaceholder": "Notes about your order, e.g. special notes for delivery.",
       "orderThanks": "Thank you for your order. We will send you an email with the order details.",
@@ -162,6 +163,10 @@
       "invalidPasswordResetLink": "Password reset link is invalid.",
       "general": "Something went wrong",
       "noOrder": "We could not find your order. Please try again later."
+    },
+    "identity": {
+      "signIn": "Sign In",
+      "signUp": "Sign Up"
     }
   }
 }
