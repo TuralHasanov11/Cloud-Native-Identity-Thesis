@@ -214,15 +214,25 @@ public static class Extensions
             ?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
         builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApp(builder.Configuration)
+            .AddMicrosoftIdentityWebApp(
+                options =>
+                {
+                    builder.Configuration.Bind(IdentityProviderSettings.AzureAd, options);
+                    options.TokenValidationParameters.RoleClaimType = "roles";
+                },
+                options =>
+                {
+                    builder.Configuration.Bind(IdentityProviderSettings.AzureAd, options);
+                }
+            )
             .EnableTokenAcquisitionToCallDownstreamApi(defaultScopes)
             .AddInMemoryTokenCaches();
 
-        builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
-        {
-            // The claim in the Jwt token where App roles are available.
-            options.TokenValidationParameters.RoleClaimType = "roles";
-        });
+        //builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
+        //{
+        //    // The claim in the Jwt token where App roles are available.
+        //    options.TokenValidationParameters.RoleClaimType = "roles";
+        //});
 
         builder.Services.AddControllersWithViews()
             .AddMicrosoftIdentityUI();
