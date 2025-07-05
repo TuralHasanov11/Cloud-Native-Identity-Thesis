@@ -59,13 +59,8 @@ try
 
     app.MapBffApi();
 
-    //app.MapFallback((IConfiguration config) =>
-    //{
-    //    var clientUrl = config.GetValue<string>("ClientUrl") ?? "https://localhost:50563";
-    //    return Results.Redirect(clientUrl);
-    //});
-
-    var clientUrl = app.Configuration.GetValue<string>("ClientUrl") ?? "https://10.0.11.2:50563";
+    var clientUrl = app.Configuration.GetValue<string>("ClientUrl");
+    ArgumentNullException.ThrowIfNull(clientUrl);
     app.MapForwarder("/{**catch-all}", clientUrl);
 
     await app.RunAsync();

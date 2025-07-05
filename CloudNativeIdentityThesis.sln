@@ -58,20 +58,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.UnitTests", "tests\
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{6ECB75DB-2D6F-418C-8EFD-754DA3277ACD}"
-	ProjectSection(SolutionItems) = preProject
-		k8s\catalog-database-configmap.yaml = k8s\catalog-database-configmap.yaml
-		k8s\catalog-database-deployment.yaml = k8s\catalog-database-deployment.yaml
-		k8s\catalog-database-pvc.yaml = k8s\catalog-database-pvc.yaml
-		k8s\catalog-database-secret.yaml = k8s\catalog-database-secret.yaml
-		k8s\catalog-deployment.yaml = k8s\catalog-deployment.yaml
-		k8s\ingress-service.yaml = k8s\ingress-service.yaml
-		k8s\pgadmin-deployment.yaml = k8s\pgadmin-deployment.yaml
-		k8s\pgadmin-secret.yaml = k8s\pgadmin-secret.yaml
-		k8s\thesis-namespace.yaml = k8s\thesis-namespace.yaml
-		k8s\webapp-server-deployment.yaml = k8s\webapp-server-deployment.yaml
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentProcessor.UnitTests", "tests\PaymentProcessor.UnitTests\PaymentProcessor.UnitTests.csproj", "{045A5315-4F5E-4297-B939-C3CCBABDFEA7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentProcessor.IntegrationTests", "tests\PaymentProcessor.IntegrationTests\PaymentProcessor.IntegrationTests.csproj", "{08857F20-EF86-4FDC-9BD9-BAB0B9041CDC}"

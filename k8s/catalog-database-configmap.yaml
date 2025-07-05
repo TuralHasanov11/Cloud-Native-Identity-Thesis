@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: catalog-database-configmap
-  namespace: thesis
-data:
-  database_url: catalog-database-service
