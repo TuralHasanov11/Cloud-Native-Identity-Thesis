@@ -246,14 +246,6 @@ await initializeBasket()
 
 @media (min-width: 992px) {
   .layout-wrapper {
-    &.layout-overlay {
-      &.layout-overlay-active {}
-    }
-
-    &.layout-static {
-      &.layout-static-inactive {}
-    }
-
     .layout-mask {
       display: none;
     }

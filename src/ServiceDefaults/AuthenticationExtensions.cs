@@ -76,13 +76,11 @@ public static class AuthenticationExtensions
                 options =>
                 {
                     builder.Configuration.Bind(IdentityProviderSettings.AzureAd, options);
-                    //options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Sub;
                     options.TokenValidationParameters.RoleClaimType = "roles";
                 },
                 options =>
                 {
                     builder.Configuration.Bind(IdentityProviderSettings.AzureAd, options);
-                    //options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Sub;
                     options.TokenValidationParameters.RoleClaimType = "roles";
                 });
 

@@ -37,17 +37,10 @@ try
 
     app.UseMiddleware<ContentTypeOptionsMiddleware>();
 
-    //app.UseRateLimiter();
-    //app.UseRequestLocalization();
     app.UseCors("CorsPolicy");
-
-    //app.UseOutputCache();
-
-    //app.UseRequestDecompression();
 
     app.UseAuthentication();
     app.UseAuthorization();
-    //app.UseResponseCompression();
 
     app.UseStatusCodePages();
 

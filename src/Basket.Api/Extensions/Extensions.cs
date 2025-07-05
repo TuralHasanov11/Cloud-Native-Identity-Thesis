@@ -19,7 +19,6 @@ public static class Extensions
         });
 
         builder.Services.AddDistributedMemoryCache();
-        //builder.Services.AddHybridCache();
 
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddTransient<IIdentityService, IdentityService>();

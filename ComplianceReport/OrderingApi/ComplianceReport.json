@@ -163,6 +163,68 @@
                     ]
                 }
             ]
+        },
+        {
+            "Name": "Ordering.Api.Features.Orders.DomainEvents.UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandlerLogger",
+            "Logging Methods": [
+                {
+                    "Name": "LogOrderPaymentMethodUpdated",
+                    "Parameters": [
+                        {
+                            "Name": "logger",
+                            "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler>",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler.cs",
+                            "Line": "33"
+                        },
+                        {
+                            "Name": "orderId",
+                            "Type": "System.Guid",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler.cs",
+                            "Line": "34"
+                        },
+                        {
+                            "Name": "paymentType",
+                            "Type": "string",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler.cs",
+                            "Line": "35"
+                        },
+                        {
+                            "Name": "paymentId",
+                            "Type": "System.Guid",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\UpdateOrderWhenBuyerAndPaymentMethodVerifiedDomainEventHandler.cs",
+                            "Line": "36"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Ordering.Api.Features.Orders.DomainEvents.ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandlerLogger",
+            "Logging Methods": [
+                {
+                    "Name": "LogOrderBuyerAndPaymentValidatedOrUpdated",
+                    "Parameters": [
+                        {
+                            "Name": "logger",
+                            "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler>",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler.cs",
+                            "Line": "50"
+                        },
+                        {
+                            "Name": "customerId",
+                            "Type": "System.Guid",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler.cs",
+                            "Line": "51"
+                        },
+                        {
+                            "Name": "orderId",
+                            "Type": "System.Guid",
+                            "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler.cs",
+                            "Line": "52"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

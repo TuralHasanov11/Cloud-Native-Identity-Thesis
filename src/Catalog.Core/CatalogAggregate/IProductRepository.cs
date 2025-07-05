@@ -14,13 +14,13 @@ public interface IProductRepository
         Specification<Product> specification,
         CancellationToken cancellationToken = default);
 
-    //Task<(IEnumerable<TResponse>, long)> ListAsync<TResponse>(
-    //    Specification<Product> specification,
-    //    Expression<Func<Product, TResponse>> mapper,
-    //    ProductId pageCursor,
-    //    int pageSize = 10,
-    //    CancellationToken cancellationToken = default)
-    //    where TResponse : class;
+    Task<(IEnumerable<TResponse>, long)> ListAsync<TResponse>(
+        Specification<Product> specification,
+        Expression<Func<Product, TResponse>> mapper,
+        ProductId pageCursor,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
+        where TResponse : class;
 
     Task<IEnumerable<TResponse>> ListAsync<TResponse>(
         Specification<Product> specification,

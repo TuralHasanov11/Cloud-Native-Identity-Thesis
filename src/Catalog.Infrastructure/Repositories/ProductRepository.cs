@@ -61,6 +61,23 @@ public class ProductRepository(CatalogDbContext dbContext) : IProductRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<(IEnumerable<TResponse>, long)> ListAsync<TResponse>(Specification<Product> specification, Expression<Func<Product, TResponse>> mapper, ProductId pageCursor, int pageSize = 10, CancellationToken cancellationToken = default) where TResponse : class
+    {
+        var queryable = dbContext.Products.GetQuery(specification);
+
+        var products = await queryable
+                .OrderBy(p => p.Id)
+                .Where(p => p.Id > pageCursor)
+                .Select(mapper)
+                .AsNoTracking()
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+        var count = await queryable.LongCountAsync(cancellationToken);
+
+        return (products, count);
+    }
+
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return dbContext.SaveChangesAsync(cancellationToken);

@@ -16,6 +16,10 @@ const useBffFetch = createFetch({
   options: {
     onFetchError(ctx) {
       if (ctx.response?.status === HttpStatusCode.Unauthorized || ctx.response?.status === HttpStatusCode.Forbidden) {
+        ctx.error = {
+          status: ctx.response?.status,
+          message: 'You are not authorized to access this resource.',
+        }
       }
 
       console.log(ctx.error)

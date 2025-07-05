@@ -24,8 +24,8 @@ const address = defineModel<Address>('address', { required: true })
 
     <div class="w-full flex flex-col gap-1">
       <label for="city">{{ t('messages.billing.city') }}</label>
-      <InputText id="city" disabled v-model="address.city" placeholder="New York" autocomplete="locality" type="text"
-        required />
+      <InputText id="city" disabled v-model="address.city" placeholder="New York" autocomplete="address-level1"
+        type="text" required />
     </div>
 
     <div class="w-full flex flex-col gap-1">

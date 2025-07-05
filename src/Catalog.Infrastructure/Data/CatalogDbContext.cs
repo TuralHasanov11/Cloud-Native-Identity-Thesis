@@ -14,8 +14,6 @@ public class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbCo
     {
         base.OnModelCreating(modelBuilder);
 
-        //builder.HasPostgresExtension("vector");
-
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogDbContext).Assembly);
 
         modelBuilder.UseOutbox();

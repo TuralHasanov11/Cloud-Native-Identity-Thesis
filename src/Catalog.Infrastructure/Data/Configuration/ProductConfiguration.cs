@@ -19,9 +19,6 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Description)
             .HasColumnType("text");
 
-        //builder.Property(p => p.Embedding)
-        //    .HasColumnType("vector(384)");
-
         builder.HasOne(p => p.Brand)
             .WithMany();
 

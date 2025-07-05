@@ -1,12 +1,10 @@
 ﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Catalog.Api.Extensions;
 
 public class CatalogDbContextSeed(
     IWebHostEnvironment env,
-    IOptions<CatalogOptions> settings,
     ILogger<CatalogDbContextSeed> logger) : IDbSeeder<CatalogDbContext>
 {
     public async Task SeedAsync(CatalogDbContext context)
@@ -96,7 +94,7 @@ public class CatalogDbContextSeed(
         if (!await context.Brands.AnyAsync())
         {
             var sourcePath = Path.Combine(contentRootPath, "Setup", "catalog.json");
-            var sourceJson = File.ReadAllText(sourcePath);
+            var sourceJson = await File.ReadAllTextAsync(sourcePath);
 
             var products = JsonSerializer.Deserialize<List<ProductDto>>(sourceJson);
 

@@ -10,6 +10,6 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-
+        // This method is intentionally left empty.
     }
 }

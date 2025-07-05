@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.Identity.Web;
 using ServiceDefaults.Identity;
+using WebApp.Server.Extensions;
 
 namespace WebApp.Server.Features;
 
@@ -24,7 +25,7 @@ public static class Endpoints
             .WithSummary("Get the current user's information.")
             .WithDescription("Get the current user's information.")
             .WithTags("Identity")
-            .RequireRateLimiting("FixedRateLimitingPolicy");
+            .RequireRateLimiting(Policies.FixedRateLimitingPolicy);
 
         identityApi.MapGet("claims/azure", async (
             IIdentityService identityService,
@@ -66,7 +67,8 @@ public static class Endpoints
                 x => x.Value,
                 StringComparer.OrdinalIgnoreCase)!;
 
-            string? accessToken = await httpContextAccessor.HttpContext?.GetTokenAsync("access_token");
+            ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
+            string? accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
 
             dictionary?.TryAdd("access_token", accessToken ?? string.Empty);
 
@@ -86,7 +88,8 @@ public static class Endpoints
                 x => x.Value,
                 StringComparer.OrdinalIgnoreCase)!;
 
-            string? accessToken = await httpContextAccessor.HttpContext?.GetTokenAsync("access_token");
+            ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
+            string? accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
 
             dictionary?.TryAdd("access_token", accessToken ?? string.Empty);
 
@@ -101,7 +104,7 @@ public static class Endpoints
             .WithDescription("Get the current user's basket.")
             .WithTags("Basket")
             .RequireAuthorization()
-            .RequireRateLimiting("FixedRateLimitingPolicy");
+            .RequireRateLimiting(Policies.FixedRateLimitingPolicy);
 
         basketApi.MapPost("", Basket.UpdateByUser.Handle)
             .WithName("UpdateBasketByUser")
@@ -109,7 +112,7 @@ public static class Endpoints
             .WithDescription("Update the current user's basket.")
             .WithTags("Basket")
             .RequireAuthorization()
-            .RequireRateLimiting("FixedRateLimitingPolicy");
+            .RequireRateLimiting(Policies.FixedRateLimitingPolicy);
 
         basketApi.MapDelete("", Basket.DeleteByUser.Handle)
             .WithName("DeleteBasketByUser")
@@ -117,7 +120,7 @@ public static class Endpoints
             .WithDescription("Delete the current user's basket.")
             .WithTags("Basket")
             .RequireAuthorization()
-            .RequireRateLimiting("FixedRateLimitingPolicy");
+            .RequireRateLimiting(Policies.FixedRateLimitingPolicy);
 
         return app;
     }

@@ -36,6 +36,18 @@ public class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler(
             customer.IdentityId);
 
         await orderingIntegrationEventService.AddAndSaveEventAsync(integrationEvent);
-        //OrderingApiTrace.LogOrderBuyerAndPaymentValidatedOrUpdated(logger, customer.Id, domainEvent.Order.Id);
+        logger.LogOrderBuyerAndPaymentValidatedOrUpdated(customer.Id, domainEvent.Order.Id);
     }
+}
+
+public static partial class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandlerLogger
+{
+    [LoggerMessage(
+        LogLevel.Information,
+        EventId = 1002,
+        Message = "Order {OrderId} buyer and payment method validated or updated for customer {CustomerId}.")]
+    public static partial void LogOrderBuyerAndPaymentValidatedOrUpdated(
+        this ILogger<ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler> logger,
+        Guid customerId,
+        Guid orderId);
 }
