@@ -1,0 +1,17 @@
+name: "TruffleHog PR Scan"
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  analyze:
+
+    name: analyze
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: TruffleHog OSS
+      uses: trufflesecurity/trufflehog@v3.89.2
