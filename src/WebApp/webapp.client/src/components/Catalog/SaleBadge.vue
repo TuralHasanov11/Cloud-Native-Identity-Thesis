@@ -7,7 +7,7 @@ const { product } = defineProps<{
 }>()
 
 const salePercentage = computed((): string => {
-  if (!product?.price || !product?.price) return ''
+  if (!product?.price) return ''
   const salePrice = product?.price
   const regularPrice = product?.price
   return Math.round(((salePrice - regularPrice) / regularPrice) * 100) + ` %`

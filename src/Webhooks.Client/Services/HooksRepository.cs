@@ -39,10 +39,35 @@ public class HooksRepository
         return subscription;
     }
 
-    private class OnChangeSubscription(Func<Task> callback, HooksRepository owner) : IDisposable
+    private sealed class OnChangeSubscription(Func<Task> callback, HooksRepository owner) 
+        : IDisposable
     {
-        public Task NotifyAsync() => callback();
+        private readonly Func<Task> _callback = callback;
+        private readonly HooksRepository _owner = owner;
+        private bool _disposed;
 
-        public void Dispose() => owner._onChangeSubscriptions.Remove(this, out _);
+        public Task NotifyAsync()
+        {
+            return _disposed ? throw new ObjectDisposedException(nameof(OnChangeSubscription)) : _callback();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _owner._onChangeSubscriptions.Remove(this, out _);
+                }
+
+                _disposed = true;
+            }
+        }
     }
 }

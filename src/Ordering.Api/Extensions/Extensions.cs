@@ -53,7 +53,6 @@ public static class Extensions
         {
             cfg.RegisterServicesFromAssemblies(Infrastructure.AssemblyReference.Assembly);
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
-            //cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
         });
 
         builder.Services.AddValidatorsFromAssembly(AssemblyReference.Assembly);

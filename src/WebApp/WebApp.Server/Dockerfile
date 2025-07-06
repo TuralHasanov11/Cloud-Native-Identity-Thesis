@@ -9,20 +9,14 @@ EXPOSE 5113
 
 
 # This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS with-node
-RUN apt-get update
-RUN apt-get install curl
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash
-RUN apt-get -y install nodejs
-
-
-FROM with-node AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY ["src/WebApp/WebApp.Server/WebApp.Server.csproj", "src/WebApp/WebApp.Server/"]
-COPY ["src/WebApp/webapp.client/webapp.client.esproj", "src/WebApp/webapp.client/"]
+COPY ["src/ServiceDefaults/ServiceDefaults.csproj", "src/ServiceDefaults/"]
+COPY ["src/SharedKernel/SharedKernel.csproj", "src/SharedKernel/"]
 RUN dotnet restore "./src/WebApp/WebApp.Server/WebApp.Server.csproj"
 COPY . .
 WORKDIR "/src/src/WebApp/WebApp.Server"

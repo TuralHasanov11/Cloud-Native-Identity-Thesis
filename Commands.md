@@ -94,3 +94,9 @@ docker pull gcr.io/openssf/scorecard:stable
 
 docker run -e GITHUB_AUTH_TOKEN=<your access token> gcr.io/openssf/scorecard:stable --repo=https://github.com/TuralHasanov11/Cloud-Native-Identity-Thesis.git
 ```
+
+### Trufflehog
+```sh
+docker run --rm -it -v "${PWD}:/pwd" trufflesecurity/trufflehog:latest github --repo https://github.com/TuralHasanov11/Cloud-Native-Identity-Thesis --json --issue-comments --pr-comments
+docker run --rm -it -v "${PWD}:/pwd" trufflesecurity/trufflehog:latest git file://test_keys --results=verified,unknown
+```

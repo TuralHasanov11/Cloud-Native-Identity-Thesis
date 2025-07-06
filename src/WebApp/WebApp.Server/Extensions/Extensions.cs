@@ -91,12 +91,7 @@ public static class Extensions
                     MinimumThroughput = 5,
                 });
             });
-
-        //builder.Services.AddHttpClient<OrderingService>(o => o.BaseAddress = new("http://ordering-api"))
-        //    .AddAuthToken();
     }
-
-
 
     private static void AddCors(IHostApplicationBuilder builder)
     {
@@ -106,17 +101,17 @@ public static class Extensions
         var azureAdInstance = builder.Configuration
             .GetSection($"{IdentityProviderSettings.AzureAd}:Authority")
             .Get<string>();
-        ArgumentNullException.ThrowIfNull(azureAdInstance, nameof(azureAdInstance));
+        ArgumentNullException.ThrowIfNull(azureAdInstance);
 
         var awsCognitoInstance = builder.Configuration
             .GetSection($"{IdentityProviderSettings.AWSCognito}:Authority")
             .Get<string>();
-        ArgumentNullException.ThrowIfNull(awsCognitoInstance, nameof(awsCognitoInstance));
+        ArgumentNullException.ThrowIfNull(awsCognitoInstance);
 
         var googleCloudIdentityInstance = builder.Configuration
             .GetSection($"{IdentityProviderSettings.GoogleCloudIdentity}:Authority")
             .Get<string>();
-        ArgumentNullException.ThrowIfNull(googleCloudIdentityInstance, nameof(googleCloudIdentityInstance));
+        ArgumentNullException.ThrowIfNull(googleCloudIdentityInstance);
 
         builder.Services.AddCors(options =>
         {
@@ -199,11 +194,9 @@ public static class Extensions
 
         builder.Services.Configure<CookiePolicyOptions>(options =>
         {
-            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
             options.CheckConsentNeeded = context => true;
             options.MinimumSameSitePolicy = SameSiteMode.None;
             options.HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always;
-            // Handling SameSite cookie according to https://learn.microsoft.com/aspnet/core/security/samesite?view=aspnetcore-3.1
             options.HandleSameSiteCookieCompatibility();
         });
 
@@ -228,7 +221,6 @@ public static class Extensions
 
         builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
         {
-            // The claim in the Jwt token where App roles are available.
             options.TokenValidationParameters.RoleClaimType = "roles";
         });
 

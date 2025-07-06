@@ -6,7 +6,7 @@ public class OrderingDbContextSeed : IDbSeeder<OrderingDbContext>
     {
         if (!context.CardTypes.Any())
         {
-            context.CardTypes.AddRange(GetPredefinedCardTypes());
+            await context.CardTypes.AddRangeAsync(GetPredefinedCardTypes());
 
             await context.SaveChangesAsync();
         }

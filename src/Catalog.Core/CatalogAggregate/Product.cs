@@ -45,10 +45,6 @@ public sealed class Product : EntityBase<ProductId>
 
     public int MaxStockThreshold { get; private set; }
 
-    ///// <summary>Optional embedding for the catalog item's description.</summary>
-    //[JsonIgnore]
-    //public Vector Embedding { get; set; }
-
     public bool OnReorder { get; private set; }
 
     public int RemoveStock(int quantityDesired)

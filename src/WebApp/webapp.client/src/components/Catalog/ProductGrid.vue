@@ -7,10 +7,10 @@ defineProps<{ products: Product[] }>()
 <template>
   <Transition name="fade" mode="out-in">
     <section v-if="products.length > 0" class="relative w-full">
-      <TransitionGroup name="shrink" tag="div" mode="in-out" class="product-grid my-4 min-h-[600px] grid transition-all gap-8 lg:my-8">
+      <TransitionGroup name="shrink" tag="div" mode="in-out"
+        class="product-grid my-4 min-h-[600px] grid transition-all gap-8 lg:my-8">
         <ProductCard v-for="(product, i) in products" :key="product.id" :product :index="i" />
       </TransitionGroup>
-      <!-- <Pagination /> -->
     </section>
     <NoProductsFound v-else />
   </Transition>
