@@ -10,8 +10,6 @@ public class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler(
 {
     public async Task Handle(OrderStartedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        var cardTypeId = domainEvent.CardTypeId != 0 ? domainEvent.CardTypeId : 1; // TODO: set the default card type to 1 for now
-
         var customer = await customerRepository.SingleOrDefaultAsync(
             new CustomerSpecification(new IdentityId(domainEvent.UserId)),
             cancellationToken);
@@ -23,7 +21,7 @@ public class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler(
         }
 
         customer.VerifyOrAddPaymentMethod(
-            cardTypeId,
+            domainEvent.CardTypeId,
             $"Payment Method on {DateTime.UtcNow}",
             domainEvent.Order.Id);
 

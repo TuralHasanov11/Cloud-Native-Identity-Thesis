@@ -28,7 +28,7 @@ public sealed class GrantUrlTesterService(IHttpClientFactory factory, ILogger<IG
         }
         catch (Exception ex)
         {
-            logger.LogWarning("Exception {TypeName} when sending OPTIONS request. Url can't be granted.", ex.GetType().Name);
+            logger.LogWarning(ex, "Exception occurred when sending OPTIONS request. Url can't be granted.");
 
             return false;
         }

@@ -59,13 +59,16 @@ public static class Extensions
             o => o.Address = new("https://basket.api:5101"))
             .ConfigureChannel(options =>
             {
-                options.HttpHandler = new SocketsHttpHandler
+                if (builder.Environment.IsDevelopment())
                 {
-                    SslOptions = new System.Net.Security.SslClientAuthenticationOptions
+                    options.HttpHandler = new SocketsHttpHandler
                     {
-                        RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
-                    }
-                };
+                        SslOptions = new System.Net.Security.SslClientAuthenticationOptions
+                        {
+                            RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
+                        }
+                    };
+                }
             });
 
         builder.Services.AddHttpClient<ICatalogService, CatalogService>(o => o.BaseAddress = new("https://catalog.api:5103"))

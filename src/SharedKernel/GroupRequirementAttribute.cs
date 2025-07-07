@@ -10,7 +10,7 @@ public sealed class GroupRequirementAttribute :
 {
     public GroupRequirementAttribute(params string[] groups)
     {
-        ArgumentNullException.ThrowIfNull(groups, nameof(groups));
+        ArgumentNullException.ThrowIfNull(groups);
         Groups = groups;
     }
 

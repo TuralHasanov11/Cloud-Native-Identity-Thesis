@@ -50,8 +50,6 @@ try
 
     app.UseDefaultOpenApi();
 
-    // app.UseBackgroundJobs();
-
     await app.RunAsync();
 }
 catch (Exception ex)
@@ -63,4 +61,9 @@ finally
     await Log.CloseAndFlushAsync();
 }
 
-public partial class Program;
+public partial class Program
+{
+    protected Program()
+    {
+    }
+}

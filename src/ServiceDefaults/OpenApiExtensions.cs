@@ -57,7 +57,7 @@ public static partial class OpenApiExtensions
             return builder;
         }
 
-        string[] scopes = []; // TODO: Replace with actual scopes based on the identity provider.
+        string[] scopes = [];
 
         if (openApiInfoOptions is null)
         {

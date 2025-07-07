@@ -1,6 +1,11 @@
 export type CardType = {
-  id: string
+  id: number
   name: string
+}
+
+export const CARD_TYPE_NULL_OBJECT: CardType = {
+  id: 0,
+  name: '',
 }
 
 export type OrderSummary = {

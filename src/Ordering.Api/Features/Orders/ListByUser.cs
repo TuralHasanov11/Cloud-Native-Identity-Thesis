@@ -12,8 +12,10 @@ public static class ListByUser
         var user = identityService.GetUser();
         var userId = user?.GetUserId();
 
+        ArgumentNullException.ThrowIfNull(userId);
+
         var orders = await orderRepository.ListAsync(
-            new OrderSpecification(new IdentityId(userId!)), // TODO: Handle null userId
+            new OrderSpecification(new IdentityId(userId)),
             o => o.ToOrderSummary(),
             cancellationToken);
 

@@ -21,8 +21,10 @@ public sealed class OrderShippedDomainEventHandler(
             return;
         }
 
+        ArgumentNullException.ThrowIfNull(order.CustomerId);
+
         var customer = await customerRepository.SingleOrDefaultAsync(
-            new CustomerSpecification(order.CustomerId!), // TODO: Check if CustomerId is nullable
+            new CustomerSpecification(order.CustomerId),
             cancellationToken);
 
         if (customer == null)
