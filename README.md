@@ -11,4 +11,7 @@
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=TuralHasanov11_Cloud-Native-Identity-Thesis&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
-[![CodeQL](https://github.com/TuralHasanov11/Cloud-Native-Identity-Thesis/actions/workflows/codeql-analysis.yml)](https://sonarcloud.io/summary/new_code?id=TuralHasanov11_Cloud-Native-Identity-Thesis)
+[![CodeQL](https://github.com/TuralHasanov11/Cloud-Native-Identity-Thesis/actions/workflows/codeql-analysis.yml)](https://github.com/TuralHasanov11/Cloud-Native-Identity-Thesis)
+[![Main CI](https://github.com/TuralHasanov11/Cloud-Native-Identity-Thesis/actions/workflows/main-ci.yml)](https://github.com/TuralHasanov11/Cloud-Native-Identity-Thesis)
+[![OSV Scanner](https://github.com/TuralHasanov11/Cloud-Native-Identity-Thesis/actions/workflows/osv-scanner-pr.yml)](https://github.com/TuralHasanov11/Cloud-Native-Identity-Thesis)
+[![TruffleHog](https://github.com/TuralHasanov11/Cloud-Native-Identity-Thesis/actions/workflows/trufflehog.yml)](https://github.com/TuralHasanov11/Cloud-Native-Identity-Thesis)
