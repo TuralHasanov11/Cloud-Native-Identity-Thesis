@@ -34,19 +34,19 @@
                             "Name": "logger",
                             "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.OrderCanceledDomainEventHandler>",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderCanceledDomainEventHandler.cs",
-                            "Line": "46"
+                            "Line": "49"
                         },
                         {
                             "Name": "orderId",
                             "Type": "System.Guid",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderCanceledDomainEventHandler.cs",
-                            "Line": "46"
+                            "Line": "50"
                         },
                         {
                             "Name": "orderStatus",
                             "Type": "Ordering.Core.OrderAggregate.OrderStatus",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderCanceledDomainEventHandler.cs",
-                            "Line": "46"
+                            "Line": "51"
                         }
                     ]
                 }
@@ -62,19 +62,19 @@
                             "Name": "logger",
                             "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.OrderShippedDomainEventHandler>",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderShippedDomainEventHandler.cs",
-                            "Line": "49"
+                            "Line": "51"
                         },
                         {
                             "Name": "orderId",
                             "Type": "System.Guid",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderShippedDomainEventHandler.cs",
-                            "Line": "49"
+                            "Line": "51"
                         },
                         {
                             "Name": "orderStatus",
                             "Type": "Ordering.Core.OrderAggregate.OrderStatus",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderShippedDomainEventHandler.cs",
-                            "Line": "49"
+                            "Line": "51"
                         }
                     ]
                 }
@@ -90,19 +90,19 @@
                             "Name": "logger",
                             "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.OrderStatusChangedToAwaitingValidationDomainEventHandler>",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToAwaitingValidationDomainEventHandler.cs",
-                            "Line": "56"
+                            "Line": "58"
                         },
                         {
                             "Name": "orderId",
                             "Type": "System.Guid",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToAwaitingValidationDomainEventHandler.cs",
-                            "Line": "56"
+                            "Line": "58"
                         },
                         {
                             "Name": "orderStatus",
                             "Type": "Ordering.Core.OrderAggregate.OrderStatus",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToAwaitingValidationDomainEventHandler.cs",
-                            "Line": "56"
+                            "Line": "58"
                         }
                     ]
                 }
@@ -118,19 +118,19 @@
                             "Name": "logger",
                             "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.OrderStatusChangedToPaidDomainEventHandler>",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToPaidDomainEventHandler.cs",
-                            "Line": "53"
+                            "Line": "55"
                         },
                         {
                             "Name": "orderId",
                             "Type": "System.Guid",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToPaidDomainEventHandler.cs",
-                            "Line": "53"
+                            "Line": "55"
                         },
                         {
                             "Name": "orderStatus",
                             "Type": "Ordering.Core.OrderAggregate.OrderStatus",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToPaidDomainEventHandler.cs",
-                            "Line": "53"
+                            "Line": "55"
                         }
                     ]
                 }
@@ -146,19 +146,19 @@
                             "Name": "logger",
                             "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.OrderStatusChangedToStockConfirmedDomainEventHandler>",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToStockConfirmedDomainEventHandler.cs",
-                            "Line": "49"
+                            "Line": "51"
                         },
                         {
                             "Name": "orderId",
                             "Type": "System.Guid",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToStockConfirmedDomainEventHandler.cs",
-                            "Line": "49"
+                            "Line": "51"
                         },
                         {
                             "Name": "orderStatus",
                             "Type": "Ordering.Core.OrderAggregate.OrderStatus",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\OrderStatusChangedToStockConfirmedDomainEventHandler.cs",
-                            "Line": "49"
+                            "Line": "51"
                         }
                     ]
                 }
@@ -208,19 +208,19 @@
                             "Name": "logger",
                             "Type": "Microsoft.Extensions.Logging.ILogger<global::Ordering.Api.Features.Orders.DomainEvents.ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler>",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler.cs",
-                            "Line": "50"
+                            "Line": "48"
                         },
                         {
                             "Name": "customerId",
                             "Type": "System.Guid",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler.cs",
-                            "Line": "51"
+                            "Line": "49"
                         },
                         {
                             "Name": "orderId",
                             "Type": "System.Guid",
                             "File": "C:\\Users\\Tural Hasan\\Desktop\\FH\\Research Thesis\\ProjectFinalV1\\Cloud-Native-Identity-Thesis\\src\\Ordering.Api\\Features\\Orders\\DomainEvents\\ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler.cs",
-                            "Line": "52"
+                            "Line": "50"
                         }
                     ]
                 }

@@ -88,7 +88,7 @@ public sealed class Product : EntityBase<ProductId>
 
     public void SetPictureUri(Uri pictureUri)
     {
-        ArgumentNullException.ThrowIfNull(pictureUri, nameof(pictureUri));
+        ArgumentNullException.ThrowIfNull(pictureUri);
 
         PictureFileName = pictureUri;
     }

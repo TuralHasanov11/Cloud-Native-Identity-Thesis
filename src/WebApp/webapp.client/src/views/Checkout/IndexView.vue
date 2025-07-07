@@ -7,6 +7,7 @@ import { computed, onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue'
+import { CARD_TYPE_NULL_OBJECT } from '@/types/ordering'
 
 const { t } = useI18n()
 const { query } = useRoute()
@@ -26,7 +27,7 @@ onBeforeMount(async () => {
   if (query.cancel_order) window.close()
 })
 
-const payNow = async (event: Event) => {
+const payNow = async () => {
   buttonText.value = t('messages.general.processing')
 
   if (user.value.address) {
@@ -36,7 +37,7 @@ const payNow = async (event: Event) => {
       state: user.value.address.state,
       country: user.value.address.country,
       zipcode: user.value.address.zipCode,
-      cardTypeId: 1, // TODO: get from API,
+      cardTypeId: cardTypes.value && cardTypes.value.length > 0 ? cardTypes.value[0].id : CARD_TYPE_NULL_OBJECT.id,
     });
     if (result.ok) {
       toast.add({

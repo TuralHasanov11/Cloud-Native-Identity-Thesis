@@ -19,8 +19,10 @@ public sealed class OrderCanceledDomainEventHandler(
             return;
         }
 
+        ArgumentNullException.ThrowIfNull(order.CustomerId);
+
         var customer = await customerRepository.SingleOrDefaultAsync(
-            new CustomerSpecification(order.CustomerId!), // TODO: Check if CustomerId is nullable
+            new CustomerSpecification(order.CustomerId),
             cancellationToken);
 
         if (customer == null)
@@ -43,6 +45,8 @@ public static partial class OrderCanceledDomainEventHandlerLogger
         EventId = 1001,
         Level = LogLevel.Information,
         Message = "Order status updated to {OrderStatus} for order {OrderId}")]
-    public static partial void LogOrderStatusUpdated(this ILogger<OrderCanceledDomainEventHandler> logger, Guid orderId, OrderStatus orderStatus);
+    public static partial void LogOrderStatusUpdated(
+        this ILogger<OrderCanceledDomainEventHandler> logger, 
+        Guid orderId, 
+        OrderStatus orderStatus);
 }
-

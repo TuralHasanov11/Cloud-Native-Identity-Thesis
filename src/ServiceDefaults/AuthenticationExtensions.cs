@@ -31,17 +31,8 @@ public static class AuthenticationExtensions
         {
             AddAWSCognito(builder);
         }
-        else if (identitySettings.EnabledProviderName == IdentityProviderSettings.GoogleCloudIdentity)
-        {
-            AddGoogleIdentityPlatform(builder);
-        }
 
         return builder.Services;
-    }
-
-    private static void AddGoogleIdentityPlatform(IHostApplicationBuilder _)
-    {
-        return;
     }
 
     private static void AddAWSCognito(IHostApplicationBuilder builder)

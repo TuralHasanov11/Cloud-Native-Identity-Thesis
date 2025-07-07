@@ -29,15 +29,12 @@ public class CorrelationIdTransformProvider : ITransformProvider
 
     public void ValidateCluster(TransformClusterValidationContext context)
     {
-        return;
     }
 
     public void ValidateRoute(TransformRouteValidationContext context)
     {
-        return;
     }
 }
-
 
 public class JwtTransformProvider : ITransformProvider
 {

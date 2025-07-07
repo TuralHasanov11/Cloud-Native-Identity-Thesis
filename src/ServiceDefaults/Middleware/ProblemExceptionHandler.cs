@@ -25,6 +25,10 @@ public class ProblemExceptionHandler(
         {
             Status = exception switch
             {
+                ArgumentException => StatusCodes.Status400BadRequest,
+                UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+                NotImplementedException => StatusCodes.Status501NotImplemented,
+                KeyNotFoundException => StatusCodes.Status404NotFound,
                 _ => StatusCodes.Status500InternalServerError
             },
             Title = exception.Message,

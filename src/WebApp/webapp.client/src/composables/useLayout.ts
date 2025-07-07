@@ -57,7 +57,7 @@ export function useLayout() {
     }
   }
 
-  const isSidebarActive = computed(() => layoutState.overlayMenuActive || layoutState.staticMenuMobileActive)
+  const isSidebarActive = computed(() => layoutState.overlayMenuActive ?? layoutState.staticMenuMobileActive)
 
   const getPrimary = computed(() => layoutConfig.primary)
 

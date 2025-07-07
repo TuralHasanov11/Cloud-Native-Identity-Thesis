@@ -23,8 +23,10 @@ public sealed class OrderStatusChangedToAwaitingValidationDomainEventHandler(
             return;
         }
 
+        ArgumentNullException.ThrowIfNull(order.CustomerId);
+
         var customer = await customerRepository.SingleOrDefaultAsync(
-            new CustomerSpecification(new CustomerId(order.CustomerId!.Value)), // TODO: handle null
+            new CustomerSpecification(new CustomerId(order.CustomerId)),
             cancellationToken);
 
         if (customer == null)

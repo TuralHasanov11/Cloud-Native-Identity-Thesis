@@ -21,8 +21,10 @@ public sealed class OrderStatusChangedToStockConfirmedDomainEventHandler(
             return;
         }
 
+        ArgumentNullException.ThrowIfNull(order.CustomerId);
+
         var customer = await customerRepository.SingleOrDefaultAsync(
-            new CustomerSpecification(new CustomerId(order.CustomerId!.Value)), // TODO: handle null
+            new CustomerSpecification(new CustomerId(order.CustomerId!.Value)),
             cancellationToken);
 
         if (customer == null)
