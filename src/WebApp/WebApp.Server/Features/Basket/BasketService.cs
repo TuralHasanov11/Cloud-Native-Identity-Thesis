@@ -16,9 +16,9 @@ public class BasketService
     private readonly HttpContext? _httpContext;
 
     public BasketService(
-        GrpcBasketClient basketClient, 
-        IServiceProvider serviceProvider, 
-        IConfiguration configuration, 
+        GrpcBasketClient basketClient,
+        IServiceProvider serviceProvider,
+        IConfiguration configuration,
         IHttpContextAccessor httpContextAccessor)
     {
         _basketClient = basketClient;

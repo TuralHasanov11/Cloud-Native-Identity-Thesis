@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace Catalog.IntegrationTests.Brands;
+﻿namespace Catalog.IntegrationTests.Brands;
 
 public class BrandRepositoryTests : BaseIntegrationTest
 {

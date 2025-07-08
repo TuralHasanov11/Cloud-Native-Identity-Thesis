@@ -6,7 +6,7 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
 {
     private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
-    public CardTypeRepositoryTests(OrderingFactory factory) 
+    public CardTypeRepositoryTests(OrderingFactory factory)
         : base(factory)
     {
     }

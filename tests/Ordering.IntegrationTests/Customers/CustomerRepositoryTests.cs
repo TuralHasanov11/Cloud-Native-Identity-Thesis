@@ -1,5 +1,4 @@
-﻿using Ordering.Core.CustomerAggregate;
-using Ordering.Core.CustomerAggregate.Specifications;
+﻿using Ordering.Core.CustomerAggregate.Specifications;
 
 namespace Ordering.IntegrationTests.Customers;
 

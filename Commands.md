@@ -28,6 +28,7 @@ appinspector analyze -s ./ -o appinspector.json -f json -g **/.git/** -l ./appin
 ### Code Coverage
 ```sh
 dotnet test ./CloudNativeIdentityThesis.sln -- --coverage --coverage-output-format cobertura --coverage-output coverage.cobertura.xml
+ReportGenerator -reports:tests\Ordering.IntegrationTests\bin\Debug\net9.0\TestResults\coverage.cobertura.xml -targetdir:CoverageReport
 
 dotnet test ./CloudNativeIdentityThesis.sln --collect:"XPLat Code Coverage;Format=json"
 

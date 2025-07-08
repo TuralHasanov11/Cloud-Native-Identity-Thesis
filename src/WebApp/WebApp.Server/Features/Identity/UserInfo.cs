@@ -13,8 +13,8 @@ public static class UserInfo
         if (user is not null && user.Identity?.IsAuthenticated == true)
         {
             var userInfo = new UserInfoDto(
-                user.GetUserId(), 
-                user.GetUserName(), 
+                user.GetUserId(),
+                user.GetUserName(),
                 AddressExtensions.ToAddress(user.GetAddress()),
                 roles: user.EntraIdAppRoles(),
                 groups: user.CognitoGroups());
