@@ -1,20 +1,22 @@
-﻿namespace Catalog.IntegrationTests.Brands;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Catalog.IntegrationTests.Brands;
 
 public class BrandRepositoryTests : BaseIntegrationTest
 {
-    private readonly IBrandRepository _repository;
     private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
     public BrandRepositoryTests(CatalogFactory factory)
         : base(factory)
     {
-        _repository = factory.Services.GetRequiredService<IBrandRepository>();
     }
 
     [Fact]
     public async Task CreateAsync_ShouldAddBrand()
     {
         // Arrange
+        var _repository = Scope.ServiceProvider.GetRequiredService<IBrandRepository>();
+        var dbContext = Scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
         var brand = Brand.Create("Brand1");
 
         // Act
@@ -22,9 +24,8 @@ public class BrandRepositoryTests : BaseIntegrationTest
         await _repository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var createdBrand = await _repository.SingleOrDefaultAsync(
-            new BrandSpecification(brand.Id),
-            _cancellationToken);
+        var createdBrand = await dbContext.Brands
+            .FirstOrDefaultAsync(b => b.Id == brand.Id, _cancellationToken);
         Assert.NotNull(createdBrand);
     }
 
@@ -32,6 +33,8 @@ public class BrandRepositoryTests : BaseIntegrationTest
     public async Task Delete_ShouldRemoveBrand()
     {
         // Arrange
+        var _repository = Scope.ServiceProvider.GetRequiredService<IBrandRepository>();
+        var dbContext = Scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
         var brand = Brand.Create("Brand2");
 
         await _repository.CreateAsync(brand, _cancellationToken);
@@ -42,9 +45,8 @@ public class BrandRepositoryTests : BaseIntegrationTest
         await _repository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var deletedBrand = await _repository.SingleOrDefaultAsync(
-            new BrandSpecification(brand.Id),
-            _cancellationToken);
+        var deletedBrand = await dbContext.Brands
+            .FirstOrDefaultAsync(b => b.Id == brand.Id, _cancellationToken);
         Assert.Null(deletedBrand);
     }
 
@@ -52,6 +54,7 @@ public class BrandRepositoryTests : BaseIntegrationTest
     public async Task ListAsync_ShouldReturnBrands()
     {
         // Arrange
+        var _repository = Scope.ServiceProvider.GetRequiredService<IBrandRepository>();
         var brand1 = Brand.Create("Brand3");
         var brand2 = Brand.Create("Brand4");
 
@@ -73,6 +76,7 @@ public class BrandRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnBrand()
     {
         // Arrange
+        var _repository = Scope.ServiceProvider.GetRequiredService<IBrandRepository>();
         var brand = Brand.Create("Brand5");
 
         await _repository.CreateAsync(brand, _cancellationToken);
@@ -91,6 +95,7 @@ public class BrandRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenBrandDoesNotExist()
     {
         // Arrange
+        var _repository = Scope.ServiceProvider.GetRequiredService<IBrandRepository>();
         var specification = new BrandSpecification(new BrandId(Guid.NewGuid()));
 
         // Act
@@ -104,6 +109,7 @@ public class BrandRepositoryTests : BaseIntegrationTest
     public async Task Update_ShouldModifyBrand()
     {
         // Arrange
+        var _repository = Scope.ServiceProvider.GetRequiredService<IBrandRepository>();
         var brand = Brand.Create("Brand6");
 
         await _repository.CreateAsync(brand, _cancellationToken);

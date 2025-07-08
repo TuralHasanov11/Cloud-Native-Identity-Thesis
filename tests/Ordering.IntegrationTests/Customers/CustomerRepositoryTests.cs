@@ -5,18 +5,18 @@ namespace Ordering.IntegrationTests.Customers;
 
 public class CustomerRepositoryTests : BaseIntegrationTest
 {
-    private readonly ICustomerRepository _customerRepository;
     private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
     public CustomerRepositoryTests(OrderingFactory factory) : base(factory)
     {
-        _customerRepository = factory.Services.GetRequiredService<ICustomerRepository>();
     }
 
     [Fact]
     public async Task CreateAsync_ShouldAddCustomer()
     {
         // Arrange
+        var _customerRepository = Scope.ServiceProvider.GetRequiredService<ICustomerRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
         // Act
@@ -32,6 +32,8 @@ public class CustomerRepositoryTests : BaseIntegrationTest
     public async Task Delete_ShouldRemoveCustomer()
     {
         // Arrange
+        var _customerRepository = Scope.ServiceProvider.GetRequiredService<ICustomerRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
         DbContext.Customers.Add(customer);
@@ -50,6 +52,8 @@ public class CustomerRepositoryTests : BaseIntegrationTest
     public async Task ListAsync_ShouldReturnCustomers()
     {
         // Arrange
+        var _customerRepository = Scope.ServiceProvider.GetRequiredService<ICustomerRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var customer1 = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
         var customer2 = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "Jane Doe");
 
@@ -70,6 +74,8 @@ public class CustomerRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnCustomer()
     {
         // Arrange
+        var _customerRepository = Scope.ServiceProvider.GetRequiredService<ICustomerRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "John Doe");
 
         DbContext.Customers.Add(customer);
@@ -88,6 +94,7 @@ public class CustomerRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenCustomerDoesNotExist()
     {
         // Arrange
+        var _customerRepository = Scope.ServiceProvider.GetRequiredService<ICustomerRepository>();
         var specification = new CustomerSpecification(new CustomerId(Guid.CreateVersion7()));
 
         // Act
@@ -101,6 +108,8 @@ public class CustomerRepositoryTests : BaseIntegrationTest
     public async Task Update_ShouldModifyCustomer()
     {
         // Arrange
+        var _customerRepository = Scope.ServiceProvider.GetRequiredService<ICustomerRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var customer = Customer.Create(new IdentityId(IdentityExtensions.GenerateId()), "Jane Doe");
         DbContext.Customers.Add(customer);
         await DbContext.SaveChangesAsync(_cancellationToken);

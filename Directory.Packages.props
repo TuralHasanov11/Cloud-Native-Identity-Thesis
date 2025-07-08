@@ -43,6 +43,7 @@
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.3.1" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="3.9.3" />
     <PackageVersion Include="Microsoft.Identity.Web.UI" Version="3.9.3" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1-Preview.1" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="9.6.0" />
     <PackageVersion Include="Microsoft.Extensions.Compliance.Redaction" Version="9.6.0" />
