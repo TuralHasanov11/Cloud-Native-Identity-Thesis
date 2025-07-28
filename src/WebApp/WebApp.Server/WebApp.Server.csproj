@@ -14,9 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="Amazon.AspNetCore.Identity.Cognito" />
-	<PackageReference Include="Amazon.Extensions.CognitoAuthentication" />
-	<PackageReference Include="AWSSDK.CognitoIdentityProvider" />
 	<PackageReference Include="FluentValidation" />
 	<PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
 	<PackageReference Include="Google.Apis.Auth.AspNetCore3" />
