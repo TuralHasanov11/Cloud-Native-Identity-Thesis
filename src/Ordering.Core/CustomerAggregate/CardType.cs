@@ -22,8 +22,8 @@ public sealed class CardType : EntityBase, IAggregateRoot
 
     public static string ValidateName(string name)
     {
-        return string.IsNullOrWhiteSpace(name) 
-            ? throw new ArgumentException("The name cannot be empty.", nameof(name)) 
+        return string.IsNullOrWhiteSpace(name)
+            ? throw new ArgumentException("The name cannot be empty.", nameof(name))
             : name;
     }
 }

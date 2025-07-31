@@ -222,11 +222,6 @@ public static class Extensions
             .EnableTokenAcquisitionToCallDownstreamApi(defaultScopes)
             .AddInMemoryTokenCaches();
 
-        builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
-        {
-            options.TokenValidationParameters.RoleClaimType = "roles";
-        });
-
         builder.Services.AddControllersWithViews()
             .AddMicrosoftIdentityUI();
     }

@@ -5,7 +5,7 @@ namespace Webhooks.Core.WebhookAggregate.Specifications;
 public class WebhookSubscriptionSpecification
     : Specification<WebhookSubscription>
 {
-    public WebhookSubscriptionSpecification(IdentityId userId) 
+    public WebhookSubscriptionSpecification(IdentityId userId)
         : base(x => x.UserId == userId)
     {
     }

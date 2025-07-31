@@ -1,4 +1,5 @@
 ﻿using DotNet.Testcontainers.Builders;
+using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -50,29 +51,21 @@ public class WebhooksFactory : WebApplicationFactory<Program>, IAsyncLifetime
                         HistoryRepository.DefaultTableName));
             });
 
-            //services.AddMassTransitTestHarness(x =>
-            // {
-            //     x.AddDelayedMessageScheduler();
+            services.AddMassTransitTestHarness(x =>
+             {
+                 x.AddDelayedMessageScheduler();
 
-            //     x.SetKebabCaseEndpointNameFormatter();
+                 x.SetKebabCaseEndpointNameFormatter();
 
-            //     x.AddConsumers(Infrastructure.AssemblyReference.Assembly);
+                 x.AddConsumers(Infrastructure.AssemblyReference.Assembly);
 
-            //     x.UsingRabbitMq((context, cfg) =>
-            //     {
-            //         cfg.UseDelayedMessageScheduler();
+                 x.UsingInMemory((context, cfg) =>
+                 {
+                     cfg.UseDelayedMessageScheduler();
 
-            //         var settings = context.GetRequiredService<MessageBrokerSettings>();
-
-            //         cfg.Host(new Uri(settings.Host), h =>
-            //         {
-            //             h.Username(settings.Username);
-            //             h.Password(settings.Password);
-            //         });
-
-            //         cfg.ConfigureEndpoints(context);
-            //     });
-            // });
+                     cfg.ConfigureEndpoints(context);
+                 });
+             });
         });
     }
 
