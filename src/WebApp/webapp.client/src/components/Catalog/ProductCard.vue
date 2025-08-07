@@ -12,14 +12,14 @@ const imgWidth = 280
 const imgHeight = Math.round(imgWidth * 1.125)
 const { FALLBACK_IMG } = useHelpers()
 
-const { isLoading: isImageLoading } = useImage({ src: FALLBACK_IMG })
+const { isLoading: isImageLoading } = useImage({ src: product.pictureUrl || FALLBACK_IMG })
 </script>
 
 <template>
   <div class="relative group">
     <RouterLink :to="`/products/${decodeURIComponent(product.id)}`" :title="product.name">
       <SaleBadge :product class="absolute top-2 right-2" />
-      <img v-if="!isImageLoading" :width="imgWidth" :height="imgHeight" :src="FALLBACK_IMG" :alt="product.name"
+      <img v-if="!isImageLoading" :width="imgWidth" :height="imgHeight" :src="product.pictureUrl" :alt="product.name"
         :title="product.name" :loading="index <= 3 ? 'eager' : 'lazy'" :sizes="`sm:${imgWidth / 2}px md:${imgWidth}px`"
         class="rounded-lg object-top object-cover w-full aspect-9/8" placeholder-class="blur-xl" />
     </RouterLink>

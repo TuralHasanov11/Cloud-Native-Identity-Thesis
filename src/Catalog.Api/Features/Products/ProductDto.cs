@@ -9,6 +9,5 @@ public record ProductDto(
     Guid BrandId,
     int AvailableStock,
     int RestockThreshold,
-    int MaxStockThreshold);
-
-
+    int MaxStockThreshold,
+    string? PictureUrl);

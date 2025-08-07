@@ -59,7 +59,7 @@ describe('HeroBanner', () => {
       expect(image.exists()).toBe(true)
       expect(image.attributes('width')).toBe('1400')
       expect(image.attributes('height')).toBe('800')
-      expect(image.attributes('src')).toBe('/images/hero.jpg')
+      expect(image.attributes('src')).toBe('/images/hero1.PNG')
       expect(image.attributes('alt')).toBe('Hero image')
       expect(image.attributes('loading')).toBe('eager')
       expect(image.attributes('sizes')).toBe('sm:100vw md:1400px')
@@ -282,7 +282,7 @@ describe('HeroBanner', () => {
 
       // Image should still have all required attributes even if src fails to load
       expect(image.attributes('alt')).toBe('Hero image')
-      expect(image.attributes('src')).toBe('/images/hero.jpg')
+      expect(image.attributes('src')).toBe('/images/hero1.PNG')
     })
 
     it('should render without router if not available', () => {

@@ -4,17 +4,17 @@ namespace Ordering.IntegrationTests.Orders;
 
 public class OrderRepositoryTests : BaseIntegrationTest
 {
-    private readonly IOrderRepository _repository;
     private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
     public OrderRepositoryTests(OrderingFactory factory) : base(factory)
     {
-        _repository = factory.Services.GetRequiredService<IOrderRepository>();
     }
 
     [Fact]
     public async Task CreateAsync_ShouldAddOrder()
     {
+        var _repository = Scope.ServiceProvider.GetRequiredService<IOrderRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var cardType = CardType.Create("Visa");
         DbContext.CardTypes.Add(cardType);
         await DbContext.SaveChangesAsync(_cancellationToken);
@@ -38,6 +38,8 @@ public class OrderRepositoryTests : BaseIntegrationTest
     public async Task Delete_ShouldRemoveOrder()
     {
         // Arrange
+        var _repository = Scope.ServiceProvider.GetRequiredService<IOrderRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var cardType = CardType.Create("Visa");
         DbContext.CardTypes.Add(cardType);
         await DbContext.SaveChangesAsync(_cancellationToken);
@@ -64,6 +66,8 @@ public class OrderRepositoryTests : BaseIntegrationTest
     public async Task ListAsync_ShouldReturnOrders()
     {
         // Arrange
+        var _repository = Scope.ServiceProvider.GetRequiredService<IOrderRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var cardType = CardType.Create("Visa");
         DbContext.CardTypes.Add(cardType);
 
@@ -104,6 +108,8 @@ public class OrderRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnOrder()
     {
         // Arrange
+        var _repository = Scope.ServiceProvider.GetRequiredService<IOrderRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var cardType = CardType.Create("Visa");
         DbContext.CardTypes.Add(cardType);
         await DbContext.SaveChangesAsync(_cancellationToken);
@@ -130,6 +136,7 @@ public class OrderRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenOrderDoesNotExist()
     {
         // Arrange
+        var _repository = Scope.ServiceProvider.GetRequiredService<IOrderRepository>();
         var specification = new OrderSpecification(new OrderId(Guid.CreateVersion7()));
 
         // Act
@@ -142,6 +149,8 @@ public class OrderRepositoryTests : BaseIntegrationTest
     [Fact]
     public async Task Update_ShouldModifyOrder()
     {
+        var _repository = Scope.ServiceProvider.GetRequiredService<IOrderRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var cardType = CardType.Create("Visa");
         DbContext.CardTypes.Add(cardType);
         await DbContext.SaveChangesAsync(_cancellationToken);

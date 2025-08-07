@@ -39,7 +39,7 @@ public class HooksRepository
         return subscription;
     }
 
-    private sealed class OnChangeSubscription(Func<Task> callback, HooksRepository owner) 
+    private sealed class OnChangeSubscription(Func<Task> callback, HooksRepository owner)
         : IDisposable
     {
         private readonly Func<Task> _callback = callback;

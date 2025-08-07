@@ -33,9 +33,9 @@ const responsiveOptions = ref([
 </script>
 
 <template>
-  <Carousel :values="gallery" :numVisible="3" :numScroll="1" :responsiveOptions="responsiveOptions">
+  <Carousel :value="gallery" :numVisible="3" :numScroll="1" :responsiveOptions="responsiveOptions">
     <template #item="{ data }">
-      <img :src="data" width="234" height="234" class="rounded-lg" />
+      <img :src="data" width="468" height="468" class="rounded-lg" />
     </template>
   </Carousel>
 </template>

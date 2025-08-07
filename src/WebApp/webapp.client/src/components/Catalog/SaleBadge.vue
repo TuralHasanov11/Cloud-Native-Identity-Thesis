@@ -6,17 +6,17 @@ const { product } = defineProps<{
   product: Product
 }>()
 
-const salePercentage = computed((): string => {
-  if (!product?.price) return ''
+const salePercentage = computed((): number => {
+  if (!product?.price) return 0
   const salePrice = product?.price
   const regularPrice = product?.price
-  return Math.round(((salePrice - regularPrice) / regularPrice) * 100) + ` %`
+  return Math.round(((salePrice - regularPrice) / regularPrice) * 100)
 })
 
-const showSaleBadge = computed(() => product.price != null)
+const showSaleBadge = computed(() => product.price != null && salePercentage.value !== 0)
 
 const textToDisplay = computed(() => {
-  return salePercentage.value
+  return salePercentage.value > 0 ? `-${salePercentage.value}%` : ''
 })
 </script>
 
