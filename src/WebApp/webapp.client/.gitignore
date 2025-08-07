@@ -39,3 +39,6 @@ components.d.ts
 .env
 
 jwt.json
+
+#Ignore vscode AI rules
+.github\copilot-instructions.md
