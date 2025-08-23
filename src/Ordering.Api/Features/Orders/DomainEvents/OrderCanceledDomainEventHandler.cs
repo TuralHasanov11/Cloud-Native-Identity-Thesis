@@ -46,7 +46,7 @@ public static partial class OrderCanceledDomainEventHandlerLogger
         Level = LogLevel.Information,
         Message = "Order status updated to {OrderStatus} for order {OrderId}")]
     public static partial void LogOrderStatusUpdated(
-        this ILogger<OrderCanceledDomainEventHandler> logger, 
-        Guid orderId, 
+        this ILogger<OrderCanceledDomainEventHandler> logger,
+        Guid orderId,
         OrderStatus orderStatus);
 }

@@ -2,11 +2,10 @@
 
 namespace Webhooks.IntegrationTests.Webhooks;
 
-
 public class WebhookSubscriptionRepositoryTests : BaseIntegrationTest
 {
     private readonly IWebhookSubscriptionRepository _repository;
-    private static readonly CancellationTokenSource _cancellationTokenSource = new(TimeSpan.FromSeconds(30));
+    private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
     public WebhookSubscriptionRepositoryTests(WebhooksFactory factory)
         : base(factory)
@@ -24,10 +23,10 @@ public class WebhookSubscriptionRepositoryTests : BaseIntegrationTest
             "sample-token",
             new IdentityId(IdentityExtensions.GenerateId()));
 
-        await _repository.CreateAsync(subscription, _cancellationTokenSource.Token);
-        await _repository.SaveChangesAsync(_cancellationTokenSource.Token);
+        await _repository.CreateAsync(subscription, _cancellationToken);
+        await _repository.SaveChangesAsync(_cancellationToken);
 
-        var createdSubscription = await DbContext.Subscriptions.FindAsync(subscription.Id);
+        var createdSubscription = await DbContext.Subscriptions.FirstOrDefaultAsync(s => s.Id == subscription.Id, _cancellationToken);
         Assert.NotNull(createdSubscription);
     }
 
@@ -42,15 +41,15 @@ public class WebhookSubscriptionRepositoryTests : BaseIntegrationTest
             "sample-token",
             new IdentityId(IdentityExtensions.GenerateId()));
 
-        await _repository.CreateAsync(subscription);
-        await _repository.SaveChangesAsync();
+        await _repository.CreateAsync(subscription, _cancellationToken);
+        await _repository.SaveChangesAsync(_cancellationToken);
 
         // Act
         _repository.Delete(subscription);
-        await _repository.SaveChangesAsync();
+        await _repository.SaveChangesAsync(_cancellationToken);
 
         // Assert
-        var deletedSubscription = await DbContext.Subscriptions.FindAsync(subscription.Id);
+        var deletedSubscription = await DbContext.Subscriptions.FirstOrDefaultAsync(s => s.Id == subscription.Id, _cancellationToken);
         Assert.Null(deletedSubscription);
     }
 
@@ -72,14 +71,14 @@ public class WebhookSubscriptionRepositoryTests : BaseIntegrationTest
             "sample-token2",
             new IdentityId(IdentityExtensions.GenerateId()));
 
-        await _repository.CreateAsync(subscription1);
-        await _repository.CreateAsync(subscription2);
-        await _repository.SaveChangesAsync();
+        await _repository.CreateAsync(subscription1, _cancellationToken);
+        await _repository.CreateAsync(subscription2, _cancellationToken);
+        await _repository.SaveChangesAsync(_cancellationToken);
 
         var specification = new WebhookSubscriptionSpecification(WebhookType.OrderPaid);
 
         // Act
-        var subscriptions = await _repository.ListAsync(specification);
+        var subscriptions = await _repository.ListAsync(specification, _cancellationToken);
 
         // Assert
         Assert.Contains(subscriptions, s => s.Id == subscription1.Id);
@@ -98,12 +97,12 @@ public class WebhookSubscriptionRepositoryTests : BaseIntegrationTest
             "sample-token",
             new IdentityId(IdentityExtensions.GenerateId()));
 
-        await repository.CreateAsync(subscription);
-        await repository.SaveChangesAsync();
+        await repository.CreateAsync(subscription, _cancellationToken);
+        await repository.SaveChangesAsync(_cancellationToken);
         var specification = new WebhookSubscriptionSpecification(subscription.UserId, subscription.Id);
 
         // Act
-        var result = await repository.SingleOrDefaultAsync(specification);
+        var result = await repository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         // Assert
         Assert.NotNull(result);
@@ -119,7 +118,7 @@ public class WebhookSubscriptionRepositoryTests : BaseIntegrationTest
             new WebhookId(Guid.CreateVersion7()));
 
         // Act
-        var result = await _repository.SingleOrDefaultAsync(specification);
+        var result = await _repository.SingleOrDefaultAsync(specification, _cancellationToken);
 
         // Assert
         Assert.Null(result);

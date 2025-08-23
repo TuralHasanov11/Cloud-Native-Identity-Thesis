@@ -4,19 +4,19 @@ namespace Ordering.IntegrationTests.Customers;
 
 public class CardTypeRepositoryTests : BaseIntegrationTest
 {
-    private readonly ICardTypeRepository _cardTypeRepository;
     private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
-    public CardTypeRepositoryTests(OrderingFactory factory) 
+    public CardTypeRepositoryTests(OrderingFactory factory)
         : base(factory)
     {
-        _cardTypeRepository = factory.Services.GetRequiredService<ICardTypeRepository>();
     }
 
     [Fact]
     public async Task CreateAsync_ShouldAddCardType()
     {
         // Arrange
+        var _cardTypeRepository = Scope.ServiceProvider.GetRequiredService<ICardTypeRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var cardType = CardType.Create("Visa");
 
         // Act
@@ -32,6 +32,8 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
     public async Task Delete_ShouldRemoveCardType()
     {
         // Arrange
+        var _cardTypeRepository = Scope.ServiceProvider.GetRequiredService<ICardTypeRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var cardType = CardType.Create("Visa2");
         await DbContext.CardTypes.AddAsync(cardType, _cancellationToken);
         await DbContext.SaveChangesAsync(_cancellationToken);
@@ -49,6 +51,8 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
     public async Task ListAsync_ShouldReturnCardTypes()
     {
         // Arrange
+        var _cardTypeRepository = Scope.ServiceProvider.GetRequiredService<ICardTypeRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var cardType1 = CardType.Create("Visa1");
         var cardType2 = CardType.Create("MasterCard1");
 
@@ -67,6 +71,8 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnCardType()
     {
         // Arrange
+        var _cardTypeRepository = Scope.ServiceProvider.GetRequiredService<ICardTypeRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var cardType = CardType.Create("Visa5");
 
         await DbContext.CardTypes.AddAsync(cardType, _cancellationToken);
@@ -85,6 +91,8 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenCardTypeDoesNotExist()
     {
         // Arrange
+        var _cardTypeRepository = Scope.ServiceProvider.GetRequiredService<ICardTypeRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var cardType = CardType.Create("Visa3");
 
         await DbContext.CardTypes.AddAsync(cardType, _cancellationToken);
@@ -103,6 +111,8 @@ public class CardTypeRepositoryTests : BaseIntegrationTest
     public async Task Update_ShouldModifyCardType()
     {
         // Arrange
+        var _cardTypeRepository = Scope.ServiceProvider.GetRequiredService<ICardTypeRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
         var cardType = CardType.Create("MasterCard3");
         await DbContext.CardTypes.AddAsync(cardType, _cancellationToken);
         await DbContext.SaveChangesAsync(_cancellationToken);

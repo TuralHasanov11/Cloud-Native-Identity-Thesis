@@ -16,9 +16,9 @@ public class BasketService
     private readonly HttpContext? _httpContext;
 
     public BasketService(
-        GrpcBasketClient basketClient, 
-        IServiceProvider serviceProvider, 
-        IConfiguration configuration, 
+        GrpcBasketClient basketClient,
+        IServiceProvider serviceProvider,
+        IConfiguration configuration,
         IHttpContextAccessor httpContextAccessor)
     {
         _basketClient = basketClient;
@@ -91,24 +91,32 @@ public class BasketService
 
     private async Task<string> GetAccessToken()
     {
-        ITokenAcquisition? tokenAcquisition = _serviceProvider.GetService<ITokenAcquisition>();
+        var identitySettings = _configuration
+            .GetSection(IdentityProviderSettings.SectionName)
+            .Get<IdentityProviderSettings>();
 
-        // Azure
-        if (tokenAcquisition is not null)
+
+        if (identitySettings?.EnabledProviderName == IdentityProviderSettings.AzureAd)
         {
-            var scopes = _configuration[$"{IdentityProviderSettings.AzureAd}:Scopes"]?.Split(" ", StringSplitOptions.RemoveEmptyEntries) ?? [];
+            ITokenAcquisition? tokenAcquisition = _serviceProvider.GetService<ITokenAcquisition>();
 
-            try
+            // Azure
+            if (tokenAcquisition is not null)
             {
-                return await tokenAcquisition.GetAccessTokenForUserAsync(scopes);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"No access token: {ex.Message}");
-                return string.Empty;
+                var scopes = _configuration[$"{IdentityProviderSettings.AzureAd}:Scopes"]?.Split(" ", StringSplitOptions.RemoveEmptyEntries) ?? [];
+
+                try
+                {
+                    return await tokenAcquisition.GetAccessTokenForUserAsync(scopes);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"No access token: {ex.Message}");
+                    return string.Empty;
+                }
             }
         }
-        else
+        else if (identitySettings?.EnabledProviderName == IdentityProviderSettings.AWSCognito)
         {
             try
             {
@@ -121,6 +129,8 @@ public class BasketService
                 return string.Empty;
             }
         }
+
+        return string.Empty;
     }
 }
 

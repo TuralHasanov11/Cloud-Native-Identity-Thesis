@@ -12,6 +12,7 @@ public static class ProductExtensions
             product.BrandId,
             product.AvailableStock,
             product.RestockThreshold,
-            product.MaxStockThreshold);
+            product.MaxStockThreshold,
+            product.PictureFileName?.OriginalString);
     }
 }

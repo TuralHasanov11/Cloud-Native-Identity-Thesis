@@ -5,7 +5,7 @@ public record Product(
     string Name,
     string Description,
     decimal Price,
-    string PictureUrl,
+    string? PictureUrl,
     Guid BrandId,
     Brand CatalogBrand,
     Guid ProductTypeId,

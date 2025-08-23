@@ -57,29 +57,21 @@ public class CatalogFactory : WebApplicationFactory<Program>, IAsyncLifetime
                         HistoryRepository.DefaultTableName));
             });
 
-            //services.AddMassTransitTestHarness(x =>
-            // {
-            //     x.AddDelayedMessageScheduler();
+            services.AddMassTransitTestHarness(x =>
+            {
+                x.AddDelayedMessageScheduler();
 
-            //     x.SetKebabCaseEndpointNameFormatter();
+                x.SetKebabCaseEndpointNameFormatter();
 
-            //     x.AddConsumers(Infrastructure.AssemblyReference.Assembly);
+                x.AddConsumers(Infrastructure.AssemblyReference.Assembly);
 
-            //     x.UsingRabbitMq((context, cfg) =>
-            //     {
-            //         cfg.UseDelayedMessageScheduler();
+                x.UsingInMemory((context, cfg) =>
+                {
+                    cfg.UseDelayedMessageScheduler();
 
-            //         var settings = context.GetRequiredService<MessageBrokerSettings>();
-
-            //         cfg.Host(new Uri(settings.Host), h =>
-            //         {
-            //             h.Username(settings.Username);
-            //             h.Password(settings.Password);
-            //         });
-
-            //         cfg.ConfigureEndpoints(context);
-            //     });
-            // });
+                    cfg.ConfigureEndpoints(context);
+                });
+            });
         });
     }
 }

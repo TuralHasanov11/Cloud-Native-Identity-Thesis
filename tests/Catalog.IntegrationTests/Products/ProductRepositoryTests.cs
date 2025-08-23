@@ -2,20 +2,20 @@
 
 public class ProductRepositoryTests : BaseIntegrationTest
 {
-    private readonly IProductRepository _repository;
     private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
     public ProductRepositoryTests(CatalogFactory factory)
         : base(factory)
     {
-        _repository = factory.Services.GetRequiredService<IProductRepository>();
     }
 
     [Fact]
     public async Task CreateAsync_ShouldAddProduct()
     {
         // Arrange
-        await SeedDatabase();
+        var _repository = Scope.ServiceProvider.GetRequiredService<IProductRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+        await SeedDatabase(DbContext);
 
         var brand = await DbContext.Brands.FirstAsync(_cancellationToken);
         var productType = await DbContext.ProductTypes.FirstAsync(_cancellationToken);
@@ -45,7 +45,9 @@ public class ProductRepositoryTests : BaseIntegrationTest
     public async Task Delete_ShouldRemoveProduct()
     {
         // Arrange
-        await SeedDatabase();
+        var _repository = Scope.ServiceProvider.GetRequiredService<IProductRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+        await SeedDatabase(DbContext);
 
         var brand = await DbContext.Brands.FirstAsync(_cancellationToken);
         var productType = await DbContext.ProductTypes.FirstAsync(_cancellationToken);
@@ -79,7 +81,9 @@ public class ProductRepositoryTests : BaseIntegrationTest
     public async Task ListAsync_ShouldReturnProducts()
     {
         // Arrange
-        await SeedDatabase();
+        var _repository = Scope.ServiceProvider.GetRequiredService<IProductRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+        await SeedDatabase(DbContext);
 
         var existingProducts = await DbContext.Products.ToListAsync(_cancellationToken);
 
@@ -95,7 +99,10 @@ public class ProductRepositoryTests : BaseIntegrationTest
     [Fact]
     public async Task SingleOrDefaultAsync_ShouldReturnProduct()
     {
-        await SeedDatabase();
+        // Arrange
+        var _repository = Scope.ServiceProvider.GetRequiredService<IProductRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+        await SeedDatabase(DbContext);
 
         // Arrange
         var brand = await DbContext.Brands.FirstAsync(_cancellationToken);
@@ -127,6 +134,7 @@ public class ProductRepositoryTests : BaseIntegrationTest
     public async Task SingleOrDefaultAsync_ShouldReturnNull_WhenProductDoesNotExist()
     {
         // Arrange
+        var _repository = Scope.ServiceProvider.GetRequiredService<IProductRepository>();
         var specification = new ProductSpecification(new ProductId(Guid.NewGuid()));
 
         // Act
@@ -140,7 +148,9 @@ public class ProductRepositoryTests : BaseIntegrationTest
     public async Task Update_ShouldModifyProduct()
     {
         // Arrange
-        await SeedDatabase();
+        var _repository = Scope.ServiceProvider.GetRequiredService<IProductRepository>();
+        var DbContext = Scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+        await SeedDatabase(DbContext);
 
         var brand = await DbContext.Brands.FirstAsync(_cancellationToken);
         var productType = await DbContext.ProductTypes.FirstAsync(_cancellationToken);
@@ -194,20 +204,20 @@ public class ProductRepositoryTests : BaseIntegrationTest
         yield return ProductType.Create("ProductType2");
     }
 
-    public async Task SeedDatabase()
+    public async Task SeedDatabase(CatalogDbContext dbContext)
     {
-        if (!await DbContext.Brands.AnyAsync())
+        if (!await dbContext.Brands.AnyAsync())
         {
             var brands = GetBrands();
-            await DbContext.AddRangeAsync(brands);
-            await DbContext.SaveChangesAsync();
+            await dbContext.AddRangeAsync(brands);
+            await dbContext.SaveChangesAsync();
         }
 
-        if (!await DbContext.ProductTypes.AnyAsync())
+        if (!await dbContext.ProductTypes.AnyAsync())
         {
             var productTypes = GetProductTypes();
-            await DbContext.AddRangeAsync(productTypes);
-            await DbContext.SaveChangesAsync();
+            await dbContext.AddRangeAsync(productTypes);
+            await dbContext.SaveChangesAsync();
         }
     }
 }

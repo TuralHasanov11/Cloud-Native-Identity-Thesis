@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 .containers/
+
+#Ignore vscode AI rules
+.github\copilot-instructions.md

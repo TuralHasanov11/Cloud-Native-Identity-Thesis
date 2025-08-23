@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Http.HttpResults;
 using WebApp.Server.Features.Catalog;
 
@@ -38,7 +37,8 @@ public static class UpdateByUser
                     Guid.Parse(x.ProductId),
                     x.Product.Name,
                     x.Product.Price,
-                    x.Quantity));
+                    x.Quantity,
+                    x.Product.PictureUrl));
 
             return TypedResults.Ok(result);
         }

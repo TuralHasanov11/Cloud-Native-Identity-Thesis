@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using IdentityModel;
 
 namespace ServiceDefaults;
 
@@ -9,7 +8,7 @@ public static class ClaimsPrincipalExtensions
     public static string? GetUserId(this ClaimsPrincipal principal)
         => principal.FindFirstValue("oid") ?? principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
-    public static string? GetUserName(this ClaimsPrincipal principal) 
+    public static string? GetUserName(this ClaimsPrincipal principal)
         => principal.FindFirstValue("cognito:username") ?? principal.FindFirstValue(JwtRegisteredClaimNames.Name);
 
     public static Dictionary<string, string> GetAddress(this ClaimsPrincipal principal)

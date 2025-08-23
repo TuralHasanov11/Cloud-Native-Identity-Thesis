@@ -4,7 +4,8 @@ public record BasketItem(
     Guid ProductId,
     string ProductName,
     decimal UnitPrice,
-    int Quantity)
+    int Quantity,
+    string? PictureUrl)
 {
     public static IEnumerable<BasketItem> Empty()
     {
