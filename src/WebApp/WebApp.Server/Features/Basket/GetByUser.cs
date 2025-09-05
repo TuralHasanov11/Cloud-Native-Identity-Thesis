@@ -36,7 +36,8 @@ public static class GetByUser
                     Guid.Parse(x.ProductId),
                     x.Product.Name,
                     x.Product.Price,
-                    x.Quantity));
+                    x.Quantity,
+                    x.Product?.PictureUrl));
 
             return TypedResults.Ok(items);
         }

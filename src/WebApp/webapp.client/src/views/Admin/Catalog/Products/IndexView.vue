@@ -30,7 +30,7 @@ async function onDeleteProduct(id: string) {
 
 <template>
   <Fluid class="grid grid-cols-12 gap-8">
-    <div class="col-span-12 xl:col-span-6">
+    <div class="col-span-12">
       <div class="card">
         <h2 class="font-semibold text-xl mb-4">Products</h2>
         <DataTable :value="productsContainer?.data" showGridlines tableStyle="min-width: 50rem">
@@ -42,7 +42,8 @@ async function onDeleteProduct(id: string) {
               <RouterLink :to="`/admin/catalog/products/${slotProps.data.id}`">
                 <Button label="Edit" icon="pi pi-pencil" class="p-button-text" />
               </RouterLink>
-              <Button @click="onDeleteProduct(slotProps.data.id)" severity="danger" label="Delete" icon="pi pi-trash" class="p-button-text" />
+              <Button @click="onDeleteProduct(slotProps.data.id)" severity="danger" label="Delete" icon="pi pi-trash"
+                class="p-button-text" />
             </template>
           </Column>
         </DataTable>

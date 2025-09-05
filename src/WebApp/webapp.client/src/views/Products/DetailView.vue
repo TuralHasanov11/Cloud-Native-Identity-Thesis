@@ -96,7 +96,7 @@ const disabledAddToCart = computed(() => {
             </div>
           </div>
         </div>
-        <div v-if="product.description" class="my-32">
+        <div class="my-32">
           <ProductTabs :product />
         </div>
       </div>

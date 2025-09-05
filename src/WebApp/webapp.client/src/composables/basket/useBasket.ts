@@ -62,7 +62,7 @@ export default function useBasket() {
       .json<BasketItem[]>()
 
     if (statusCode.value === HttpStatusCode.OK && data.value) {
-      cart.value.items = data.value
+      await getBasket()
       return Ok.EMPTY
     }
     return new Err('Failed to update basket')

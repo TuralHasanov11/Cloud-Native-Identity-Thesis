@@ -8,7 +8,7 @@ export type BasketItem = {
   unitPrice: number
   oldUnitPrice?: number
   quantity: number
-  pictureUrl: string
+  pictureUrl?: string
 }
 
 export type UpdateBasketRequest = {

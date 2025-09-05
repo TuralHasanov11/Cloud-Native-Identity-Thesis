@@ -12,7 +12,7 @@ const { item } = defineProps<{
 }>()
 
 const productSlug = computed(() => `/products/${decodeURIComponent(item.productId)}`)
-const imgScr = computed(() => FALLBACK_IMG)
+const imgScr = computed(() => item.pictureUrl || FALLBACK_IMG)
 
 const removeItem = () => {
   updateItemQuantity(item.productId, 0)
