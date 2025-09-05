@@ -96,7 +96,7 @@ public static partial class OpenApiExtensions
 
         builder.Services.AddRedaction(options =>
         {
-            options.SetRedactor<ErasingRedactor>(new DataClassificationSet(ApplicationLoggingTaxonomy.EUPDataClassification));
+            options.SetRedactor<ErasingRedactor>(new DataClassificationSet(ApplicationLoggingTaxonomy.EUPIDataClassification));
 
             options.SetRedactor<SecretRedactor>(new DataClassificationSet(ApplicationLoggingTaxonomy.EUIIDataClassification));
         });

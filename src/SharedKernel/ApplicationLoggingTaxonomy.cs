@@ -6,5 +6,5 @@ public static class ApplicationLoggingTaxonomy
 {
     public static DataClassification EUIIDataClassification => new("EUIIDataTaxonomy", "EUIIData");
 
-    public static DataClassification EUPDataClassification => new("EUPDataTaxonomy", "EUPData");
+    public static DataClassification EUPIDataClassification => new("EUPIDataTaxonomy", "EUPIData");
 }

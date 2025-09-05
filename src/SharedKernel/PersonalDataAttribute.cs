@@ -10,8 +10,8 @@ public sealed class EUIIDataAttribute : DataClassificationAttribute
 }
 
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
-public sealed class EUPDataAttribute : DataClassificationAttribute
+public sealed class EUPIDataAttribute : DataClassificationAttribute
 {
-    public EUPDataAttribute()
-        : base(ApplicationLoggingTaxonomy.EUPDataClassification) { }
+    public EUPIDataAttribute()
+        : base(ApplicationLoggingTaxonomy.EUPIDataClassification) { }
 }
