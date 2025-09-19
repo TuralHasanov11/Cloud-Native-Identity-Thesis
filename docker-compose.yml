@@ -38,7 +38,7 @@ services:
       - thesis-net
 
   catalog.postgres:
-    image: postgres:latest
+    image: postgres:16.3.0-alpine
     container_name: catalog.postgres
     environment:
       - POSTGRES_DB=catalog
@@ -83,7 +83,7 @@ services:
      - thesis-net
 
   ordering.postgres:
-    image: postgres:latest
+    image: postgres:16.3.0-alpine
     container_name: ordering.postgres
     environment:
       - POSTGRES_DB=ordering
@@ -134,7 +134,7 @@ services:
   #     - thesis-net
 
   # webhooks.postgres:
-  #   image: postgres:latest
+  #   image: postgres:16.3.0-alpine
   #   container_name: webhooks.postgres
   #   environment:
   #     - POSTGRES_DB=webhooks
@@ -250,7 +250,7 @@ services:
   #     - ./grafana/datasource:/etc/grafana/provisioning/datasources
 
   webapp.server:
-    image: ${DOCKER_REGISTRY-}webappserver
+    image: ${DOCKER_REGISTRY-}webapp-server
     build:
       context: .
       dockerfile: src/WebApp/WebApp.Server/Dockerfile

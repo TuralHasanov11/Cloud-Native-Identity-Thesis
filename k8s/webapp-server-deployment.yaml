@@ -6,8 +6,12 @@ metadata:
     app: webapp-server
   namespace: thesis
 spec:
-  # ingressClassName: web-ingress
+  ingressClassName: thesis-ingress
   replicas: 1
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: webapp-server
@@ -18,8 +22,8 @@ spec:
     spec:
       containers:
         - name: webapp.server
-          image: turalhasanov/thesis/webappserver:dev
-          imagePullPolicy: Always
+          image: "{{ .Values.webapp_image.name }}:{{ .Values.webapp_image.tag }}" # turalhasanov/thesis/webappserver:1.0.0 #{{.Values.version}}
+          # imagePullPolicy: Always
           resources:
             limits:
               memory: "512Mi"
@@ -48,7 +52,6 @@ spec:
         runAsUser: 1001
         runAsGroup: 1001
         runAsNonRoot: true
-
 ---
 apiVersion: v1
 kind: Service
@@ -58,6 +61,7 @@ metadata:
     app: webapp-server
   namespace: thesis
 spec:
+  # type: LoadBalancer
   selector:
     app: webapp-server
   ports:
@@ -65,25 +69,3 @@ spec:
     protocol: TCP
     port: 5113
     targetPort: 5113
-  type: LoadBalancer
----
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: webapp-server-ingress
-#   namespace: thesis
-#   annotations:
-#     kubernetes.io/ingress.class: nginx
-#     nginx.ingress.kubernetes.io/use-regex: 'true'
-# spec:
-#   rules:
-#   - host: modularmonolith.local
-#     http:
-#       paths:
-#       - path: /?(.*)
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: web-service
-#             port:
-#               number: 80

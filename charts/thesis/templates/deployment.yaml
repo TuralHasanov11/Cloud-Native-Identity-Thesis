@@ -1,0 +1,121 @@
+{{/* Generate deployment for each service */}}
+{{- $services := list "basket-api" "catalog-api" "ordering-api" "orderprocessor" "paymentprocessor" "webapp-server" "seq" "pgadmin" -}}
+{{- range $serviceName := $services -}}
+{{- $service := index $.Values $serviceName -}}
+{{- if $service.enabled -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Release.Name }}-{{ $serviceName }}
+  labels:
+    {{- include "thesis.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $serviceName }}
+  {{- with $.Values.commonAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ $service.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "thesis.selectorLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: {{ $serviceName }}
+  template:
+    metadata:
+      labels:
+        {{- include "thesis.selectorLabels" $ | nindent 8 }}
+        app.kubernetes.io/component: {{ $serviceName }}
+      {{- with $.Values.commonAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with $.Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "thesis.serviceAccountName" $ }}
+      securityContext:
+        {{- include "thesis.podSecurityContext" $ | nindent 8 }}
+      containers:
+        - name: {{ $serviceName }}
+          securityContext:
+            {{- include "thesis.securityContext" $ | nindent 12 }}
+          {{- if hasPrefix "turalhasanov/thesis/" $service.image.repository }}
+          image: "{{ $service.image.repository }}:{{ $service.image.tag | default "latest" }}"
+          {{- else if hasPrefix "dpage/" $service.image.repository }}
+          image: "{{ $service.image.repository }}:{{ $service.image.tag | default "latest" }}"
+          {{- else }}
+          image: "{{ include "thesis.imageRegistry" $ }}{{ $service.image.repository }}:{{ $service.image.tag | default "latest" }}"
+          {{- end }}
+          imagePullPolicy: {{ $service.image.pullPolicy }}
+          {{- if $service.service }}
+          ports:
+            - name: http
+              containerPort: {{ $service.service.targetPort | default 80 }}
+              protocol: TCP
+            {{- if eq $serviceName "seq" }}
+            - name: ingest
+              containerPort: 5341
+              protocol: TCP
+            {{- end }}
+          {{- end }}
+          {{- if $service.env }}
+          env:
+            {{- range $service.env }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+            {{- if or (eq $serviceName "basket-api") (eq $serviceName "catalog-api") (eq $serviceName "ordering-api") }}
+            - name: ConnectionStrings__DefaultConnection
+              value: {{ include "thesis.postgresqlConnectionString" $ | quote }}
+            - name: ConnectionStrings__Redis
+              value: {{ include "thesis.redisConnectionString" $ | quote }}
+            - name: MessageBroker__Host
+              value: {{ include "thesis.rabbitmqConnectionString" $ | quote }}
+            {{- end }}
+          {{- end }}
+          {{- if $service.service }}
+          livenessProbe:
+            httpGet:
+              path: {{ if eq $serviceName "seq" }}/{{ else }}/health{{ end }}
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: {{ if eq $serviceName "seq" }}/{{ else }}/health{{ end }}
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          {{- end }}
+          resources:
+            {{- if $service.resources }}
+            {{- toYaml $service.resources | nindent 12 }}
+            {{- end }}
+          {{- if $service.persistence }}
+          volumeMounts:
+            - name: {{ $serviceName }}-data
+              mountPath: {{ if eq $serviceName "seq" }}/data{{ else if eq $serviceName "pgadmin" }}/var/lib/pgadmin{{ else }}/data{{ end }}
+          {{- end }}
+      {{- if $service.persistence }}
+      volumes:
+        - name: {{ $serviceName }}-data
+          persistentVolumeClaim:
+            claimName: {{ $.Release.Name }}-{{ $serviceName }}-pvc
+      {{- end }}
+      {{- with $service.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $service.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $service.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end -}}
+{{- end -}}

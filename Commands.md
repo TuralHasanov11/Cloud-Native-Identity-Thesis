@@ -1,7 +1,7 @@
 ### CI/CD
 ```sh
 docker tag <image_name_> <user_name_>/thesis/<image_name_>
-docker build -t <user_name_>/thesis/<image_name_>:latest -f ./src/<ServiceName>/Dockerfile .
+docker build -t <user_name_>/thesis/<image_name_>:1.0.0 -f ./src/<ServiceName>/Dockerfile .
 ```
 
 ```sh
@@ -55,7 +55,7 @@ dotnet format ./CloudNativeIdentityThesis.sln
 ### Testing
 ```sh
 dotnet test --filter <ServiceName>.UnitTests --no-build --verbosity normal
-dotnet test –collect:”XPlat Code Coverage”
+dotnet test ï¿½collect:ï¿½XPlat Code Coverageï¿½
 ```
 
 ### Kubernetes

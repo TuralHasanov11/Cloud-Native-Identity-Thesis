@@ -1,0 +1,558 @@
+# Global configuration
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+# Docker registry configuration
+dockerRegistry: "turalhasanov/thesis/"
+
+# Namespace configuration
+namespaceOverride: ""
+
+# Common labels applied to all resources
+commonLabels: {}
+
+# Common annotations applied to all resources
+commonAnnotations: {}
+
+# Service Account configuration
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# RBAC configuration
+rbac:
+  create: true
+
+# Pod Security Context
+podSecurityContext:
+  fsGroup: 2000
+
+# Security Context
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+# Basket API configuration
+basket-api:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: turalhasanov/thesis/basket-api
+    pullPolicy: IfNotPresent
+    tag: "1.0.0"
+  
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 5100
+  
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/"
+    hosts:
+      - host: basket-api.local
+        paths:
+          - path: /basket
+            pathType: Prefix
+    tls: []
+  
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+  
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://seq:5341/ingest/otlp/v1/traces"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "http/protobuf"
+    - name: OTEL_EXPORTER_OTLP_HEADERS
+      value: "X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    - name: ConnectionStrings__RedisCache
+      value: "thesis-redis-master:6379"
+    - name: MessageBroker__Host
+      value: "amqp://thesis-rabbitmq:5672"
+    - name: MessageBroker__Username
+      value: "user"
+    - name: MessageBroker__Password
+      value: "bitnami"
+    - name: ASPNETCORE_ENVIRONMENT
+      value: "Production"
+    - name: ASPNETCORE_URLS
+      value: "http://+:80"
+
+# Catalog API configuration
+catalog-api:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: turalhasanov/thesis/catalog-api
+    pullPolicy: IfNotPresent
+    tag: "1.0.0"
+  
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 5102
+  
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/"
+    hosts:
+      - host: catalog-api.local
+        paths:
+          - path: /catalog
+            pathType: Prefix
+    tls: []
+  
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+  
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://seq:5341/ingest/otlp/v1/traces"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "http/protobuf"
+    - name: OTEL_EXPORTER_OTLP_HEADERS
+      value: "X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    - name: ConnectionStrings__Database
+      value: "Host=thesis-postgresql;Username=postgres;Port=5432;Database=catalog;Password=postgres;Include Error Detail=true"
+    - name: MessageBroker__Host
+      value: "amqp://thesis-rabbitmq:5672"
+    - name: MessageBroker__Username
+      value: "user"
+    - name: MessageBroker__Password
+      value: "bitnami"
+    - name: ASPNETCORE_ENVIRONMENT
+      value: "Production"
+    - name: ASPNETCORE_URLS
+      value: "http://+:80"
+
+# Ordering API configuration
+ordering-api:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: turalhasanov/thesis/ordering-api
+    pullPolicy: IfNotPresent
+    tag: "1.0.0"
+  
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 5104
+  
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/"
+    hosts:
+      - host: ordering-api.local
+        paths:
+          - path: /ordering
+            pathType: Prefix
+    tls: []
+  
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+  
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://seq:5341/ingest/otlp/v1/traces"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "http/protobuf"
+    - name: OTEL_EXPORTER_OTLP_HEADERS
+      value: "X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    - name: ConnectionStrings__Database
+      value: "Host=thesis-postgresql;Username=postgres;Port=5432;Database=ordering;Password=postgres;Include Error Detail=true"
+    - name: MessageBroker__Host
+      value: "amqp://thesis-rabbitmq:5672"
+    - name: MessageBroker__Username
+      value: "user"
+    - name: MessageBroker__Password
+      value: "bitnami"
+    - name: ASPNETCORE_ENVIRONMENT
+      value: "Production"
+    - name: ASPNETCORE_URLS
+      value: "http://+:80"
+
+# Order Processor configuration (background service)
+orderprocessor:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: turalhasanov/thesis/orderprocessor
+    pullPolicy: IfNotPresent
+    tag: "1.0.0"
+  
+  service:
+    type: ClusterIP
+    port: 80
+  
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://seq:5341/ingest/otlp/v1/traces"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "http/protobuf"
+    - name: OTEL_EXPORTER_OTLP_HEADERS
+      value: "X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+
+# Payment Processor configuration
+paymentprocessor:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: turalhasanov/thesis/paymentprocessor
+    pullPolicy: IfNotPresent
+    tag: "1.0.0"
+  
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 5106
+  
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/"
+    hosts:
+      - host: payment-api.local
+        paths:
+          - path: /payment
+            pathType: Prefix
+    tls: []
+  
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+  
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://seq:5341/ingest/otlp/v1/traces"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "http/protobuf"
+    - name: OTEL_EXPORTER_OTLP_HEADERS
+      value: "X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+
+# WebApp Server configuration
+webapp-server:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: turalhasanov/thesis/webapp-server
+    pullPolicy: IfNotPresent
+    tag: "1.0.0"
+  
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 5112
+  
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/"
+    hosts:
+      - host: webapp.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+  
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+  
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://seq:5341/ingest/otlp/v1/traces"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "http/protobuf"
+    - name: OTEL_EXPORTER_OTLP_HEADERS
+      value: "X-Seq-ApiKey=XMdIiVvcRbsIkFf2U7DQ"
+    - name: ASPNETCORE_ENVIRONMENT
+      value: "Production"
+    - name: ASPNETCORE_URLS
+      value: "http://+:80"
+    - name: ApiServices__BasketApi
+      value: "http://thesis-basket-api:80"
+    - name: ApiServices__CatalogApi
+      value: "http://thesis-catalog-api:80"
+    - name: ApiServices__OrderingApi
+      value: "http://thesis-ordering-api:80"
+
+# External services (managed by Bitnami charts)
+
+# PostgreSQL configuration
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "postgres"
+    username: "postgres"
+    password: "postgres"
+    database: "thesis"
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi
+  service:
+    ports:
+      postgresql: 5432
+
+# Redis configuration
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: true
+      size: 8Gi
+  service:
+    ports:
+      redis: 6379
+
+# RabbitMQ configuration
+rabbitmq:
+  enabled: true
+  auth:
+    username: "guest"
+    password: "guest"
+  service:
+    ports:
+      amqp: 5672
+      manager: 15672
+  persistence:
+    enabled: true
+    size: 8Gi
+
+# Additional services
+
+# Seq (for logging)
+seq:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: datalust/seq
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  
+  service:
+    type: ClusterIP
+    ports:
+      - name: http
+        port: 80
+        targetPort: 80
+      - name: ingest
+        port: 5341
+        targetPort: 5341
+  
+  ingress:
+    enabled: true
+    className: "nginx"
+    hosts:
+      - host: seq.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+  
+  persistence:
+    enabled: true
+    size: 10Gi
+  
+  env:
+    - name: ACCEPT_EULA
+      value: "Y"
+  
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+
+# PgAdmin configuration
+pgadmin:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: dpage/pgadmin4
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+  
+  ingress:
+    enabled: true
+    className: "nginx"
+    hosts:
+      - host: pgadmin.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+  
+  env:
+    - name: PGADMIN_DEFAULT_EMAIL
+      value: "admin@postgres.com"
+    - name: PGADMIN_DEFAULT_PASSWORD
+      value: "postgres"
+  
+  persistence:
+    enabled: true
+    size: 5Gi
+  
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  #       set:
+  #       - name: My-Overwrite-Header
+  #         value: this-is-the-only-value
+  #       remove:
+  #       - User-Agent
+  # - matches:
+  #   - path:
+  #       type: PathPrefix
+  #       value: /echo
+  #     headers:
+  #     - name: version
+  #       value: v2
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+# This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

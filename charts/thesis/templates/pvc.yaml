@@ -1,0 +1,28 @@
+{{/* Generate PVC for services that have persistence enabled */}}
+{{- $services := list "seq" "pgadmin" -}}
+{{- range $serviceName := $services -}}
+{{- $service := index $.Values $serviceName -}}
+{{- if and $service.enabled $service.persistence $service.persistence.enabled -}}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $.Release.Name }}-{{ $serviceName }}-pvc
+  labels:
+    {{- include "thesis.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $serviceName }}
+  {{- with $.Values.commonAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ $service.persistence.size }}
+  {{- if $.Values.global.storageClass }}
+  storageClassName: {{ $.Values.global.storageClass }}
+  {{- end }}
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "thesis.fullname" . }}-config
+  labels:
+    {{- include "thesis.labels" . | nindent 4 }}
+  {{- with .Values.commonAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+data:
+  # Connection strings
+  postgresql.connection: {{ include "thesis.postgresqlConnectionString" . | quote }}
+  redis.connection: {{ include "thesis.redisConnectionString" . | quote }}
+  rabbitmq.connection: {{ include "thesis.rabbitmqConnectionString" . | quote }}
+  seq.endpoint: {{ include "thesis.seqEndpoint" . | quote }}
+  
+  # Application settings
+  aspnetcore.environment: "Production"
+  aspnetcore.urls: "http://+:80"
+  
+  # Logging configuration
+  logging.loglevel.default: "Information"
+  logging.loglevel.microsoft: "Warning"
+  logging.loglevel.microsoft.hosting.lifetime: "Information"

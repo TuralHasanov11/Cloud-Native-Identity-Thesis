@@ -1,0 +1,38 @@
+{{/* Generate service for each service that has a service configuration */}}
+{{- $services := list "basket-api" "catalog-api" "ordering-api" "orderprocessor" "paymentprocessor" "webapp-server" "seq" "pgadmin" -}}
+{{- range $serviceName := $services -}}
+{{- $service := index $.Values $serviceName -}}
+{{- if and $service.enabled $service.service -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $.Release.Name }}-{{ $serviceName }}
+  labels:
+    {{- include "thesis.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $serviceName }}
+  {{- with $.Values.commonAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ $service.service.type }}
+  ports:
+    {{- if eq $serviceName "seq" }}
+    {{- range $service.service.ports }}
+    - port: {{ .port }}
+      targetPort: {{ .targetPort }}
+      protocol: TCP
+      name: {{ .name }}
+    {{- end }}
+    {{- else }}
+    - port: {{ $service.service.port }}
+      targetPort: {{ $service.service.targetPort | default $service.service.port }}
+      protocol: TCP
+      name: http
+    {{- end }}
+  selector:
+    {{- include "thesis.selectorLabels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $serviceName }}
+{{- end -}}
+{{- end -}}

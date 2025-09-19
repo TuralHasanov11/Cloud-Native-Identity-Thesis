@@ -1,0 +1,48 @@
+{{/* Generate ingress for each service that has ingress enabled */}}
+{{- $services := list "basket-api" "catalog-api" "ordering-api" "paymentprocessor" "webapp-server" "seq" "pgadmin" -}}
+{{- range $serviceName := $services -}}
+{{- $service := index $.Values $serviceName -}}
+{{- if and $service.enabled $service.ingress $service.ingress.enabled -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $.Release.Name }}-{{ $serviceName }}
+  labels:
+    {{- include "thesis.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $serviceName }}
+  {{- with $service.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if $service.ingress.className }}
+  ingressClassName: {{ $service.ingress.className }}
+  {{- end }}
+  {{- if $service.ingress.tls }}
+  tls:
+    {{- range $service.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range $service.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ $.Release.Name }}-{{ $serviceName }}
+                port:
+                  number: {{ index $.Values $serviceName "service" "port" }}
+          {{- end }}
+    {{- end }}
+{{- end -}}
+{{- end -}}

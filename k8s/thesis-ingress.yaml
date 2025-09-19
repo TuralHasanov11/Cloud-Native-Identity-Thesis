@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: thesis-ingress
+  namespace: thesis
+  labels: 
+    app: thesis-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      host: thesis-webapp-server.local
+      paths:
+      - path: /?(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: webapp-server-service
+            port:
+              number: 5113

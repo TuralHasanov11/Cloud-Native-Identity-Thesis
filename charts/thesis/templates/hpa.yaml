@@ -1,0 +1,43 @@
+{{/* Generate HPA for services that have autoscaling enabled */}}
+{{- $services := list "basket-api" "catalog-api" "ordering-api" "paymentprocessor" "webapp-server" -}}
+{{- range $serviceName := $services -}}
+{{- $service := index $.Values $serviceName -}}
+{{- if and $service.enabled $service.autoscaling $service.autoscaling.enabled -}}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ $.Release.Name }}-{{ $serviceName }}
+  labels:
+    {{- include "thesis.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $serviceName }}
+  {{- with $.Values.commonAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ $.Release.Name }}-{{ $serviceName }}
+  minReplicas: {{ $service.autoscaling.minReplicas }}
+  maxReplicas: {{ $service.autoscaling.maxReplicas }}
+  metrics:
+    {{- if $service.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ $service.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if $service.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ $service.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end -}}
+{{- end -}}
