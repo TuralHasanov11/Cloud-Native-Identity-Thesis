@@ -1,19 +1,19 @@
-﻿# Remove the line below if you want to inherit .editorconfig settings from higher directories
-root = true
+[*]
+charset = utf-8
 
-# C# files
-[*.cs]
 
 #### Core EditorConfig Options ####
+
+# New line preferences
+end_of_line = crlf
+insert_final_newline = false
 
 # Indentation and spacing
 indent_size = 4
 indent_style = space
 tab_width = 4
 
-# New line preferences
-end_of_line = crlf
-insert_final_newline = false
+[*.cs]
 
 #### .NET Code Actions ####
 
@@ -25,6 +25,7 @@ dotnet_property_generation_behavior = prefer_throwing_properties
 # Symbol search
 dotnet_search_reference_assemblies = true
 
+
 #### .NET Coding Conventions ####
 
 # Organize usings
@@ -33,14 +34,14 @@ dotnet_sort_system_directives_first = false
 file_header_template = unset
 
 # this. and Me. preferences
-dotnet_style_qualification_for_event = false
-dotnet_style_qualification_for_field = false
-dotnet_style_qualification_for_method = false
-dotnet_style_qualification_for_property = false
+dotnet_style_qualification_for_event = false:silent
+dotnet_style_qualification_for_field = false:silent
+dotnet_style_qualification_for_method = false:silent
+dotnet_style_qualification_for_property = false:silent
 
 # Language keywords vs BCL types preferences
-dotnet_style_predefined_type_for_locals_parameters_members = true
-dotnet_style_predefined_type_for_member_access = true
+dotnet_style_predefined_type_for_locals_parameters_members = true:warning
+dotnet_style_predefined_type_for_member_access = true:warning
 
 # Parentheses preferences
 dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity
@@ -53,24 +54,24 @@ dotnet_style_require_accessibility_modifiers = for_non_interface_members
 
 # Expression-level preferences
 dotnet_prefer_system_hash_code = true
-dotnet_style_coalesce_expression = true
-dotnet_style_collection_initializer = true
-dotnet_style_explicit_tuple_names = true
-dotnet_style_namespace_match_folder = true
-dotnet_style_null_propagation = true
-dotnet_style_object_initializer = true
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_explicit_tuple_names = true:suggestion
+dotnet_style_namespace_match_folder = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_object_initializer = true:error
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
-dotnet_style_prefer_auto_properties = true
-dotnet_style_prefer_collection_expression = when_types_loosely_match
-dotnet_style_prefer_compound_assignment = true
-dotnet_style_prefer_conditional_expression_over_assignment = true
-dotnet_style_prefer_conditional_expression_over_return = true
+dotnet_style_prefer_auto_properties = true:silent
+dotnet_style_prefer_collection_expression = when_types_loosely_match:suggestion
+dotnet_style_prefer_compound_assignment = true:suggestion
+dotnet_style_prefer_conditional_expression_over_assignment = true:silent
+dotnet_style_prefer_conditional_expression_over_return = true:silent
 dotnet_style_prefer_foreach_explicit_cast_in_source = when_strongly_typed
-dotnet_style_prefer_inferred_anonymous_type_member_names = true
-dotnet_style_prefer_inferred_tuple_names = true
-dotnet_style_prefer_is_null_check_over_reference_equality_method = true
-dotnet_style_prefer_simplified_boolean_expressions = true
-dotnet_style_prefer_simplified_interpolation = true
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
+dotnet_style_prefer_inferred_tuple_names = true:suggestion
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_style_prefer_simplified_interpolation = true:suggestion
 
 # Field preferences
 dotnet_style_readonly_field = true
@@ -81,16 +82,13 @@ dotnet_code_quality_unused_parameters = all
 # Suppression preferences
 dotnet_remove_unnecessary_suppression_exclusions = none
 
-# New line preferences
-dotnet_style_allow_multiple_blank_lines_experimental = true
-dotnet_style_allow_statement_immediately_after_block_experimental = true
 
 #### C# Coding Conventions ####
 
 # var preferences
-csharp_style_var_elsewhere = false:silent
+csharp_style_var_elsewhere = false
 csharp_style_var_for_built_in_types = false:silent
-csharp_style_var_when_type_is_apparent = false:silent
+csharp_style_var_when_type_is_apparent = true:suggestion
 
 # Expression-bodied members
 csharp_style_expression_bodied_accessors = true:silent
@@ -124,7 +122,7 @@ csharp_style_prefer_readonly_struct_member = true:suggestion
 csharp_prefer_braces = true:silent
 csharp_prefer_simple_using_statement = true:suggestion
 csharp_prefer_system_threading_lock = true:suggestion
-csharp_style_namespace_declarations = block_scoped:silent
+csharp_style_namespace_declarations = file_scoped:suggestion
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_primary_constructors = true:suggestion
 csharp_style_prefer_top_level_statements = true:silent
@@ -148,12 +146,6 @@ csharp_style_unused_value_expression_statement_preference = discard_variable:sil
 # 'using' directive preferences
 csharp_using_directive_placement = outside_namespace:silent
 
-# New line preferences
-csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = true:silent
-csharp_style_allow_blank_line_after_token_in_arrow_expression_clause_experimental = true:silent
-csharp_style_allow_blank_line_after_token_in_conditional_expression_experimental = true:silent
-csharp_style_allow_blank_lines_between_consecutive_braces_experimental = true:silent
-csharp_style_allow_embedded_statements_on_same_line_experimental = true:silent
 
 #### C# Formatting Rules ####
 
@@ -173,6 +165,7 @@ csharp_indent_case_contents = true
 csharp_indent_case_contents_when_block = true
 csharp_indent_labels = one_less_than_current
 csharp_indent_switch_labels = true
+
 
 # Space preferences
 csharp_space_after_cast = false
@@ -201,6 +194,10 @@ csharp_space_between_square_brackets = false
 # Wrapping preferences
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
+
+[*.{cs,vb}]
+max_line_length = 120
+
 
 #### Naming styles ####
 
@@ -266,82 +263,21 @@ dotnet_naming_symbols.private_or_internal_constant_field.required_modifiers = co
 
 # Naming styles
 
-dotnet_naming_style.pascal_case.required_prefix =
-dotnet_naming_style.pascal_case.required_suffix =
-dotnet_naming_style.pascal_case.word_separator =
-dotnet_naming_style.pascal_case.capitalization = pascal_case
-
 dotnet_naming_style.begins_with_i.required_prefix = I
 dotnet_naming_style.begins_with_i.required_suffix =
 dotnet_naming_style.begins_with_i.word_separator =
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
 
-dotnet_naming_style.prepend_with__.required_prefix = _
-dotnet_naming_style.prepend_with__.required_suffix =
-dotnet_naming_style.prepend_with__.word_separator =
-dotnet_naming_style.prepend_with__.capitalization = camel_case
-dotnet_diagnostic.ASP0018.severity = error
-dotnet_diagnostic.SA1600.severity = none
-dotnet_diagnostic.SA1602.severity = none
-dotnet_diagnostic.SA1200.severity = none
-dotnet_diagnostic.SA1101.severity = none
-dotnet_diagnostic.SA1649.severity = suggestion
-dotnet_diagnostic.SA1633.severity = none
-dotnet_diagnostic.SA1309.severity = none
+dotnet_naming_style.pascal_case.required_prefix =
+dotnet_naming_style.pascal_case.required_suffix =
+dotnet_naming_style.pascal_case.word_separator =
+dotnet_naming_style.pascal_case.capitalization = pascal_case
 
-# IDE0005: Using directive is unnecessary.
-dotnet_diagnostic.IDE0005.severity = none
-
-# SA1623: Property summary documentation should match accessors
-dotnet_diagnostic.SA1623.severity = none
-
-# SA1313: Parameter names should begin with lower-case letter
-dotnet_diagnostic.SA1313.severity = none
-dotnet_diagnostic.SA1204.severity = none
-dotnet_diagnostic.SA1601.severity = suggestion
-dotnet_diagnostic.SA1413.severity = none
-
-[*.{cs,vb}]
-dotnet_style_operator_placement_when_wrapping = beginning_of_line
-tab_width = 4
-indent_size = 4
-end_of_line = crlf
-dotnet_code_quality_unused_parameters = all:suggestion
+# Performance rules
 dotnet_diagnostic.CA1823.severity = error
 dotnet_diagnostic.CA1837.severity = error
 dotnet_diagnostic.CA1850.severity = error
 dotnet_diagnostic.CA1813.severity = warning
-insert_final_newline = true
-dotnet_style_coalesce_expression = true:suggestion
-dotnet_style_null_propagation = true:suggestion
-dotnet_style_prefer_is_null_check_over_reference_equality_method = true:silent
-dotnet_style_prefer_auto_properties = true:silent
-dotnet_style_object_initializer = true:suggestion
-dotnet_style_collection_initializer = true:suggestion
-dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
-dotnet_style_prefer_conditional_expression_over_assignment = true:silent
-dotnet_style_prefer_conditional_expression_over_return = true:silent
-dotnet_style_explicit_tuple_names = true:suggestion
-dotnet_style_prefer_inferred_tuple_names = true:suggestion
-dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
-dotnet_style_prefer_compound_assignment = true:suggestion
-dotnet_style_prefer_simplified_interpolation = true:suggestion
-dotnet_style_prefer_collection_expression = when_types_loosely_match:suggestion
-dotnet_style_namespace_match_folder = true:suggestion
-dotnet_style_readonly_field = true:suggestion
-dotnet_style_predefined_type_for_locals_parameters_members = true:silent
-dotnet_style_predefined_type_for_member_access = true:silent
-dotnet_style_require_accessibility_modifiers = for_non_interface_members:silent
-dotnet_style_allow_multiple_blank_lines_experimental = true:silent
-dotnet_style_allow_statement_immediately_after_block_experimental = true:silent
-dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
-dotnet_style_qualification_for_field = false:silent
-dotnet_style_qualification_for_property = false:silent
-dotnet_style_qualification_for_method = false:silent
-dotnet_style_qualification_for_event = false:silent
 
 
 #### Interoperability  ####
@@ -369,6 +305,7 @@ dotnet_diagnostic.CA1421.severity = warning
 
 # Validate platform compatibility - obsoleted APIs
 dotnet_diagnostic.CA1422.severity = warning
+
 
 #### Diagnostic ####
 
@@ -508,7 +445,6 @@ dotnet_diagnostic.IDISP026.severity = error
 dotnet_diagnostic.IDE0130.severity = warning
 
 
-
 #### Naming ####
 
 # Do not name enum values 'Reserved'
@@ -538,7 +474,7 @@ dotnet_diagnostic.CA1713.severity = warning
 dotnet_diagnostic.CA1714.severity = error
 
 # Identifiers should have correct prefix
-dotnet_diagnostic.CA1715.severity = suggestion
+dotnet_diagnostic.CA1715.severity = error
 
 # Identifiers should not match keywords
 dotnet_diagnostic.CA1716.severity = warning
@@ -562,11 +498,10 @@ dotnet_diagnostic.CA1725.severity = warning
 dotnet_diagnostic.CA1727.severity = warning
 
 
+#### Obsolete ####
 
 # The UTF-7 encoding is insecure
 dotnet_diagnostic.SYSLIB0001.severity = error
-
-#### Obsolete ####
 
 # PrincipalPermissionAttribute is obsolete
 dotnet_diagnostic.SYSLIB0002.severity = error
@@ -967,6 +902,7 @@ dotnet_diagnostic.SYSLIB1103.severity = error
 # Generator cannot determine the target configuration type.
 dotnet_diagnostic.SYSLIB1104.severity = error
 
+
 #### Reliability ####
 
 # Dispose objects before losing scope
@@ -1019,6 +955,7 @@ dotnet_diagnostic.CA2022.severity = warning
 
 # Do not useStreamReader.EndOfStream in asyncmethods
 dotnet_diagnostic.CA2022.severity = warning
+
 
 #### Security Rules ####
 
@@ -1244,7 +1181,7 @@ dotnet_diagnostic.CA5383.severity = warning
 # Do Not Use Digital Signature Algorithm (DSA)
 dotnet_diagnostic.CA5384.severity = warning
 
-# Use RivestShamirAdleman (RSA) Algorithm With Sufficient Key Size
+# Use Rivest�Shamir�Adleman (RSA) Algorithm With Sufficient Key Size
 dotnet_diagnostic.CA5385.severity = warning
 
 # Avoid hardcoding SecurityProtocolType value
@@ -1306,6 +1243,7 @@ dotnet_diagnostic.CA5404.severity = error
 
 # Do not always skip token validation in delegates
 dotnet_diagnostic.CA5405.severity = error
+
 
 #### Usage Rules ####
 
@@ -1370,7 +1308,7 @@ dotnet_diagnostic.CA2229.severity = warning
 dotnet_diagnostic.CA2231.severity = warning
 
 # Pass System.Uri objects instead of strings
-dotnet_diagnostic.CA2234.severity = warning
+dotnet_diagnostic.CA2234.severity = suggestion
 
 # Mark all non-serializable fields
 dotnet_diagnostic.CA2235.severity = suggestion
@@ -1448,8 +1386,6 @@ dotnet_diagnostic.CA2264.severity = warning
 dotnet_diagnostic.CA2265.severity = warning
 
 
-
-
 #### Language Rules ####
 
 # this and Me preferences
@@ -1470,10 +1406,6 @@ dotnet_diagnostic.IDE0043.severity = warning
 
 # Add readonly modifier
 dotnet_diagnostic.IDE0044.severity = warning
-
-# Language keywords instead of framework type names for type references
-dotnet_style_predefined_type_for_locals_parameters_members = true:warning
-dotnet_style_predefined_type_for_member_access = true:warning
 
 # Use language keywords instead of framework type names for type references
 dotnet_diagnostic.IDE0049.severity = warning
@@ -1499,10 +1431,6 @@ dotnet_diagnostic.IDE0064.severity = suggestion
 # Parentheses preferences
 dotnet_diagnostic.IDE0047.severity = warning
 dotnet_diagnostic.IDE0048.severity = warning
-dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:warning
-dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:warning
-dotnet_style_parentheses_in_other_operators = never_if_unnecessary:warning
-dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:warning
 
 # Add missing cases to switch statement
 dotnet_diagnostic.IDE0010.severity = warning
@@ -1723,6 +1651,56 @@ dotnet_diagnostic.IDE0320.severity = warning
 # Prefer 'System.Threading.Lock'
 dotnet_diagnostic.IDE0330.severity = warning
 
+# Simplify name
+dotnet_diagnostic.IDE0001.severity = warning
+
+# Simplify member access
+dotnet_diagnostic.IDE0002.severity = warning
+
+# Remove unnecessary cast
+dotnet_diagnostic.IDE0004.severity = error
+
+# Remove unnecessary import
+dotnet_diagnostic.IDE0005.severity = warning
+
+# Remove unreachable code
+dotnet_diagnostic.IDE0035.severity = error
+
+# Remove unused private member
+dotnet_diagnostic.IDE0051.severity = warning
+
+# Remove unread private member
+dotnet_diagnostic.IDE0052.severity = error
+
+# Remove unnecessary value assignment
+dotnet_diagnostic.IDE0059.severity = error
+
+# Remove unused parameter
+dotnet_diagnostic.IDE0060.severity = warning
+
+# Remove unnecessary suppression
+dotnet_diagnostic.IDE0079.severity = error
+
+# Remove unnecessary suppression operator
+dotnet_diagnostic.IDE0080.severity = suggestion
+
+# Remove ByVal
+dotnet_diagnostic.IDE0081.severity = error
+
+# Remove unnecessary equality operator
+dotnet_diagnostic.IDE0100.severity = suggestion
+
+# Use conditional delegate call
+dotnet_diagnostic.IDE0105.severity = warning
+
+# Remove unnecessary discard
+dotnet_diagnostic.IDE0110.severity = warning
+
+# Simplify object creation
+dotnet_diagnostic.IDE0140.severity = suggestion
+
+# Prefer 'null' check over type check
+dotnet_diagnostic.IDE0150.severity = warning
 
 
 #### Design Rules ####
@@ -1782,7 +1760,7 @@ dotnet_diagnostic.CA1028.severity = error
 dotnet_diagnostic.CA1030.severity = suggestion
 
 # Do not catch general exception types
-#dotnet_diagnostic.CA1031.severity = error
+dotnet_diagnostic.CA1031.severity = warning
 
 # Implement standard exception constructors
 dotnet_diagnostic.CA1032.severity = suggestion
@@ -1871,16 +1849,14 @@ dotnet_diagnostic.CA1069.severity = error
 # Do not declare event fields as virtual
 dotnet_diagnostic.CA1070.severity = warning
 
+
 #### Documentation Rules ####
 
 # Avoid using cref tags with a prefix
 dotnet_diagnostic.CA1200.severity = suggestion
 
-#### Globalization Rules ####
 
-# Do not pass literals as localized parameters
-dotnet_diagnostic.CA1303.severity = warning
-dotnet_code_quality.CA1303.use_naming_heuristic = true
+#### Globalization Rules ####
 
 # Specify CultureInfo
 dotnet_diagnostic.CA1304.severity = error
@@ -1906,6 +1882,7 @@ dotnet_diagnostic.CA1311.severity = warning
 # Specify marshaling for P/Invoke string arguments
 dotnet_diagnostic.CA2101.severity = warning
 
+
 #### SingleFile Rules ####
 
 # Avoid using accessing Assembly file path when publishing as a single-file
@@ -1923,6 +1900,7 @@ dotnet_diagnostic.IL3003.severity = error
 # RequiresAssemblyFilesAttribute cannot be placed directly on applicationentry point.
 dotnet_diagnostic.IL3005.severity = error
 
+
 #### Miscellaneous Rules ####
 
 #Remove invalid global 'SuppressMessageAttribute'
@@ -1931,437 +1909,3 @@ dotnet_diagnostic.IDE0076.severity = silent
 #Avoid legacy format target in global 'SuppressMessageAttribute'
 dotnet_diagnostic.IDE0077.severity = warning
 
-
-
-#### StyleCop Rules ####
-
-# A violation of this rule occurs when a compilation (project) contains one or more files which are parsed with the DocumentationMode set to None. This most frequently occurs when the project is configured to not produce an XML documentation file during the build.
-dotnet_diagnostic.SA0001.severity = warning
-
-# The spacing around a C# keyword is incorrect.
-dotnet_diagnostic.SA1000.severity = warning
-
-# DoNotPrefixCallsWithBaseUnlessLocalImplementationExists
-dotnet_diagnostic.SA1100.severity = warning
-
-# CommentsMustContainText
-dotnet_diagnostic.SA1120.severity = warning
-
-# DoNotUseRegions
-dotnet_diagnostic.SA1124.severity = warning
-
-# InterfaceNamesMustBeginWithI
-dotnet_diagnostic.SA1302.severity = error
-
-# ConstFieldNamesMustBeginWithUpperCaseLetter
-dotnet_diagnostic.SA1303.severity = error
-
-# FieldNamesMustNotUseHungarianNotation
-dotnet_diagnostic.SA1305.severity = warning
-
-# VariableNamesMustNotBePrefixed
-dotnet_diagnostic.SA1308.severity = error
-
-# A field name in C# begins with an underscore.
-dotnet_diagnostic.SA1309.severity = none
-
-# VariableNamesMustBeginWithLowerCaseLetter
-dotnet_diagnostic.SA1312.severity = warning
-
-# TupleElementNamesShouldUseCorrectCasing
-dotnet_diagnostic.SA1316.severity = warning
-
-# A Code Analysis SuppressMessage attribute does not include a justification.
-dotnet_diagnostic.SA1404.severity = error
-
-# BracesForMultiLineStatementsMustNotShareLine
-dotnet_diagnostic.SA1500.severity = warning
-
-# ElementMustNotBeOnSingleLine
-dotnet_diagnostic.SA1502.severity = warning
-
-# BracesMustNotBeOmitted
-dotnet_diagnostic.SA1503.severity = warning
-
-# ClosingBraceMustBeFollowedByBlankLine
-dotnet_diagnostic.SA1513.severity = warning
-
-# UseBracesConsistently
-dotnet_diagnostic.SA1520.severity = warning
-
-# File header copyright text should match
-dotnet_diagnostic.SA1636.severity = none
-
-# ElementDocumentationMustBeSpelledCorrectly
-dotnet_diagnostic.SA1650.severity = warning
-
-# Do not return null
-dotnet_diagnostic.RETURN0001.severity = warning
-
-#### Async Rules ####
-
-# Asynchronous method names should end with Async
-dotnet_diagnostic.ASYNC0001.severity = error
-
-# Non asynchronous method names should end with Async
-dotnet_diagnostic.ASYNC0002.severity = error
-
-# Avoid void returning asynchronous method
-dotnet_diagnostic.ASYNC0003.severity = warning
-
-# Use ConfigureAwait(false) on await expression
-dotnet_diagnostic.ASYNC0004.severity = error
-
-# Do not use blocking call (make method async)
-dotnet_diagnostic.MA0045.severity = none
-
-# Call 'ConfigureAwait(false)'.
-dotnet_diagnostic.RCS1090.severity = error
-
-# Return completed task instead of returning null
-dotnet_diagnostic.RCS1210.severity = error
-
-# AsyncifyInvocation: Use Task Async
-dotnet_diagnostic.AsyncifyInvocation.severity = error
-
-# AsyncifyVariable: Use Task Async
-dotnet_diagnostic.AsyncifyVariable.severity = error
-
-# Avoid legacy thread switching methods
-dotnet_diagnostic.VSTHRD001.severity = error
-
-# Avoid problematic synchronous waits
-dotnet_diagnostic.VSTHRD002.severity = error
-
-# Avoid awaiting foreign Tasks
-dotnet_diagnostic.VSTHRD003.severity = error
-
-# Await SwitchToMainThreadAsync
-dotnet_diagnostic.VSTHRD004.severity = error
-
-# Invoke single-threaded types on Main thread
-dotnet_diagnostic.VSTHRD010.severity = error
-
-# Use AsyncLazy<T>
-dotnet_diagnostic.VSTHRD011.severity = error
-
-# Provide JoinableTaskFactory where allowed
-dotnet_diagnostic.VSTHRD012.severity = error
-
-# Avoid async void methods
-dotnet_diagnostic.VSTHRD100.severity = error
-
-# Avoid unsupported async delegates
-dotnet_diagnostic.VSTHRD101.severity = error
-
-# Implement internal logic asynchronously
-dotnet_diagnostic.VSTHRD102.severity = error
-
-# Call async methods when in an async method
-dotnet_diagnostic.VSTHRD103.severity = error
-
-# Offer async option
-dotnet_diagnostic.VSTHRD104.severity = warning
-
-# Avoid method overloads that assume TaskScheduler.Current
-dotnet_diagnostic.VSTHRD105.severity = warning
-
-# Use InvokeAsync to raise async events
-dotnet_diagnostic.VSTHRD106.severity = error
-
-# Await Task within using expression
-dotnet_diagnostic.VSTHRD107.severity = error
-
-# Assert thread affinity unconditionally
-dotnet_diagnostic.VSTHRD108.severity = error
-
-# Switch instead of assert in async methods
-dotnet_diagnostic.VSTHRD109.severity = error
-
-# Observe result of async calls
-dotnet_diagnostic.VSTHRD110.severity = error
-
-# Use .ConfigureAwait(bool)
-dotnet_diagnostic.VSTHRD111.severity = error
-
-# Implement System.IAsyncDisposable
-dotnet_diagnostic.VSTHRD112.severity = error
-
-# Check for System.IAsyncDisposable
-dotnet_diagnostic.VSTHRD113.severity = error
-
-# Avoid returning a null Task
-dotnet_diagnostic.VSTHRD114.severity = error
-
-# Non-asynchronous method name should not end with 'Async'.
-dotnet_diagnostic.RCS1047.severity = error
-
-#### Class Rules ####
-
-# Seal Class
-dotnet_diagnostic.CLASS0001.severity = warning
-
-#### Enum Rules ####
-
-# Default switch label
-dotnet_diagnostic.ENUM0001.severity = error
-
-# Merge switch sections
-dotnet_diagnostic.ENUM0002.severity = warning
-
-# Populate switch
-dotnet_diagnostic.ENUM0003.severity = warning#### StyleCop Rules ####
-
-# A violation of this rule occurs when a compilation (project) contains one or more files which are parsed with the DocumentationMode set to None. This most frequently occurs when the project is configured to not produce an XML documentation file during the build.
-dotnet_diagnostic.SA0001.severity = warning
-
-# The spacing around a C# keyword is incorrect.
-dotnet_diagnostic.SA1000.severity = warning
-
-# DoNotPrefixCallsWithBaseUnlessLocalImplementationExists
-dotnet_diagnostic.SA1100.severity = warning
-
-# CommentsMustContainText
-dotnet_diagnostic.SA1120.severity = warning
-
-# DoNotUseRegions
-dotnet_diagnostic.SA1124.severity = warning
-
-# ElementsMustAppearInTheCorrectOrder
-dotnet_diagnostic.SA1201.severity = warning
-
-# ElementsMustBeOrderedByAccess
-dotnet_diagnostic.SA1202.severity = warning
-
-# ElementMustBeginWithUpperCaseLetter
-dotnet_diagnostic.SA1300.severity = error
-
-# InterfaceNamesMustBeginWithI
-dotnet_diagnostic.SA1302.severity = error
-
-# ConstFieldNamesMustBeginWithUpperCaseLetter
-dotnet_diagnostic.SA1303.severity = error
-
-# FieldNamesMustNotUseHungarianNotation
-dotnet_diagnostic.SA1305.severity = warning
-
-# VariableNamesMustNotBePrefixed
-dotnet_diagnostic.SA1308.severity = error
-
-# VariableNamesMustBeginWithLowerCaseLetter
-dotnet_diagnostic.SA1312.severity = warning
-
-# TupleElementNamesShouldUseCorrectCasing
-dotnet_diagnostic.SA1316.severity = warning
-
-# A Code Analysis SuppressMessage attribute does not include a justification.
-dotnet_diagnostic.SA1404.severity = error
-
-# BracesForMultiLineStatementsMustNotShareLine
-dotnet_diagnostic.SA1500.severity = warning
-
-# ElementMustNotBeOnSingleLine
-dotnet_diagnostic.SA1502.severity = warning
-
-# BracesMustNotBeOmitted
-dotnet_diagnostic.SA1503.severity = warning
-
-# ClosingBraceMustBeFollowedByBlankLine
-dotnet_diagnostic.SA1513.severity = warning
-
-# UseBracesConsistently
-dotnet_diagnostic.SA1520.severity = warning
-
-# File header copyright text should match
-dotnet_diagnostic.SA1636.severity = none
-
-# ElementDocumentationMustBeSpelledCorrectly
-dotnet_diagnostic.SA1650.severity = warning
-
-# Do not return null
-dotnet_diagnostic.RETURN0001.severity = warning
-
-#### Async Rules ####
-
-# Asynchronous method names should end with Async
-dotnet_diagnostic.ASYNC0001.severity = error
-
-# Non asynchronous method names should end with Async
-dotnet_diagnostic.ASYNC0002.severity = error
-
-# Avoid void returning asynchronous method
-dotnet_diagnostic.ASYNC0003.severity = warning
-
-# Use ConfigureAwait(false) on await expression
-dotnet_diagnostic.ASYNC0004.severity = error
-
-# Do not use blocking call (make method async)
-dotnet_diagnostic.MA0045.severity = none
-
-# Call 'ConfigureAwait(false)'.
-dotnet_diagnostic.RCS1090.severity = error
-
-# Return completed task instead of returning null
-dotnet_diagnostic.RCS1210.severity = error
-
-# AsyncifyInvocation: Use Task Async
-dotnet_diagnostic.AsyncifyInvocation.severity = error
-
-# AsyncifyVariable: Use Task Async
-dotnet_diagnostic.AsyncifyVariable.severity = error
-
-# Avoid legacy thread switching methods
-dotnet_diagnostic.VSTHRD001.severity = error
-
-# Avoid problematic synchronous waits
-dotnet_diagnostic.VSTHRD002.severity = error
-
-# Avoid awaiting foreign Tasks
-dotnet_diagnostic.VSTHRD003.severity = error
-
-# Await SwitchToMainThreadAsync
-dotnet_diagnostic.VSTHRD004.severity = error
-
-# Invoke single-threaded types on Main thread
-dotnet_diagnostic.VSTHRD010.severity = error
-
-# Use AsyncLazy<T>
-dotnet_diagnostic.VSTHRD011.severity = error
-
-# Provide JoinableTaskFactory where allowed
-dotnet_diagnostic.VSTHRD012.severity = error
-
-# Avoid async void methods
-dotnet_diagnostic.VSTHRD100.severity = error
-
-# Avoid unsupported async delegates
-dotnet_diagnostic.VSTHRD101.severity = error
-
-# Implement internal logic asynchronously
-dotnet_diagnostic.VSTHRD102.severity = error
-
-# Call async methods when in an async method
-dotnet_diagnostic.VSTHRD103.severity = error
-
-# Offer async option
-dotnet_diagnostic.VSTHRD104.severity = warning
-
-# Avoid method overloads that assume TaskScheduler.Current
-dotnet_diagnostic.VSTHRD105.severity = warning
-
-# Use InvokeAsync to raise async events
-dotnet_diagnostic.VSTHRD106.severity = error
-
-# Await Task within using expression
-dotnet_diagnostic.VSTHRD107.severity = error
-
-# Assert thread affinity unconditionally
-dotnet_diagnostic.VSTHRD108.severity = error
-
-# Switch instead of assert in async methods
-dotnet_diagnostic.VSTHRD109.severity = error
-
-# Observe result of async calls
-dotnet_diagnostic.VSTHRD110.severity = error
-
-# Use .ConfigureAwait(bool)
-dotnet_diagnostic.VSTHRD111.severity = error
-
-# Implement System.IAsyncDisposable
-dotnet_diagnostic.VSTHRD112.severity = error
-
-# Check for System.IAsyncDisposable
-dotnet_diagnostic.VSTHRD113.severity = error
-
-# Avoid returning a null Task
-dotnet_diagnostic.VSTHRD114.severity = error
-
-# Use "Async" suffix for async methods
-dotnet_diagnostic.VSTHRD200.severity = error
-
-# Non-asynchronous method name should not end with 'Async'.
-dotnet_diagnostic.RCS1047.severity = error
-
-#### Class Rules ####
-
-# Seal Class
-dotnet_diagnostic.CLASS0001.severity = warning
-
-#### Enum Rules ####
-
-# Default switch label
-dotnet_diagnostic.ENUM0001.severity = error
-
-# Merge switch sections
-dotnet_diagnostic.ENUM0002.severity = warning
-
-# Populate switch
-dotnet_diagnostic.ENUM0003.severity = warning
-
-
-# Simplify name
-dotnet_diagnostic.IDE0001.severity = warning
-
-# Simplify member access
-dotnet_diagnostic.IDE0002.severity = warning
-
-# Remove unnecessary cast
-dotnet_diagnostic.IDE0004.severity = error
-
-# Remove unnecessary import
-dotnet_diagnostic.IDE0005.severity = warning
-
-# Remove unreachable code
-dotnet_diagnostic.IDE0035.severity = error
-
-# Remove unused private member
-dotnet_diagnostic.IDE0051.severity = warning
-
-# Remove unread private member
-dotnet_diagnostic.IDE0052.severity = error
-
-# Remove unnecessary value assignment
-dotnet_diagnostic.IDE0059.severity = error
-
-# Remove unused parameter
-dotnet_diagnostic.IDE0060.severity = error
-
-# Remove unnecessary suppression
-dotnet_diagnostic.IDE0079.severity = error
-
-# Remove unnecessary suppression operator
-dotnet_diagnostic.IDE0080.severity = suggestion
-
-# Remove ByVal
-dotnet_diagnostic.IDE0081.severity = error
-
-# Remove unnecessary equality operator
-dotnet_diagnostic.IDE0100.severity = suggestion
-
-# Use conditional delegate call
-dotnet_diagnostic.IDE0105.severity = warning
-
-# Remove unnecessary discard
-dotnet_diagnostic.IDE0110.severity = warning
-
-# Simplify object creation
-dotnet_diagnostic.IDE0140.severity = suggestion
-
-# Prefer 'null' check over type check
-dotnet_diagnostic.IDE0150.severity = warning
-
-# JSON Rules
-[*.{cs,vb}]
-#Invalid JSON pattern
-dotnet_diagnostic.JSON001.severity = suggestion
-# Probable JSON string detected
-dotnet_diagnostic.JSON002.severity = suggestion
-
-# REGEX
-[*.{cs,vb}]
-# Invalid regex pattern
-dotnet_diagnostic.RE0001.severity = warning
-
-[*.g.cs]
-# Missing XML comment for publicly visible type or member 'Type_or_Member'
-dotnet_diagnostic.CS1591.severity = none
